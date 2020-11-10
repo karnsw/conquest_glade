@@ -1,0 +1,48 @@
+package GladeBoard:
+//Link with game board
+import java.util.Random;
+
+public class Space {
+
+    int x;
+    int y;
+    //current space
+    public Space( int x, int y) {
+        this.x = x;
+        this.y=y;
+    
+    }
+    //Special space functionality
+    public Spacetype(int x){
+        int freeze=0;
+        int fire=1;
+        int wind=2;
+        //May make these offensive abilities instead of trap spaces
+        if(x==freeze)
+        click(piece){
+            for(round=2;round>rand.nextInt(2);round--)
+            piece = Space;
+        }
+        //Freezes a piece for 1 or 2 turns
+        else if(x==fire)
+        //Allows a piece to take a piece in any surrounding space
+
+        else
+        click(piece){
+            click(space){
+                /*$$Figure out how to compare space with piece*/
+            }
+        }
+        //Shifts a piece in a direction the player chooses.
+
+    }
+    // Function to determine if space is occupied.
+    public boolean isOccupied(){
+        if(piece != null)
+            return true;
+        else
+            return false;
+    }
+
+
+}
