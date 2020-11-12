@@ -25,23 +25,37 @@ public class Space {
         }
         //Freezes a piece for 1 or 2 turns
         else if(x==fire)
+        {
+            if(OppPiece=piece[x-1][y-1]||OppPiece=piece[x-1][y]||OppPiece=piece[x-1][y+1]|OppPiece=piece[x][y-1]||OppPiece=piece[x][y+1]||OppPiece=piece[x+1][y-1]||OppPiece=piece[x+1][y]||OppPiece=piece[x-1][y+1])
+            {
+            click(OppPiece);
+            clearSpace(OppPiece);
+            }
+        }
         //Allows a piece to take a piece in any surrounding space
 
         else
-        click(piece){
+        click(OppPiece){
+            if(space=OppPiece[x+1][y]||space=OppPiece[x-1][y]||space=OppPiece[x-1][y+1]|space=OppPiece[x][y-1])
             click(space){
-                /*$$Figure out how to compare space with piece*/
+               OppPiece=space; 
             }
         }
         //Shifts a piece in a direction the player chooses.
 
     }
     // Function to determine if space is occupied.
-    public boolean isOccupied(){
+    public boolean Occupied(){
         if(piece != null)
             return true;
         else
             return false;
+    }
+    // Used to clear space when piece is killed
+    public piece clearSpace(){
+        piece killPiece= this.piece;
+        this.piece=null;
+        return killPiece;
     }
 
 
