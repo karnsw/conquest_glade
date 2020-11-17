@@ -75,4 +75,16 @@ public class Player {
 			}
 		}
 	}
+	public int get_board_count() {
+		return this._rack_pieces.size();
+	}
+	public int get_rack_count() {
+		return this._rack_pieces.size();
+	}
+	public Piece get_rack_piece(int pos) {
+		return this._rack_pieces.get(pos);
+	}
+	public Piece get_board_piece(int pos) {
+		return this._rack_pieces.get(pos);
+	}
 }

@@ -3,9 +3,11 @@ package main;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
+
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-public class SquareSpace{
+public class SquareSpace extends JComponent{
 
 	private int _dim;
 	private int _color;
@@ -35,8 +37,34 @@ public class SquareSpace{
 	}
 	
 	
-	public void draw() {
-		switch(get_color()) {
+	public void paintComponent(Graphics g) {
+
+		super.paintComponent(g);
+		int width = getWidth();
+		int height = getHeight();
+		int dim = 100;
+		if(width > dim || height > dim) {
+			if(width > height) {
+				dim = width;
+			}
+			else {
+				dim = height;
+			}
+		}
+		System.out.println("width " + width);
+		System.out.println("height " + height);
+		
+		g.setColor(Color.BLUE);
+		g.fillRect(0, 0, dim, dim);
+		
+		//System.out.println("width " + getWidth());
+		//System.out.println("height " + getHeight() + "\n");
+	}
+	
+	
+	/*
+		public void draw() {
+		switch(this.get_color()) {
 		case 0:
 			new BlueSquare();
 		case 1:
@@ -44,4 +72,5 @@ public class SquareSpace{
 
 		}
 	}
+	*/
 }

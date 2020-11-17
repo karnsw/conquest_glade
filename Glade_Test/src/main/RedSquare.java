@@ -5,10 +5,9 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-public class BlueSquare extends JPanel{
+public class RedSquare extends JPanel{
 	
 	public void paintComponent(Graphics g) {
-
 		super.paintComponent(g);
 		int width = getWidth();
 		int height = getHeight();
@@ -21,10 +20,10 @@ public class BlueSquare extends JPanel{
 				dim = height;
 			}
 		}
-
-		g.setColor(Color.BLUE);
-		g.fillRect(0, 0, dim, dim);
+		//System.out.println("width " + width);
+		//System.out.println("height " + height + "\n");
 		
-
+		g.setColor(Color.RED);
+		g.fillRect(0, 0, dim, dim);
 	}
 }
