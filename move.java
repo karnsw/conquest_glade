@@ -1,55 +1,42 @@
 package glade;
-
+//Created by Brian Greene on 11/20/2020
+//This version has generic movement options.
 public class move {
-	public void movePiece(piece piece, piece[][] b, String moveType){
+	public piece[][] movePiece(piece piece, piece[][] b, String moveType){
+		
 		String moveOption = moveType;
-		if (moveOption.equals("move")) {
-			if (piece.getMove().equals("diagonal left")) {
-				if (piece.getOwner().equals("Player1")) {
-					b[piece.getYPos() - 1][piece.getXPos() - 1] = piece;
-				}
-				else {
-					b[piece.getYPos() + 1][piece.getXPos() - 1] = piece;
-				}
-				b[piece.getXPos()][piece.getYPos()] = null;
-			}
-			else if (piece.getMove().equals("left")){
-				b[piece.getYPos()][piece.getXPos() - 1] = piece;
-				b[piece.getXPos()][piece.getYPos()] = null;
-			}
-			else if (piece.getMove().equals("forward")) {
-				if (piece.getOwner().equals("Player1")) {
-					b[piece.getYPos() - 1][piece.getXPos()] = piece;
-				}
-				else {
-					b[piece.getYPos() + 1][piece.getXPos()] = piece;
-				}
-				b[piece.getXPos()][piece.getYPos()] = null;
-			}
-			else if (piece.getMove().equals("backward")) {
-				if (piece.getOwner().equals("Player1")) {
-					b[piece.getYPos() + 1][piece.getXPos()] = piece;
-				}
-				else {
-					b[piece.getYPos() + 1][piece.getXPos()] = piece;
-				}
-				b[piece.getXPos()][piece.getYPos()] = null;
-			}
+		if (moveOption.equals("up")){
+			b[piece.getYPos() - 1][piece.getXPos()] = piece;
+			b[piece.getYPos()][piece.getXPos()] = null;
 		}
-		else {
-			if (piece.getMove().equals("diagonal right")) {
-				if (piece.getOwner().equals("Player1")) {
-					b[piece.getYPos() - 1][piece.getXPos() + 1] = piece;
-				}
-				else{
-					b[piece.getYPos() + 1][piece.getXPos() + 1] = piece;
-				}
-				b[piece.getXPos()][piece.getYPos()] = null;
-			}
-			else if (piece.getMove().equals("right")){
-				b[piece.getYPos()][piece.getXPos() + 1] = piece;
-				b[piece.getXPos()][piece.getYPos()] = null;
-			}
+		else if (moveOption.equals("up left")) {
+			b[piece.getYPos() - 1][piece.getXPos() - 1] = piece;
+			b[piece.getYPos()][piece.getXPos()] = null;
 		}
+		else if (moveOption.equals("up right")) {
+			b[piece.getYPos() - 1][piece.getXPos() + 1] = piece;
+			b[piece.getYPos()][piece.getXPos()] = null;
+		}
+		else if (moveOption.equals("right")) {
+			b[piece.getYPos()][piece.getXPos() + 1] = piece;
+			b[piece.getYPos()][piece.getXPos()] = null;
+		}
+		else if (moveOption.equals("left")) {
+			b[piece.getYPos()][piece.getXPos() - 1] = piece;
+			b[piece.getYPos()][piece.getXPos()] = null;
+		}
+		else if (moveOption.equals("down")) {
+			b[piece.getYPos() + 1][piece.getXPos()] = piece;
+			b[piece.getYPos()][piece.getXPos()] = null;
+		}
+		else if (moveOption.equals("down right")) {
+			b[piece.getYPos() + 1][piece.getXPos() + 1] = piece;
+			b[piece.getYPos()][piece.getXPos()] = null;
+		}
+		else if (moveOption.equals("down left")) {
+			b[piece.getYPos() + 1][piece.getXPos() - 1] = piece;
+			b[piece.getYPos()][piece.getXPos()] = null;
+		}
+		return b;
 	}
 }

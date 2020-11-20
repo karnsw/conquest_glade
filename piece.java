@@ -1,5 +1,9 @@
 package glade;
-
+//Created by Brian Greene on 11/20/2020
+//This version enables the creation of generic pieces. 
+//Note that this version will probably require code changes 
+//for piece creation to set certain parameters (move, move2, xPos, yPos)
+//as a consequence of making the pieces generic.
 public class piece {
 	private String owner;
 	private String type;
@@ -9,49 +13,32 @@ public class piece {
 	private int xPos;
 	private int yPos;
 	
-	public piece(String pieceOwner, String pieceType, int pieceId, int startx, int starty)
+	public piece(String pieceOwner, String pieceType, int pieceId)
 	{
+		//owner, type and id will not change for a particular piece.
 		owner = pieceOwner;
 		type = pieceType;
-		move = getMove();
-		move2 = getMove2();
 		id = pieceId;
-		xPos = startx;
-		yPos = starty;
+		//xPos, yPos, move and move2 must be changed with set methods.
+		move = "none";
+		move2 = "none";
+		xPos = -1;
+		yPos = -1;
 	}
 	
 	public String getMove() {
-		String pieceName = type.toLowerCase();
-		if (pieceName.equals("rabbit")) {
-			pieceName = "forward";
-		}
-		else if (pieceName.equals("snake")) {
-			pieceName = "diagonal left";
-		}
-		else if (pieceName.equals("bird")) {
-			pieceName = "sideways left";
-		}
-		else if (pieceName.equals("groundhog")) {
-			pieceName = "backward";
-		}
-		else {
-			pieceName = "none";
-		}
-		return pieceName;
+		return move;
+	}
+	public void setMove(String s) {
+		move = s;
 	}
 	
 	public String getMove2() {
-		String pieceName = type.toLowerCase();
-		if (pieceName.contentEquals("snake")) {
-			pieceName = "diagonal right";
-		}
-		else if (pieceName.contentEquals("bird")) {
-			pieceName = "sideways right";
-		}
-		else{
-			pieceName = "none";
-		}
-		return pieceName;
+		return move2;
+	}
+	
+	public void setMove2(String s) {
+		move2 = s;
 	}
 	
 	public String getOwner(){
