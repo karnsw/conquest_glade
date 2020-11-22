@@ -9,8 +9,10 @@ public class Player {
 	private String _name;
 	private int _type;
 	private int _score;
-	private List<Piece> _board_pieces = new ArrayList<Piece>();
-	private List<Piece> _rack_pieces = new ArrayList<Piece>();
+	private Piece[] _board_pieces = new Piece[8];
+	private Piece[] _rack_pieces = new Piece[8];
+	private List<Piece> rackPieces = new ArrayList<Piece>();
+	
 
 	Player(int id){
 		this._id = id;
@@ -24,7 +26,7 @@ public class Player {
 		this._id = id;
 		this.set_teamColor(teamColor);
 		this.set_name(name);
-		this.set_type(type);
+		this.set_type(type);	
 	}
 	
 	public int get_id() {
@@ -55,36 +57,103 @@ public class Player {
 		this._score = _score;
 	}
 	
-	public void add_board_piece(Piece item) {
-		this._board_pieces.add(item);
+	public void add_board_piece(Piece item, int pos) {
+		this._board_pieces[pos] = item;
 	}
-	public void remove_board_piece(Piece item) {
-		for(Piece i: this._board_pieces) {
-			if(i.get_id() == item.get_id()) {
-				this._board_pieces.remove(i);
+	public void remove_board_piece(Piece item, int pos) {
+		this._board_pieces[pos] = null;
+	}
+
+	public void add_rack_piece(Piece item, int pos) {
+		this._rack_pieces[pos] = item;
+	}
+	
+	
+	
+	public void remove_rack_piece(int item) {
+		for(int i = 0; i < this._rack_pieces.length; i++) {
+			if(this._rack_pieces[i].getPieceType() == item) {
+				this._rack_pieces[i] = this._rack_pieces[i+1];
 			}
 		}
 	}
-	public void add_rack_piece(Piece item) {
-		this._rack_pieces.add(item);
+	
+	
+	public void addRackPiece(Piece item) {
+		this.rackPieces.add(item);
 	}
-	public void remove_rack_piece(Piece item) {
-		for(Piece i: this._rack_pieces) {
-			if(i.get_id() == item.get_id()) {
-				this._rack_pieces.remove(i);
+	
+	public void removeRackPiece(int type) {
+		for(int i = 0; i < this.rackPieces.size(); i++) {
+			if(this.rackPieces.get(i).getPieceType() == type) {
+				this.rackPieces.remove(i);
 			}
 		}
 	}
+	
+	
 	public int get_board_count() {
-		return this._rack_pieces.size();
+		return this._rack_pieces.length;
 	}
 	public int get_rack_count() {
-		return this._rack_pieces.size();
+		return this._rack_pieces.length;
 	}
 	public Piece get_rack_piece(int pos) {
-		return this._rack_pieces.get(pos);
+		return this._rack_pieces[pos];
 	}
 	public Piece get_board_piece(int pos) {
-		return this._rack_pieces.get(pos);
+		return this._rack_pieces[pos];
+	}
+	
+	
+	
+	public int getRabbitCount(){
+		int count = 0;
+		for(int i = 0; i < this.rackPieces.size(); i++) {
+			if(this.rackPieces.get(i).getPieceType() == 0) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	public int getSnakeCount(){
+		int count = 0;
+		for(int i = 0; i < this.rackPieces.size(); i++) {
+			if(this.rackPieces.get(i).getPieceType() == 1) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	public int getBirdCount(){
+		int count = 0;
+		for(int i = 0; i < this.rackPieces.size(); i++) {
+			if(this.rackPieces.get(i).getPieceType() == 2) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	public int getGroundhogCount(){
+		int count = 0;
+		for(int i = 0; i < this.rackPieces.size(); i++) {
+			if(this.rackPieces.get(i).getPieceType() == 3) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	public int getTurtleCount(){
+		int count = 0;
+		for(int i = 0; i < this.rackPieces.size(); i++) {
+			if(this.rackPieces.get(i).getPieceType() == 4) {
+				count++;
+			}
+		}
+		return count;
 	}
 }

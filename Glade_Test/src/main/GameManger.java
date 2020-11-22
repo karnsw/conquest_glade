@@ -3,9 +3,9 @@ package main;
 public class GameManger {
 
 	private int _spaceCount;
-	private int _rows = 8;
-	private int _columns = 8;
-	private int _minSpaceDim = 50;
+	private int _rows;
+	private int _columns;
+	private int _minSpaceDim;
 	
 	GameManger(){
 		this._spaceCount = 0;

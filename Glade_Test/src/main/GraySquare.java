@@ -75,7 +75,7 @@ public class GraySquare extends JPanel{
 					}
 				}
 				else {
-					g.setColor(Color.MAGENTA);
+					g.setColor(Color.YELLOW);
 				}
 	
 				g.fillRect(0, 0, dim, dim);
