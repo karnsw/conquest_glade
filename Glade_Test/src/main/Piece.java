@@ -19,21 +19,27 @@ public class Piece extends JPanel {
 	private int _type;
 	private boolean _selected;
 	private int _size;
-	private int _id = 0;
-	private List<Moves> moves = new ArrayList<Moves>();
+	private List<Move> moves = new ArrayList<Move>();
 	//private List<Piece> rackPieces = new ArrayList<Piece>();
 	
 	
 	Piece(){
-		this._id = -1;
 		this._team = -1;
 		this._type = -1;
 		this._selected = false;
 		this._size = -1;		
 	}
+
+	Piece(int team, int type, boolean selected){
+		this._team = team;
+		this._type = type;
+		this._selected = selected;
+		//this._size = size;
+		this.setMoves();
+	}
+	
 	
 	Piece(int team, int type, boolean selected, int size){
-		this._id = _id++;
 		this._team = team;
 		this._type = type;
 		this._selected = selected;
@@ -64,8 +70,8 @@ public class Piece extends JPanel {
 	
 	
 	private void setMoves() {
-		Moves move1 = new Moves();
-		Moves move2 = new Moves();
+		Move move1 = new Move();
+		Move move2 = new Move();
 		
 		if(this._type == 0) {
 			move1.F1();
@@ -84,99 +90,108 @@ public class Piece extends JPanel {
 		return this.moves.size();
 	}
 	
-	public List<Moves> possibleSpaces() {
+	public List<Move> possibleSpaces() {
 		return this.moves;
 	}
 	
 	
 	public void paintComponent(Graphics g) {
+		int size = this.getWidth();
+		
 		if(this._team == 0) {
-			Font glade = new Font(Font.SERIF, Font.BOLD, this._size);
+			Font glade = new Font(Font.SERIF, Font.BOLD, size);
 			g.setColor(Color.BLACK);
-			g.fillOval(this._size/10, this._size/10, this._size-(this._size/5), this._size-(this._size/5));
+			g.fillOval(size/10, size/10, size-(size/5), size-(size/5));
 
 			if(this._selected == false) {
 				g.setColor(Color.BLUE);
 				Graphics2D g2;
 				g2 = (Graphics2D)g; 
 				g2.setStroke(new BasicStroke(5));
-				g2.drawOval(this._size/10, this._size/10, this._size-(this._size/5), this._size-(this._size/5));
+				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
 			}
 			if(this._selected == true) {
 				g.setColor(Color.CYAN);
 				Graphics2D g2;
 				g2 = (Graphics2D)g; 
 				g2.setStroke(new BasicStroke(5));
-				g2.drawOval(this._size/10, this._size/10, this._size-(this._size/5), this._size-(this._size/5));
+				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
 			}
 			
 			switch(this._type) {
-
 			case 0:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
-				g.drawString("R", (this._size/5), this._size-(this._size/5));
+				g.drawString("R", (size/5), size-(size/5));
 				break;
 			case 1:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
-				g.drawString("S", (this._size/5), this._size-(this._size/5));
+				g.drawString("S", (size/5), size-(size/5));
 				break;
 			case 2:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
-				g.drawString("B", (this._size/5), this._size-(this._size/5));
+				g.drawString("B", (size/5), size-(size/5));
 				break;
 			case 3:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
-				g.drawString("G", (this._size/5), this._size-(this._size/5));
+				g.drawString("G", (size/5), size-(size/5));
 				break;
 			case 4:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
-				g.drawString("T", (this._size/5), this._size-(this._size/5));
+				g.drawString("T", (size/5), size-(size/5));
 				break;
-
-		}
+			}
 		}
 		if(this._team == 1) {
-			Font glade = new Font(Font.SERIF, Font.BOLD, this._size);
-			g.setColor(Color.RED);
-			g.fillOval(this._size/10, this._size/10, this._size-(this._size/5), this._size-(this._size/5));
-			
+			Font glade = new Font(Font.SERIF, Font.BOLD, size);
+			g.setColor(Color.BLACK);
+			g.fillOval(size/10, size/10, size-(size/5), size-(size/5));
+
+			if(this._selected == false) {
+				g.setColor(Color.RED);
+				Graphics2D g2;
+				g2 = (Graphics2D)g; 
+				g2.setStroke(new BasicStroke(5));
+				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
+			}
 			if(this._selected == true) {
 				g.setColor(Color.MAGENTA);
-				g.drawOval(this._size/10, this._size/10, this._size-(this._size/5), this._size-(this._size/5));
+				Graphics2D g2;
+				g2 = (Graphics2D)g; 
+				g2.setStroke(new BasicStroke(5));
+				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
 			}
 			
 			switch(this._type) {
 			case 0:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
-				g.drawString("R", (this._size/5), this._size-(this._size/5));
+				g.drawString("R", (size/5), size-(size/5));
 				break;
 			case 1:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
-				g.drawString("S", (this._size/5), this._size-(this._size/5));
+				g.drawString("S", (size/5), size-(size/5));
 				break;
 			case 2:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
-				g.drawString("B", (this._size/5), this._size-(this._size/5));
+				g.drawString("B", (size/5), size-(size/5));
 				break;
 			case 3:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
-				g.drawString("G", (this._size/5), this._size-(this._size/5));
+				g.drawString("G", (size/5), size-(size/5));
 				break;
 			case 4:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
-				g.drawString("T", (this._size/5), this._size-(this._size/5));
+				g.drawString("T", (size/5), size-(size/5));
 				break;
-
 			}
 		}
 		

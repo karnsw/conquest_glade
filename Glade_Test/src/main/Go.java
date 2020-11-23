@@ -19,20 +19,18 @@ import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
 
 public class Go {
 
+	
 	public static void main(String[] args) {
 
 		
-		
-		
 		JFrame window = new JFrame("Glade");
 
-		
-		
 
 		
 		int columns = (8 + 4);
@@ -42,9 +40,7 @@ public class Go {
 		int mouseCoordinate[][] = new int[columns][rows];
 		int pieceCoordinate[][] = new int[columns][rows];
 		
-		
-		int playerOnePieces[] = new int[columns];
-		int playerTwoPieces[] = new int[columns];
+	
 		
 	////////////
 		Piece pieces[][] = new Piece[columns][rows]; 
@@ -78,28 +74,71 @@ public class Go {
 		
 		
 		
-		Player p1 = new Player(0);
-		p1.set_name("Ashton");
-		//int p1id = p1.get_id();
-		p1.addRackPiece(new Piece(0, 0, false, spaceSize));
-		p1.addRackPiece(new Piece(0, 0, false, spaceSize));
-		p1.addRackPiece(new Piece(0, 1, false, spaceSize));
-		p1.addRackPiece(new Piece(0, 1, false, spaceSize));
-		p1.addRackPiece(new Piece(0, 2, false, spaceSize));
-		p1.addRackPiece(new Piece(0, 2, false, spaceSize));
-		p1.addRackPiece(new Piece(0, 3, false, spaceSize));
-		p1.addRackPiece(new Piece(0, 3, false, spaceSize));
+		Player player1 = new Player(0);
+		String s1 = (String)JOptionPane.showInputDialog("Player 1, please enter your name.","???");
+		player1.set_name(s1);
 		
-		Player p2 = new Player(1);
-		p2.set_name("Brian");
-		p2.addRackPiece(new Piece(1, 0, false, spaceSize));
-		p2.addRackPiece(new Piece(1, 0, false, spaceSize));
-		p2.addRackPiece(new Piece(1, 1, false, spaceSize));
-		p2.addRackPiece(new Piece(1, 1, false, spaceSize));
-		p2.addRackPiece(new Piece(1, 2, false, spaceSize));
-		p2.addRackPiece(new Piece(1, 2, false, spaceSize));
-		p2.addRackPiece(new Piece(1, 3, false, spaceSize));
-		p2.addRackPiece(new Piece(1, 3, false, spaceSize));
+		Object[] choices = {"blue", "red", "purple"};
+		String c1 = (String)JOptionPane.showInputDialog(null, s1 +  " select your team color.", "team color", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+		if(c1 == "blue") {
+			player1.set_teamColor(0); 
+		}
+		else if(c1 == "red") {
+			player1.set_teamColor(1);
+		}
+		else {
+			player1.set_teamColor(2);
+		}
+
+		System.out.println("p1 team color- " + player1.get_teamColor());
+		
+//		String s1 = (String)JOptionPane.showInputDialog(s1 + " select your team color.","???");
+		player1.addRackPiece(new Piece(0, 0, false));
+		player1.addRackPiece(new Piece(0, 0, false));
+		player1.addRackPiece(new Piece(0, 1, false));
+		player1.addRackPiece(new Piece(0, 1, false));
+		player1.addRackPiece(new Piece(0, 2, false));
+		player1.addRackPiece(new Piece(0, 2, false));
+		player1.addRackPiece(new Piece(0, 3, false));
+		player1.addRackPiece(new Piece(0, 3, false));
+		player1.addRackPiece(new Piece(0, 4, false));
+		/*
+		player1.addRackPiece(new Piece(0, 0, false, spaceSize));
+		player1.addRackPiece(new Piece(0, 0, false, spaceSize));
+		player1.addRackPiece(new Piece(0, 1, false, spaceSize));
+		player1.addRackPiece(new Piece(0, 1, false, spaceSize));
+		player1.addRackPiece(new Piece(0, 2, false, spaceSize));
+		player1.addRackPiece(new Piece(0, 2, false, spaceSize));
+		player1.addRackPiece(new Piece(0, 3, false, spaceSize));
+		player1.addRackPiece(new Piece(0, 3, false, spaceSize));
+		player1.addRackPiece(new Piece(0, 4, false, spaceSize));
+		*/
+		
+		
+		Player player2 = new Player(1);
+		String s2 = (String)JOptionPane.showInputDialog("Player 2, please enter your name.","???");
+		player2.set_name(s2);
+		player2.addRackPiece(new Piece(1, 0, false));
+		player2.addRackPiece(new Piece(1, 0, false));
+		player2.addRackPiece(new Piece(1, 1, false));
+		player2.addRackPiece(new Piece(1, 1, false));
+		player2.addRackPiece(new Piece(1, 2, false));
+		player2.addRackPiece(new Piece(1, 2, false));
+		player2.addRackPiece(new Piece(1, 3, false));
+		player2.addRackPiece(new Piece(1, 3, false));
+		player2.addRackPiece(new Piece(1, 4, false));
+		
+		/*
+		player2.addRackPiece(new Piece(1, 0, false, spaceSize));
+		player2.addRackPiece(new Piece(1, 0, false, spaceSize));
+		player2.addRackPiece(new Piece(1, 1, false, spaceSize));
+		player2.addRackPiece(new Piece(1, 1, false, spaceSize));
+		player2.addRackPiece(new Piece(1, 2, false, spaceSize));
+		player2.addRackPiece(new Piece(1, 2, false, spaceSize));
+		player2.addRackPiece(new Piece(1, 3, false, spaceSize));
+		player2.addRackPiece(new Piece(1, 3, false, spaceSize));
+		player2.addRackPiece(new Piece(1, 4, false, spaceSize));
+		 */
 		
 		
 		pieces[0][1] = new Piece(0,0,false, spaceSize);
@@ -120,19 +159,27 @@ public class Go {
 		
 		for(int row = 0; row < rows; row++) {
 			for(int col = 0; col < columns; col++) {
-				if(col == 0 || col == columns-1) {
-					spaces[col][row] = (new Square(1, spaceSize, mouseCoordinate[col][row], pieceCoordinate[col][row]));
+				if(col == 0) {
+					spaces[col][row] = (new Square(1, mouseCoordinate[col][row], pieceCoordinate[col][row]));
+					spaces[col][row].setType(3);
+				}
+				else if(col == columns-1) {
+					spaces[col][row] = (new Square(1, mouseCoordinate[col][row], pieceCoordinate[col][row]));
+					spaces[col][row].setType(4);
 				}
 				else if(row == 0 || row == rows-1 || col == 1 || col == columns-2){
-					spaces[col][row] = (new Square(2, spaceSize, mouseCoordinate[col][row], pieceCoordinate[col][row]));
+					spaces[col][row] = (new Square(2, mouseCoordinate[col][row], pieceCoordinate[col][row]));
+					spaces[col][row].setType(2);
 				}
 
 				
 				else if(col%2 == row%2 || (col+1)%2 == (row+1)%2) {
-					spaces[col][row] = (new Square(0, spaceSize, mouseCoordinate[col][row], pieceCoordinate[col][row]));
+					spaces[col][row] = (new Square(0, mouseCoordinate[col][row], pieceCoordinate[col][row]));
+					spaces[col][row].setType(0);
 				}
 				else {
-					spaces[col][row] = (new Square(1, spaceSize, mouseCoordinate[col][row], pieceCoordinate[col][row]));
+					spaces[col][row] = (new Square(1, mouseCoordinate[col][row], pieceCoordinate[col][row]));
+					spaces[col][row].setType(0);
 				}			
 			}
 		}
@@ -147,58 +194,111 @@ public class Go {
 		
 		
 		
-		JPanel player1 = new JPanel();		
-		player1.setPreferredSize(new Dimension(102, spaceSize*rows));
-		player1.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
-		player1.setLayout(new GridLayout(rows, 1));
-		player1.setLayout(new BoxLayout(player1, BoxLayout.Y_AXIS));
-		
-		JPanel player2 = new JPanel();
-		player2.setPreferredSize(new Dimension(102, spaceSize*rows));
-		player2.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
-		player2.setLayout(new GridLayout(rows, 1));
-		player2.setLayout(new BoxLayout(player2, BoxLayout.Y_AXIS));
+
+
 		
 
-		player1.add(new Label(p1.get_name()));
+		
+		//initalize player 1 panel
+		JPanel player1panel = new JPanel();		
+		player1panel.setPreferredSize(new Dimension(102, spaceSize*rows)); ///102 needs to be flexible
+		player1panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
+		player1panel.setLayout(new GridLayout(rows, 1));
+		player1panel.setLayout(new BoxLayout(player1panel, BoxLayout.Y_AXIS));
+		
+		
+		player1panel.add(new Label(player1.get_name()));
 
-		JLabel Rabbits = new JLabel(String.format("<html>Rabbits:<br>%d</html>", p1.getRabbitCount()));
-		Rabbits.setAlignmentX(Component.CENTER_ALIGNMENT);
-		player1.add(Rabbits);
+		JLabel p1Rabbits = new JLabel(String.format("<html>Rabbits:<br>%d</html>", player1.getRabbitCount()));
+		p1Rabbits.setAlignmentX(Component.CENTER_ALIGNMENT);
+		player1panel.add(p1Rabbits);
 
-		JLabel Snakes = new JLabel(String.format("<html>Snakes:<br>%d</html>", p1.getSnakeCount()));
-		Snakes.setAlignmentX(Component.CENTER_ALIGNMENT);
-		player1.add(Snakes);
+		JLabel p1Snakes = new JLabel(String.format("<html>Snakes:<br>%d</html>", player1.getSnakeCount()));
+		p1Snakes.setAlignmentX(Component.CENTER_ALIGNMENT);
+		player1panel.add(p1Snakes);
 		
-		JLabel Birds = new JLabel(String.format("<html>Birds:<br>%d</html>", p1.getBirdCount()));
-		Birds.setAlignmentX(Component.CENTER_ALIGNMENT);
-		player1.add(Birds);
+		JLabel p1Birds = new JLabel(String.format("<html>Birds:<br>%d</html>", player1.getBirdCount()));
+		p1Birds.setAlignmentX(Component.CENTER_ALIGNMENT);
+		player1panel.add(p1Birds);
 		
-		JLabel Groundhogs = new JLabel(String.format("<html>Groundhogs:<br>%d</html>", p1.getGroundhogCount()));
-		Groundhogs.setAlignmentX(Component.CENTER_ALIGNMENT);
-		player1.add(Groundhogs);
+		JLabel p1Groundhogs = new JLabel(String.format("<html>Groundhogs:<br>%d</html>", player1.getGroundhogCount()));
+		p1Groundhogs.setAlignmentX(Component.CENTER_ALIGNMENT);
+		player1panel.add(p1Groundhogs);
 		
-		JLabel Turtles = new JLabel(String.format("<html>Turtles:<br>%d</html>", p1.getTurtleCount()));
-		Turtles.setAlignmentX(Component.CENTER_ALIGNMENT);
-		player1.add(Turtles);
+		JLabel p1Turtles = new JLabel(String.format("<html>Turtles:<br>%d</html>", player1.getTurtleCount()));
+		p1Turtles.setAlignmentX(Component.CENTER_ALIGNMENT);
+		player1panel.add(p1Turtles);
+		
+		player1panel.add(new Label(""));
+
+		JLabel p1Score= new JLabel(String.format("<html>Score:<br>%d</html>", player1.get_score()));
+		p1Score.setAlignmentX(Component.CENTER_ALIGNMENT);
+		player1panel.add(p1Score);
+		
+		player1panel.add(new Label(""));
 		
 		
-		player1.add(new Label(""));
-		player1.add(new Label(""));
-		player1.add(new Label(""));
 		
-		for(int i = 0; i < rows; i++) {
-			//player2.add(new Square(2, spaceSize));
-			//player2.add(p2.get_rack_piece(i));
-			player2.add(new Number(3));
+		
+		//intialize player 2 panel
+		JPanel player2panel = new JPanel();
+		player2panel.setPreferredSize(new Dimension(102, spaceSize*rows)); ///102 needs to be flexible
+		player2panel.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
+		player2panel.setLayout(new GridLayout(rows, 1));
+		player2panel.setLayout(new BoxLayout(player2panel, BoxLayout.Y_AXIS));
+		
+		player2panel.add(new Label(player2.get_name()));
+
+		JLabel p2Rabbits = new JLabel(String.format("<html>Rabbits:<br>%d</html>", player2.getRabbitCount()));
+		p2Rabbits.setAlignmentX(Component.CENTER_ALIGNMENT);
+		player2panel.add(p2Rabbits);
+
+		JLabel p2Snakes = new JLabel(String.format("<html>Snakes:<br>%d</html>", player2.getSnakeCount()));
+		p2Snakes.setAlignmentX(Component.CENTER_ALIGNMENT);
+		player2panel.add(p2Snakes);
+		
+		JLabel p2Birds = new JLabel(String.format("<html>Birds:<br>%d</html>", player2.getBirdCount()));
+		p2Birds.setAlignmentX(Component.CENTER_ALIGNMENT);
+		player2panel.add(p2Birds);
+		
+		JLabel p2Groundhogs = new JLabel(String.format("<html>Groundhogs:<br>%d</html>", player2.getGroundhogCount()));
+		p2Groundhogs.setAlignmentX(Component.CENTER_ALIGNMENT);
+		player2panel.add(p2Groundhogs);
+		
+		JLabel p2Turtles = new JLabel(String.format("<html>Turtles:<br>%d</html>", player2.getTurtleCount()));
+		p2Turtles.setAlignmentX(Component.CENTER_ALIGNMENT);
+		player2panel.add(p2Turtles);
+		
+		player2panel.add(new Label(""));
+		
+		JLabel p2Score= new JLabel(String.format("<html>Score:<br>%d</html>", player2.get_score()));
+		p2Score.setAlignmentX(Component.CENTER_ALIGNMENT);
+		player2panel.add(p2Score);
+		
+		player2panel.add(new Label(""));
+		
+		
+		
+		
+		GameManager Boss = new GameManager();
+		
+		
+		
+		
+		JPanel status = new JPanel();
+		String player = null;
+		if(Boss.getTurn() == 0) {
+			 player = player1.get_name();
 		}
-
+		else if(Boss.getTurn() == 1) {
+			player = player2.get_name();
+		}
+		JLabel activePlayer = new JLabel(String.format("<html>Active Player:<br>%s</html>", player));
+		activePlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
+		status.add(activePlayer);
+		status.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		
 		
-		
-		JPanel north = new JPanel();
-		north.add(new Label("GLADE"));
-		north.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		
 		JPanel south = new JPanel();
 		south.add(new Label("History"));		
@@ -209,10 +309,10 @@ public class Go {
 		JPanel game = new JPanel();
 		game.setLayout(new BorderLayout());
 		
-		game.add(north, BorderLayout.NORTH);
+		game.add(status, BorderLayout.NORTH);
 		game.add(south, BorderLayout.SOUTH);
-		game.add(player1, BorderLayout.WEST);
-		game.add(player2, BorderLayout.EAST);
+		game.add(player1panel, BorderLayout.WEST);
+		game.add(player2panel, BorderLayout.EAST);
 		
 
 		
@@ -236,72 +336,20 @@ public class Go {
 
 		for(int row = 0; row < rows; row++) {
 			for(int col = 0; col < columns; col++) {
-					
-
 				if(pieces[col][row] != null) {
-					//System.out.println("Piece@-  col:" + col + " row:" + row);
 					JPanel stack = new JPanel();
 					stack.setLayout(new OverlayLayout(stack));
 					stack.add(pieces[col][row]);
 					stack.add(spaces[col][row]);
 					board.add(stack, row*columns + col);
 				}
-				
 				else {
 					board.add(spaces[col][row], row*columns + col);					
 				}
 			}
 		}
 		
-		
-		/*
-		for(int row = 0; row < rows; row++) {
-			for(int col = 0; col < columns; col++) {
-				
-				//top and bottom corners
-				if(row == 0 && col == 0 || row == 0 && col == columns-1 || row == rows-1 && col == 0 || row == rows-1 && col == columns-1 ) {
-					board.add(new Square(3, spaceSize, mouseCoordinate[col][row], pieceCoordinate[col][row]));
-				}
-				//top row
-				else if(row == 0 || row == rows-1) {
-					board.add(new Square(2, spaceSize, mouseCoordinate[col][row], pieceCoordinate[col][row]));
-				}				
-				//bottom row
-				else if(col == 1 || col == columns-2) {
-					board.add(new Square(2, spaceSize, mouseCoordinate[col][row], pieceCoordinate[col][row]));					
-				}
-				//player1 pieces
-				else if(col == 0) {	
-					JPanel stack = new JPanel();
-					stack.setLayout(new OverlayLayout(stack));
-					if(pieces[col][row] != null) {
-						stack.add(pieces[col][row]);
-						stack.add(new Square(1,spaceSize, 0,0));
-						board.add(stack, row*columns + col);
-					}
-					
-					else {
-						board.add(new Square(2, spaceSize, mouseCoordinate[col][row], pieceCoordinate[col][row]), row*columns + col);
-					}
-				}
-				else if(col == columns-1) {
-					board.add(p2.get_rack_piece(row-1));
-				}
-				
-				
-				else if(col%2 == row%2 || (col+1)%2 == (row+1)%2) {
-					board.add(new Square(0, spaceSize, mouseCoordinate[col][row], pieceCoordinate[col][row]));
-				}
-				else {
-					board.add(new Square(1, spaceSize, mouseCoordinate[col][row], pieceCoordinate[col][row]));
-				}			
-			}
-		}
-		
-		 */
-		
-		
-		
+			
 	
 		
 		
@@ -311,96 +359,238 @@ public class Go {
 			private int tempTeam = -1;
 			private int selectionX = -1;
 			private int selectionY = -1;
-			private boolean selectionMade = false;
+			private boolean addPiece = false;
+			private boolean movePiece = false;
 			
 			@Override
 			public void mouseClicked(MouseEvent evt) {
 				
 				int mouse_x = evt.getX();
 				int mouse_y = evt.getY();
-				System.out.println("clickX- " + mouse_x);
-				System.out.println("clickY- " + mouse_y);
 				int mouseXcoordinate = mouse_x / spaceSize;
 				int mouseYcoordinate = mouse_y / spaceSize;
-					
+				
+				System.out.println("outer X- " + mouseXcoordinate);
+				System.out.println("outer Y- " + mouseYcoordinate);
+				
 				JPanel stack = new JPanel();
 				stack.setLayout(new OverlayLayout(stack));
 				
 				
-				if(selectionMade == false) {
+				if(movePiece == false) {
 
+					//if piece from player1 rack is selected 
 					if(mouseXcoordinate == 0) {		
-						switch(mouseYcoordinate) {
-						case 1:
-							pieces[mouseXcoordinate][mouseYcoordinate].toggleSelection();
-							tempType = pieces[mouseXcoordinate][mouseYcoordinate].getPieceType();
-							tempTeam = pieces[mouseXcoordinate][mouseYcoordinate].getTeam();
-							
-				
-							stack.add(pieces[mouseXcoordinate][mouseYcoordinate]);
-							stack.add(spaces[mouseXcoordinate][mouseYcoordinate]);
-							board.remove(mouseYcoordinate*columns + mouseXcoordinate);
-							board.add(stack, mouseYcoordinate*columns + mouseXcoordinate);
-							
-							
-							selectionX = mouseXcoordinate;
-							selectionY = mouseYcoordinate;
-							selectionMade = true;
-							break;
-							
-						
-						case 2:
-							pieces[mouseXcoordinate][mouseYcoordinate].toggleSelection();
-							tempType = pieces[mouseXcoordinate][mouseYcoordinate].getPieceType();
-							tempTeam = pieces[mouseXcoordinate][mouseYcoordinate].getTeam();
-							
-							stack.add(pieces[mouseXcoordinate][mouseYcoordinate]);
-							stack.add(spaces[mouseXcoordinate][mouseYcoordinate]);
-							board.remove(mouseYcoordinate*columns + mouseXcoordinate);
-							board.add(stack, mouseYcoordinate*columns + mouseXcoordinate);
-							
-							selectionX = mouseXcoordinate;
-							selectionY = mouseYcoordinate;
-							selectionMade = true;
-							break;
-							
-						}
-					}
-					
-					if(mouseXcoordinate > 1 && mouseXcoordinate < columns-2 && mouseYcoordinate > 1 && mouseYcoordinate < rows-2) {
-						if(pieces[mouseXcoordinate][mouseYcoordinate] != null) {
-							pieces[mouseXcoordinate][mouseYcoordinate].toggleSelection();
-							Piece here = pieces[mouseXcoordinate][mouseYcoordinate];
-							int size = here.getListLength();
-							for(int i = 0; i < here.getListLength(); i++) {
-								int f = pieces[mouseXcoordinate][mouseYcoordinate].possibleSpaces().get(i)._Forward;
-								int r = pieces[mouseXcoordinate][mouseYcoordinate].possibleSpaces().get(i)._Right;
-								int l = pieces[mouseXcoordinate][mouseYcoordinate].possibleSpaces().get(i)._Left;
-								if(f == 1 && r == 1) {
-									//if(it is player 1's turn)
-									spaces[mouseXcoordinate + 1][mouseYcoordinate + 1].togglePieceHere();
-											//if it is player 2's turn than - instead of +
-								}
-								else if(f == 1 && l == 1) {
-									System.out.println("move right");
-									spaces[mouseXcoordinate - 1][mouseYcoordinate + 1].togglePieceHere();
-								}
-								else if(f == 1) {
-									spaces[mouseXcoordinate][mouseYcoordinate + 1].togglePieceHere();
-								}
+						if(mouseYcoordinate < 6 && mouseYcoordinate > 0) {
+							if(mouseYcoordinate == 1 && player1.getRabbitCount() > 0  ||
+							   mouseYcoordinate == 2 && player1.getSnakeCount() > 0  ||
+							   mouseYcoordinate == 3 && player1.getBirdCount() > 0  ||
+							   mouseYcoordinate == 4 && player1.getGroundhogCount() > 0 || 
+							   mouseYcoordinate == 5 && player1.getTurtleCount() > 0){
+													
+
+								pieces[mouseXcoordinate][mouseYcoordinate].toggleSelection();
+								tempType = pieces[mouseXcoordinate][mouseYcoordinate].getPieceType();
+								tempTeam = pieces[mouseXcoordinate][mouseYcoordinate].getTeam();
+								
+								stack.add(pieces[mouseXcoordinate][mouseYcoordinate]);
+								stack.add(spaces[mouseXcoordinate][mouseYcoordinate]);
+								
+								board.remove(mouseYcoordinate*columns + mouseXcoordinate);
+								board.add(stack, mouseYcoordinate*columns + mouseXcoordinate);
+								
+								selectionX = mouseXcoordinate;
+								selectionY = mouseYcoordinate;
+								addPiece = true;
 							}
 						}
 					}
 					
+					//if piece from player2 rack is selected 
+					else if(mouseXcoordinate == columns-1) {		
+						if(mouseYcoordinate < 6 && mouseYcoordinate > 0) {
+							pieces[mouseXcoordinate][mouseYcoordinate].toggleSelection();
+							tempType = pieces[mouseXcoordinate][mouseYcoordinate].getPieceType();
+							tempTeam = pieces[mouseXcoordinate][mouseYcoordinate].getTeam();
+							
+							//so piece can be highlighted
+							stack.add(pieces[mouseXcoordinate][mouseYcoordinate]);
+							stack.add(spaces[mouseXcoordinate][mouseYcoordinate]);
+							board.remove(mouseYcoordinate*columns + mouseXcoordinate);
+							board.add(stack, mouseYcoordinate*columns + mouseXcoordinate);
+							
+							selectionX = mouseXcoordinate;
+							selectionY = mouseYcoordinate;
+							addPiece = true;
+						}
+					}
 					
+				}
+					
+				if(movePiece == true && selectionX == mouseXcoordinate && selectionY == mouseYcoordinate) {
+					pieces[mouseXcoordinate][mouseYcoordinate].toggleSelection();
+					movePiece = false;
+					
+					for(int col = 0; col < columns; col++) {
+						for(int row = 0; row < rows; row++) {
+							if(spaces[col][row].get_pieceHere() == 1) {
+								spaces[col][row].togglePieceHere();
+							}
+						}
+					}
+					board.revalidate();
+					board.repaint();
+					
+					tempType = -1;
+					tempTeam = -1;
+					selectionX = -1;
+					selectionY = -1;
+				}
+					
+				
+				
+				else if(addPiece == false) {	
+					if(mouseXcoordinate > 1 && mouseXcoordinate < columns-2 && mouseYcoordinate > 0 && mouseYcoordinate < rows-1) {
+						
+						//if the selection on the board has a piece
+						if(pieces[mouseXcoordinate][mouseYcoordinate] != null && movePiece != true) {
+							movePiece = true;
+							pieces[mouseXcoordinate][mouseYcoordinate].toggleSelection();
+							tempType = pieces[mouseXcoordinate][mouseYcoordinate].getPieceType();
+							tempTeam = pieces[mouseXcoordinate][mouseYcoordinate].getTeam();
+							selectionX = mouseXcoordinate;
+							selectionY = mouseYcoordinate;
+							
+							for(int i = 0; i < pieces[mouseXcoordinate][mouseYcoordinate].getListLength(); i++) {
+								int f = pieces[mouseXcoordinate][mouseYcoordinate].possibleSpaces().get(i)._Forward;
+								int b = pieces[mouseXcoordinate][mouseYcoordinate].possibleSpaces().get(i)._Backward;
+								int r = pieces[mouseXcoordinate][mouseYcoordinate].possibleSpaces().get(i)._Right;
+								int l = pieces[mouseXcoordinate][mouseYcoordinate].possibleSpaces().get(i)._Left;
+								if(f == 1 && r == 1) {
+									//if(it is player 1's turn)
+									if(pieces[mouseXcoordinate][mouseYcoordinate].getTeam() == 1) {
+										int newX = mouseXcoordinate + 1; 
+										int newY = mouseYcoordinate + 1;
+										
+										if(spaces[newX][newY].getType() == 0) {
+											spaces[newX][newY].togglePieceHere();
+											
+											if(pieces[newX][newY] != null && pieces[newX][newY].getTeam() == 1) {
+												spaces[newX][newY].togglePieceHere();
+											}
+										}
+									}
+									//if(it is player 2's turn)
+									if(pieces[mouseXcoordinate][mouseYcoordinate].getTeam() == 0) {
+										int newX = mouseXcoordinate - 1; 
+										int newY = mouseYcoordinate - 1;
+										
+										if(spaces[newX][newY].getType() == 0) {
+											spaces[newX][newY].togglePieceHere();
+											
+											if(pieces[newX][newY] != null && pieces[newX][newY].getTeam() == 0) {
+												spaces[newX][newY].togglePieceHere();
+											}
+										}
+									}
+									
+									
+									//if the space available for a move is an active piece then toggle its color
+
+											//if it is player 2's turn than - instead of +
+								}
+								else if(f == 1 && l == 1) {
+									if(pieces[mouseXcoordinate][mouseYcoordinate].getTeam() == 1) {
+										int newX = mouseXcoordinate - 1; 
+										int newY = mouseYcoordinate + 1;
+										
+										if(spaces[newX][newY].getType() == 0) {
+											spaces[newX][newY].togglePieceHere();
+											if(pieces[newX][newY] != null && pieces[newX][newY].getTeam() == 1) {
+												spaces[newX][newY].togglePieceHere();
+											}
+										}
+									}
+
+									if(pieces[mouseXcoordinate][mouseYcoordinate].getTeam() == 0) {
+										int newX = mouseXcoordinate + 1; 
+										int newY = mouseYcoordinate - 1;
+										
+										if(spaces[newX][newY].getType() == 0) {
+											spaces[newX][newY].togglePieceHere();
+											if(pieces[newX][newY] != null && pieces[newX][newY].getTeam() == 0) {
+												spaces[newX][newY].togglePieceHere();
+											}
+										}
+									}
+								}
+							}
+						}	
+					}
 					board.revalidate();
 					board.repaint();
 				}
 				
+					
+
+				if(movePiece == true) {
+					
+					if(spaces[mouseXcoordinate][mouseYcoordinate].get_pieceHere() == 1) {	
+
+							stack.removeAll();
+							System.out.println("its true!");
+							System.out.println("type- " + tempType);
+							
+							if(pieces[mouseXcoordinate][mouseYcoordinate] != null) {
+								if(pieces[mouseXcoordinate][mouseYcoordinate].getTeam() != pieces[selectionX][selectionY].getTeam()) {
+									pieces[mouseXcoordinate][mouseYcoordinate] = new Piece(tempTeam, tempType, false);
+									stack.add(pieces[mouseXcoordinate][mouseYcoordinate]);
+									stack.add(spaces[mouseXcoordinate][mouseYcoordinate]);			
+									board.remove(mouseYcoordinate*columns + mouseXcoordinate);
+									board.add(stack, mouseYcoordinate*columns + mouseXcoordinate);
+								}
+							}
+							
+							else {
+								pieces[mouseXcoordinate][mouseYcoordinate] = new Piece(tempTeam, tempType, false);
+								stack.add(pieces[mouseXcoordinate][mouseYcoordinate]);
+								stack.add(spaces[mouseXcoordinate][mouseYcoordinate]);						
+								board.add(stack, mouseYcoordinate*columns + mouseXcoordinate);
+							}
+							
+							pieces[selectionX][selectionY] = null;
+							board.remove(selectionY*columns + selectionX);
+							board.add(spaces[selectionX][selectionY], selectionY*columns + selectionX);
+						
+							
+							for(int col = 0; col < columns; col++) {
+								for(int row = 0; row < rows; row++) {
+									if(spaces[col][row].get_pieceHere() == 1) {
+										spaces[col][row].togglePieceHere();
+									}
+								}
+							}
+	
+							board.revalidate();
+							board.repaint();
+							
+							Boss.incrementTurn();
+							
+							addPiece = false;
+							movePiece = false;
+							tempType = -1;
+							tempTeam = -1;
+							selectionX = -1;
+							selectionY = -1;	
+					}
+					
 				
-				if(pieces[mouseXcoordinate][mouseYcoordinate] == null) {
+				}
+				
+				
+				if(pieces[mouseXcoordinate][mouseYcoordinate] == null && addPiece == true) {
 					stack.removeAll();
-					pieces[mouseXcoordinate][mouseYcoordinate] = new Piece(tempTeam, tempType, false, spaceSize);
+					pieces[mouseXcoordinate][mouseYcoordinate] = new Piece(tempTeam, tempType, false);
 					stack.add(pieces[mouseXcoordinate][mouseYcoordinate]);
 					stack.add(spaces[mouseXcoordinate][mouseYcoordinate]);
 					//board.remove(mouseYcoordinate*columns + mouseXcoordinate);
@@ -410,53 +600,84 @@ public class Go {
 
 					board.revalidate();
 					board.repaint();
+										
+					player1.removeRackPiece(tempType);
 			
 					
+					if(selectionX == 0 && selectionY == 1) {
+						JLabel Rabbits = new JLabel(String.format("<html>Rabbits:<br>%d</html>", player1.getRabbitCount()));
+						Rabbits.setAlignmentX(Component.CENTER_ALIGNMENT);
+						player1panel.remove(1);
+						player1panel.add(Rabbits, 1);
+					}
+					else if(selectionX == 0 && selectionY == 2) {
+						JLabel Snakes = new JLabel(String.format("<html>Snakes:<br>%d</html>", player1.getSnakeCount()));
+						Snakes.setAlignmentX(Component.CENTER_ALIGNMENT);
+						player1panel.remove(2);
+						player1panel.add(Snakes, 2);
+					}					
+					else if(selectionX == 0 && selectionY == 3) {
+						JLabel p1Birds = new JLabel(String.format("<html>Birds:<br>%d</html>", player1.getBirdCount()));
+						p1Birds.setAlignmentX(Component.CENTER_ALIGNMENT);
+						player1panel.remove(3);
+						player1panel.add(p1Birds, 3);
+					}
+					else if(selectionX == 0 && selectionY == 4) {	
+						JLabel p1Groundhogs = new JLabel(String.format("<html>Groundhogs:<br>%d</html>", player1.getGroundhogCount()));
+						p1Groundhogs.setAlignmentX(Component.CENTER_ALIGNMENT);
+						player1panel.remove(4);
+						player1panel.add(p1Groundhogs, 4);
+					}
+					else if(selectionX == 0 && selectionY == 5) {
+						JLabel p1Turtles = new JLabel(String.format("<html>Turtles:<br>%d</html>", player1.getTurtleCount()));
+						p1Turtles.setAlignmentX(Component.CENTER_ALIGNMENT);
+						player1panel.remove(5);
+						player1panel.add(p1Turtles, 5);
+					}
 					
 					
-					p1.removeRackPiece(tempType);
-			
-					JLabel Rabbits = new JLabel(String.format("<html>Rabbits:<br>%d</html>", p1.getRabbitCount()));
-					Rabbits.setAlignmentX(Component.CENTER_ALIGNMENT);
-					player1.remove(1);
-					player1.add(Rabbits, 1);
-					
-					
-					selectionMade = false;
+					addPiece = false;
 					tempType = -1;
 					tempTeam = -1;
 					selectionX = -1;
-					selectionY = -1;
-					
-				}
-						
-						
-			}
-		
+					selectionY = -1;		
+				}		
 				
+				
+				JPanel status = new JPanel();
+				String player = null;
+				if(Boss.getTurn() == 0) {
+					 player = player1.get_name();
+				}
+				else if(Boss.getTurn() == 1) {
+					player = player2.get_name();
+				}
+				JLabel activePlayer = new JLabel(String.format("<html>Active Player:<br>%s</html>", player));
+				activePlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
+				status.add(activePlayer);
+				status.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+			}
 			
-
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
 				// TODO Auto-generated method stub
 			}
-
 			@Override
 			public void mouseExited(MouseEvent arg0) {
 				// TODO Auto-generated method stub
 			}
-
 			@Override
 			public void mousePressed(MouseEvent arg0) {
 				// TODO Auto-generated method stub
 			}
-
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 				// TODO Auto-generated method stub
 			}
-			
 		});
+		
+		
+		
 		
 		
 		
@@ -465,172 +686,41 @@ public class Go {
 			private int prevX;
 			private int prevY;
 			private boolean initalize = true;
-			
-			
-			public void mouseDragged(MouseEvent evt) {
-			}
 
-			
 			public void mouseMoved(MouseEvent evt) {
 				
 				int mouse_x = evt.getX();
 				int mouse_y = evt.getY();
-				System.out.println("X- " + mouse_x + "  Column: " + mouse_x/spaceSize);
-				System.out.println("Y- " + mouse_y + "  Row: " + mouse_y/spaceSize);
-				System.out.println("prevX- " + prevX + "  PrevY- " + prevY);
-				
-				
-				
 				int mouseXcoordinate = mouse_x / spaceSize;
 				int mouseYcoordinate = mouse_y / spaceSize;
-				
 				
 				if(initalize == true) {
 					spaces[prevX][prevY].toggleMouseHere();
 					initalize = false;
-					System.out.println("initalize = " + initalize);
 				}
-				
 				
 				if(prevX != mouseXcoordinate || prevY != mouseYcoordinate) {
 					
-					
-					
-				for(int col = 0; col < columns; col++) {	
-					for(int row = 0; row < rows; row++) {
-
-						if(mouseXcoordinate == col && mouseYcoordinate == row) {
-								
-							spaces[col][row].toggleMouseHere();
-	//						mouseCoordinate[col][row] = 1;
-							spaces[prevX][prevY].toggleMouseHere();
-
-						}
-						
-						
-						
-						/*
-						else {
-							mouseCoordinate[col][row] = 0;
-							board.remove(row*columns + col);
-						}
-							//
-							
-							//top and bottom corners
-							if(row == 0 && col == 0 || row == 0 && col == columns-1 || row == rows-1 && col == 0 || row == rows-1 && col == columns-1 ) {
-								board.add(new Square(3, spaceSize, mouseCoordinate[col][row], pieceCoordinate[col][row]), row*columns + col);
-							}
-							//top row
-							else if(row == 0 || row == rows-1) {
-								board.add(new Square(2, spaceSize, mouseCoordinate[col][row], pieceCoordinate[col][row]), row*columns + col);
-							}				
-							//bottom row
-							else if(col == 1 || col == columns-2) {
-								board.add(new Square(2, spaceSize, mouseCoordinate[col][row], pieceCoordinate[col][row]), row*columns + col);					
-							}
-							//player1 pieces
-							else if(col == 0) {		
-								JPanel stack = new JPanel();
-								stack.setLayout(new OverlayLayout(stack));
-
-								switch(row) {
-								case 1:
-									stack.add(pieces[col][row]);
-									stack.add(new Square(1,spaceSize, mouseCoordinate[col][row],pieceCoordinate[col][row]));
-									board.add(stack, row*columns + col);
-									break;
-								case 2:
-									board.add(new Piece(0,1,false,spaceSize), row*columns + col);
-									break;
-								case 3:
-									board.add(new Piece(0,2,false,spaceSize), row*columns + col);
-									break;
-								case 4:
-									board.add(new Piece(0,3,false,spaceSize), row*columns + col);
-									break;
-								default:
-									board.add(new Square(2, spaceSize, mouseCoordinate[col][row], pieceCoordinate[col][row]), row*columns + col);
-								}
-							}
-							else if(col == columns-1) {
-								board.add(p2.get_rack_piece(row-1), row*columns + col);
-							}
-							
-							
-							else if(col%2 == row%2 || (col+1)%2 == (row+1)%2) {
-								board.add(new Square(0, spaceSize, mouseCoordinate[col][row], pieceCoordinate[col][row]), row*columns + col);
-							}
-							else {
-								board.add(new Square(1, spaceSize, mouseCoordinate[col][row], pieceCoordinate[col][row]), row*columns + col);
-							}	
-						//}
-							*/
-
-						board.revalidate();
-						board.repaint();
-					}
-				}
-				prevX = mouseXcoordinate;
-				prevY = mouseYcoordinate;
-				}
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				/*
-				for(int i = 0; i < columns; i++) {
-					for(int j = 0; j < rows; j++) {
+					for(int col = 0; col < columns; col++) {	
+						for(int row = 0; row < rows; row++) {
 	
-						if(mouse_x / spaceSize != i || mouse_y / spaceSize != j) {
-							if(board.getComponent(j*rows + i).getColorModel().getColorSpace() == Color.RED.getColorSpace()) {
-								//System.out.println("touching red & SHOULDNT BE :)");
-								//System.out.println("sq,width " + board.getComponent(j*rows + i).getWidth());
-								//System.out.println("sq,height " + board.getComponent(j*rows + i).getHeight());
-
-								
-								if(i%2 == j%2 || (i+1%2 == (j+1)%2)) {
-									board.remove(j*rows + i);
-									//System.out.println("mosueData- " + mouseCoordinate[i][j]);
-									mouseCoordinate[i][j] = 0;
-									board.add(new Square(0, spaceSize, mouseCoordinate[i][j], pieceCoordinate[i][j]), j*rows + i);
-								}
-								else {
-									board.remove(j*rows + i);
-									mouseCoordinate[i][j] = 0;
-									board.add(new Square(1, spaceSize, mouseCoordinate[i][j], pieceCoordinate[i][j]), j*rows + i);
-								}
+							if(mouseXcoordinate == col && mouseYcoordinate == row) {
+									
+								spaces[col][row].toggleMouseHere();
+								spaces[prevX][prevY].toggleMouseHere();
 							}
+							board.revalidate();
+							board.repaint();
 						}
-						
-						
-						
-						if(mouse_x / spaceSize == i && mouse_y / spaceSize == j && board.getComponent(j*rows + i).getForeground() != Color.RED) {
-							System.out.println("X- " + mouse_x/spaceSize);
-							System.out.println("Y- " + mouse_y/spaceSize);
-							System.out.println();
-							mouseCoordinate[i][j] = 1;
-							board.remove(j*rows + i);
-							board.add(new Square(0, spaceSize, mouseCoordinate[i][j], pieceCoordinate[i][j]), j*rows + i);
-
-						}
-				
-						board.revalidate();
-						
 					}
+					prevX = mouseXcoordinate;
+					prevY = mouseYcoordinate;
 				}
-				*/
+			}
+			
+			@Override
+			public void mouseDragged(MouseEvent evt) {
+				// TODO Auto-generated method stub
 			}
 		});
 		
@@ -691,6 +781,10 @@ public class Go {
 	}
 
 	
+
+	
+	
 }
+
 
 

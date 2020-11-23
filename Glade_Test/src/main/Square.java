@@ -16,10 +16,18 @@ public class Square extends JPanel{
 		private int _minDim;
 		private int _mouseHere;
 		private int _pieceHere;
+		private int _type;
 		
 		Square(int color, int minDim, int mouseHere, int pieceHere){
 			this._color = color;
 			this._minDim = minDim;
+			this._mouseHere = mouseHere;
+			this._pieceHere = pieceHere;
+		}
+
+		Square(int color, int mouseHere, int pieceHere){
+			this._color = color;
+			//this._minDim = minDim;
 			this._mouseHere = mouseHere;
 			this._pieceHere = pieceHere;
 		}
@@ -59,6 +67,19 @@ public class Square extends JPanel{
 			else {
 				this._pieceHere = 0;
 			}
+		}
+		
+		
+		// 0 = active game square
+		// 1 = edge
+		// 2 = Out of Bounds
+		// 3 = player 1 rack
+		// 4 = player 2 rack
+		public void setType(int type) {
+			this._type = type;
+		}
+		public int getType() {
+			return this._type;
 		}
 		
 	

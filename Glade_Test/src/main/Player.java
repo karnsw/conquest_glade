@@ -9,9 +9,8 @@ public class Player {
 	private String _name;
 	private int _type;
 	private int _score;
-	private Piece[] _board_pieces = new Piece[8];
-	private Piece[] _rack_pieces = new Piece[8];
 	private List<Piece> rackPieces = new ArrayList<Piece>();
+	private List<Piece> boardPieces = new ArrayList<Piece>();
 	
 
 	Player(int id){
@@ -57,32 +56,31 @@ public class Player {
 		this._score = _score;
 	}
 	
-	public void add_board_piece(Piece item, int pos) {
-		this._board_pieces[pos] = item;
-	}
-	public void remove_board_piece(Piece item, int pos) {
-		this._board_pieces[pos] = null;
-	}
-
-	public void add_rack_piece(Piece item, int pos) {
-		this._rack_pieces[pos] = item;
-	}
 	
 	
 	
-	public void remove_rack_piece(int item) {
-		for(int i = 0; i < this._rack_pieces.length; i++) {
-			if(this._rack_pieces[i].getPieceType() == item) {
-				this._rack_pieces[i] = this._rack_pieces[i+1];
+	
+	public int get_board_count() {
+		return this.boardPieces.size();
+	}
+	public void addBoardPiece(Piece item) {
+		this.boardPieces.add(item);
+	}
+	public void removeBoardPiece(int type) {
+		for(int i = 0; i < this.boardPieces.size(); i++) {
+			if(this.boardPieces.get(i).getPieceType() == type) {
+				this.boardPieces.remove(i);
 			}
 		}
 	}
+
 	
-	
+	public int get_rack_count() {
+		return this.rackPieces.size();
+	}
 	public void addRackPiece(Piece item) {
 		this.rackPieces.add(item);
 	}
-	
 	public void removeRackPiece(int type) {
 		for(int i = 0; i < this.rackPieces.size(); i++) {
 			if(this.rackPieces.get(i).getPieceType() == type) {
@@ -92,18 +90,8 @@ public class Player {
 	}
 	
 	
-	public int get_board_count() {
-		return this._rack_pieces.length;
-	}
-	public int get_rack_count() {
-		return this._rack_pieces.length;
-	}
-	public Piece get_rack_piece(int pos) {
-		return this._rack_pieces[pos];
-	}
-	public Piece get_board_piece(int pos) {
-		return this._rack_pieces[pos];
-	}
+
+
 	
 	
 	
