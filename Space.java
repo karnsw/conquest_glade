@@ -1,4 +1,5 @@
-package GladeBoard:
+import GladeBoard.java;
+import piece.java;
 //Link with game board
 import java.util.Random;
 
@@ -6,6 +7,7 @@ public class Space {
 
     int x;
     int y;
+    int OppPiece < 0;
     //current space
     public Space( int x, int y) {
         this.x = x;
@@ -19,14 +21,14 @@ public class Space {
         int wind=2;
         //May make these offensive abilities instead of trap spaces
         if(x==freeze)
-        click(piece){
+        click(OppPiece){
             for(round=2;round>rand.nextInt(2);round--)
-            piece = Space;
+            OppPiece = space[this.x][this.y];
         }
         //Freezes a piece for 1 or 2 turns
         else if(x==fire)
         {
-            if(OppPiece=piece[x-1][y-1]||OppPiece=piece[x-1][y]||OppPiece=piece[x-1][y+1]|OppPiece=piece[x][y-1]||OppPiece=piece[x][y+1]||OppPiece=piece[x+1][y-1]||OppPiece=piece[x+1][y]||OppPiece=piece[x-1][y+1])
+            if(OppPiece=space[x-1][y-1]||OppPiece=space[x-1][y]||OppPiece=space[x-1][y+1]|OppPiece=space[x][y-1]||OppPiece=space[x][y+1]||OppPiece=space[x+1][y-1]||OppPiece=piece[x+1][y]||OppPiece=piece[x-1][y+1])
             {
             click(OppPiece);
             clearSpace(OppPiece);
@@ -36,7 +38,7 @@ public class Space {
 
         else
         click(OppPiece){
-            if(space=OppPiece[x+1][y]||space=OppPiece[x-1][y]||space=OppPiece[x-1][y+1]|space=OppPiece[x][y-1])
+            if(space[x+1][y]=OppPiece||space[x-1][y]=OppPiece||space[x-1][y+1]=OppPiece|space[x][y-1]=OppPiece)
             click(space){
                OppPiece=space; 
             }
