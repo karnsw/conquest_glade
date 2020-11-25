@@ -11,6 +11,7 @@ public class Player {
 	private int _score;
 	private List<Piece> rackPieces = new ArrayList<Piece>();
 	private List<Piece> boardPieces = new ArrayList<Piece>();
+	private Square _winningPos;
 	
 
 	Player(int id){
@@ -56,6 +57,13 @@ public class Player {
 		this._score = _score;
 	}
 	
+	
+	
+	
+	public void setWinningSquare(Square winner) {
+		this._winningPos = winner;
+	}
+
 	
 	
 	

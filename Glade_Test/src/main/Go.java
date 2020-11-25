@@ -13,6 +13,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -31,11 +33,10 @@ public class Go {
 		
 		JFrame window = new JFrame("Glade");
 
+		GameManager miniTest = new GameManager(0);
 
-		
-		int columns = (8 + 4);
-		int rows = (8 + 2);
-
+		int columns = (miniTest.getColumns() + 4);
+		int rows = (miniTest.getRows() + 2);
 		
 		int mouseCoordinate[][] = new int[columns][rows];
 		int pieceCoordinate[][] = new int[columns][rows];
@@ -78,79 +79,108 @@ public class Go {
 		String s1 = (String)JOptionPane.showInputDialog("Player 1, please enter your name.","???");
 		player1.set_name(s1);
 		
-		Object[] choices = {"blue", "red", "purple"};
-		String c1 = (String)JOptionPane.showInputDialog(null, s1 +  " select your team color.", "team color", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+		
+
+		//String c1 = (String)JOptionPane.showInputDialog(null, s1 +  " select your team color.", "team color", JOptionPane.QUESTION_MESSAGE, null, colors, colors.get(0));
+		Object[] colorChoices1 = {"blue", "red", "yellow"};
+		String c1 = (String)JOptionPane.showInputDialog(null, s1 +  " select your team color.", "team color", JOptionPane.QUESTION_MESSAGE, null, colorChoices1, colorChoices1[0]);
 		if(c1 == "blue") {
 			player1.set_teamColor(0); 
 		}
 		else if(c1 == "red") {
 			player1.set_teamColor(1);
 		}
-		else {
+		else if(c1 == "yellow"){
 			player1.set_teamColor(2);
 		}
-
-		System.out.println("p1 team color- " + player1.get_teamColor());
+		
 		
 //		String s1 = (String)JOptionPane.showInputDialog(s1 + " select your team color.","???");
-		player1.addRackPiece(new Piece(0, 0, false));
-		player1.addRackPiece(new Piece(0, 0, false));
-		player1.addRackPiece(new Piece(0, 1, false));
-		player1.addRackPiece(new Piece(0, 1, false));
-		player1.addRackPiece(new Piece(0, 2, false));
-		player1.addRackPiece(new Piece(0, 2, false));
-		player1.addRackPiece(new Piece(0, 3, false));
-		player1.addRackPiece(new Piece(0, 3, false));
-		player1.addRackPiece(new Piece(0, 4, false));
-		/*
-		player1.addRackPiece(new Piece(0, 0, false, spaceSize));
-		player1.addRackPiece(new Piece(0, 0, false, spaceSize));
-		player1.addRackPiece(new Piece(0, 1, false, spaceSize));
-		player1.addRackPiece(new Piece(0, 1, false, spaceSize));
-		player1.addRackPiece(new Piece(0, 2, false, spaceSize));
-		player1.addRackPiece(new Piece(0, 2, false, spaceSize));
-		player1.addRackPiece(new Piece(0, 3, false, spaceSize));
-		player1.addRackPiece(new Piece(0, 3, false, spaceSize));
-		player1.addRackPiece(new Piece(0, 4, false, spaceSize));
-		*/
+		player1.addRackPiece(new Piece(player1.get_teamColor(), 0, false));
+		player1.addRackPiece(new Piece(player1.get_teamColor(), 0, false));
+		player1.addRackPiece(new Piece(player1.get_teamColor(), 1, false));
+		player1.addRackPiece(new Piece(player1.get_teamColor(), 1, false));
+		player1.addRackPiece(new Piece(player1.get_teamColor(), 2, false));
+		player1.addRackPiece(new Piece(player1.get_teamColor(), 2, false));
+		player1.addRackPiece(new Piece(player1.get_teamColor(), 3, false));
+		player1.addRackPiece(new Piece(player1.get_teamColor(), 3, false));
+		player1.addRackPiece(new Piece(player1.get_teamColor(), 4, false));
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		Player player2 = new Player(1);
 		String s2 = (String)JOptionPane.showInputDialog("Player 2, please enter your name.","???");
+	
+		Object[] colorChoices2 = new Object[colorChoices1.length-1];	
+		
+		int cC2pos = 0;
+		for(int i = 0; i < colorChoices1.length; i++) {
+			if(colorChoices1[i] != c1) {
+				colorChoices2[cC2pos] = colorChoices1[i];
+				cC2pos++;
+			}
+		}
+		
+		String c2 = (String)JOptionPane.showInputDialog(null, s2 +  " select your team color.", "team color", JOptionPane.QUESTION_MESSAGE, null, colorChoices2, colorChoices2[0]);
+		if(c2 == "blue") {
+			player2.set_teamColor(0); 
+		}
+		else if(c2 == "red") {
+			player2.set_teamColor(1);
+		}
+		else if(c2 == "yellow"){
+			player2.set_teamColor(2);
+		}
+		
+		
+		
+
+		System.out.println("p2 team color- " + player2.get_teamColor());
+		
+
+		
+		
+
 		player2.set_name(s2);
-		player2.addRackPiece(new Piece(1, 0, false));
-		player2.addRackPiece(new Piece(1, 0, false));
-		player2.addRackPiece(new Piece(1, 1, false));
-		player2.addRackPiece(new Piece(1, 1, false));
-		player2.addRackPiece(new Piece(1, 2, false));
-		player2.addRackPiece(new Piece(1, 2, false));
-		player2.addRackPiece(new Piece(1, 3, false));
-		player2.addRackPiece(new Piece(1, 3, false));
-		player2.addRackPiece(new Piece(1, 4, false));
-		
-		/*
-		player2.addRackPiece(new Piece(1, 0, false, spaceSize));
-		player2.addRackPiece(new Piece(1, 0, false, spaceSize));
-		player2.addRackPiece(new Piece(1, 1, false, spaceSize));
-		player2.addRackPiece(new Piece(1, 1, false, spaceSize));
-		player2.addRackPiece(new Piece(1, 2, false, spaceSize));
-		player2.addRackPiece(new Piece(1, 2, false, spaceSize));
-		player2.addRackPiece(new Piece(1, 3, false, spaceSize));
-		player2.addRackPiece(new Piece(1, 3, false, spaceSize));
-		player2.addRackPiece(new Piece(1, 4, false, spaceSize));
-		 */
+		player2.addRackPiece(new Piece(player2.get_teamColor(), 0, false));
+		player2.addRackPiece(new Piece(player2.get_teamColor(), 0, false));
+		player2.addRackPiece(new Piece(player2.get_teamColor(), 1, false));
+		player2.addRackPiece(new Piece(player2.get_teamColor(), 1, false));
+		player2.addRackPiece(new Piece(player2.get_teamColor(), 2, false));
+		player2.addRackPiece(new Piece(player2.get_teamColor(), 2, false));
+		player2.addRackPiece(new Piece(player2.get_teamColor(), 3, false));
+		player2.addRackPiece(new Piece(player2.get_teamColor(), 3, false));
+		player2.addRackPiece(new Piece(player2.get_teamColor(), 4, false));
 		
 		
-		pieces[0][1] = new Piece(0,0,false, spaceSize);
-		pieces[0][2] = new Piece(0,1,false, spaceSize);
-		pieces[0][3] = new Piece(0,2,false, spaceSize);
-		pieces[0][4] = new Piece(0,3,false, spaceSize);
-		pieces[0][5] = new Piece(0,4,false, spaceSize);
-		pieces[columns-1][1] = new Piece(1,0,false, spaceSize);
-		pieces[columns-1][2] = new Piece(1,1,false, spaceSize);
-		pieces[columns-1][3] = new Piece(1,2,false, spaceSize);
-		pieces[columns-1][4] = new Piece(1,3,false, spaceSize);
-		pieces[columns-1][5] = new Piece(1,4,false, spaceSize);
+		
+		
+		
+		
+		
+		
+		
+		
+		pieces[0][1] = new Piece(player1.get_teamColor(),0,false, spaceSize);
+		pieces[0][2] = new Piece(player1.get_teamColor(),1,false, spaceSize);
+		pieces[0][3] = new Piece(player1.get_teamColor(),2,false, spaceSize);
+		pieces[0][4] = new Piece(player1.get_teamColor(),3,false, spaceSize);
+		pieces[0][5] = new Piece(player1.get_teamColor(),4,false, spaceSize);
+		pieces[columns-1][1] = new Piece(player2.get_teamColor(),0,false, spaceSize);
+		pieces[columns-1][2] = new Piece(player2.get_teamColor(),1,false, spaceSize);
+		pieces[columns-1][3] = new Piece(player2.get_teamColor(),2,false, spaceSize);
+		pieces[columns-1][4] = new Piece(player2.get_teamColor(),3,false, spaceSize);
+		pieces[columns-1][5] = new Piece(player2.get_teamColor(),4,false, spaceSize);
 		
 		
 		
@@ -213,9 +243,13 @@ public class Go {
 		p1Rabbits.setAlignmentX(Component.CENTER_ALIGNMENT);
 		player1panel.add(p1Rabbits);
 
+		makePlayerSnakePanel(player1, player1panel);
+		
+		/*
 		JLabel p1Snakes = new JLabel(String.format("<html>Snakes:<br>%d</html>", player1.getSnakeCount()));
 		p1Snakes.setAlignmentX(Component.CENTER_ALIGNMENT);
 		player1panel.add(p1Snakes);
+		*/
 		
 		JLabel p1Birds = new JLabel(String.format("<html>Birds:<br>%d</html>", player1.getBirdCount()));
 		p1Birds.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -253,9 +287,13 @@ public class Go {
 		p2Rabbits.setAlignmentX(Component.CENTER_ALIGNMENT);
 		player2panel.add(p2Rabbits);
 
+		makePlayerSnakePanel(player2, player2panel);
+		
+		/*
 		JLabel p2Snakes = new JLabel(String.format("<html>Snakes:<br>%d</html>", player2.getSnakeCount()));
 		p2Snakes.setAlignmentX(Component.CENTER_ALIGNMENT);
 		player2panel.add(p2Snakes);
+		*/
 		
 		JLabel p2Birds = new JLabel(String.format("<html>Birds:<br>%d</html>", player2.getBirdCount()));
 		p2Birds.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -282,9 +320,26 @@ public class Go {
 		
 		GameManager Boss = new GameManager();
 		
-		
-		
-		
+		/*
+		GameManager miniTest = new GameManager(0);
+		System.out.println("turn0 " + miniTest.getTurn() + " - player: " + miniTest.currentPlayer().get_id());
+		miniTest.incrementTurn();
+		miniTest.currentPlayer().get_id();
+		System.out.println("turn1 " + miniTest.getTurn() + " - player: " + miniTest.currentPlayer().get_id());
+		miniTest.incrementTurn();
+		miniTest.currentPlayer().get_id();
+		System.out.println("turn2 " + miniTest.getTurn() + " - player: " + miniTest.currentPlayer().get_id());
+		miniTest.incrementTurn();
+		miniTest.currentPlayer().get_id();
+		System.out.println("turn3 " + miniTest.getTurn() + " - player: " + miniTest.currentPlayer().get_id());
+		miniTest.incrementTurn();
+		miniTest.currentPlayer().get_id();
+		System.out.println("turn4 " + miniTest.getTurn() + " - player: " + miniTest.currentPlayer().get_id());
+		miniTest.incrementTurn();
+		miniTest.currentPlayer().get_id();
+		 */
+		 
+		 
 		JPanel status = new JPanel();
 		String player = null;
 		if(Boss.getTurn() == 0) {
@@ -361,6 +416,7 @@ public class Go {
 			private int selectionY = -1;
 			private boolean addPiece = false;
 			private boolean movePiece = false;
+			private boolean validSelection = false;
 			
 			@Override
 			public void mouseClicked(MouseEvent evt) {
@@ -382,26 +438,33 @@ public class Go {
 					//if piece from player1 rack is selected 
 					if(mouseXcoordinate == 0) {		
 						if(mouseYcoordinate < 6 && mouseYcoordinate > 0) {
-							if(mouseYcoordinate == 1 && player1.getRabbitCount() > 0  ||
-							   mouseYcoordinate == 2 && player1.getSnakeCount() > 0  ||
-							   mouseYcoordinate == 3 && player1.getBirdCount() > 0  ||
-							   mouseYcoordinate == 4 && player1.getGroundhogCount() > 0 || 
-							   mouseYcoordinate == 5 && player1.getTurtleCount() > 0){
-													
-
-								pieces[mouseXcoordinate][mouseYcoordinate].toggleSelection();
-								tempType = pieces[mouseXcoordinate][mouseYcoordinate].getPieceType();
-								tempTeam = pieces[mouseXcoordinate][mouseYcoordinate].getTeam();
-								
-								stack.add(pieces[mouseXcoordinate][mouseYcoordinate]);
-								stack.add(spaces[mouseXcoordinate][mouseYcoordinate]);
-								
-								board.remove(mouseYcoordinate*columns + mouseXcoordinate);
-								board.add(stack, mouseYcoordinate*columns + mouseXcoordinate);
-								
-								selectionX = mouseXcoordinate;
-								selectionY = mouseYcoordinate;
-								addPiece = true;
+							if(Boss.getTurn() % 2 == player1.get_id()) {
+								validSelection = true;
+							}
+							
+							if(validSelection == true) {
+								//test weather player1 has pieces available in th selection
+								if(mouseYcoordinate == 1 && player1.getRabbitCount() > 0  ||
+								   mouseYcoordinate == 2 && player1.getSnakeCount() > 0  ||
+								   mouseYcoordinate == 3 && player1.getBirdCount() > 0  ||
+								   mouseYcoordinate == 4 && player1.getGroundhogCount() > 0 || 
+								   mouseYcoordinate == 5 && player1.getTurtleCount() > 0){
+														
+	
+									pieces[mouseXcoordinate][mouseYcoordinate].toggleSelection();
+									tempType = pieces[mouseXcoordinate][mouseYcoordinate].getPieceType();
+									tempTeam = pieces[mouseXcoordinate][mouseYcoordinate].getTeam();
+									
+									stack.add(pieces[mouseXcoordinate][mouseYcoordinate]);
+									stack.add(spaces[mouseXcoordinate][mouseYcoordinate]);
+									
+									board.remove(mouseYcoordinate*columns + mouseXcoordinate);
+									board.add(stack, mouseYcoordinate*columns + mouseXcoordinate);
+									
+									selectionX = mouseXcoordinate;
+									selectionY = mouseYcoordinate;
+									addPiece = true;
+								}
 							}
 						}
 					}
@@ -780,7 +843,12 @@ public class Go {
 	
 	}
 
-	
+	public static void makePlayerSnakePanel(Player player, JPanel playerPanel) {
+		JLabel Snakes = new JLabel(String.format("<html>Snakes:<br>%d</html>", player.getSnakeCount()));
+		Snakes.setAlignmentX(Component.CENTER_ALIGNMENT);
+		//playerPanel.remove(2);
+		playerPanel.add(Snakes, 2);
+	}
 
 	
 	

@@ -98,6 +98,8 @@ public class Piece extends JPanel {
 	public void paintComponent(Graphics g) {
 		int size = this.getWidth();
 		
+		System.out.println("team- " + this._team);
+		
 		if(this._team == 0) {
 			Font glade = new Font(Font.SERIF, Font.BOLD, size);
 			g.setColor(Color.BLACK);
@@ -195,5 +197,54 @@ public class Piece extends JPanel {
 			}
 		}
 		
+		
+		if(this._team == 2) {
+			Font glade = new Font(Font.SERIF, Font.BOLD, size);
+			g.setColor(Color.BLACK);
+			g.fillOval(size/10, size/10, size-(size/5), size-(size/5));
+
+			if(this._selected == false) {
+				g.setColor(Color.YELLOW);
+				Graphics2D g2;
+				g2 = (Graphics2D)g; 
+				g2.setStroke(new BasicStroke(5));
+				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
+			}
+			if(this._selected == true) {
+				g.setColor(Color.PINK);
+				Graphics2D g2;
+				g2 = (Graphics2D)g; 
+				g2.setStroke(new BasicStroke(5));
+				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
+			}
+			
+			switch(this._type) {
+			case 0:
+				g.setColor(Color.WHITE);
+				g.setFont(glade);
+				g.drawString("R", (size/5), size-(size/5));
+				break;
+			case 1:
+				g.setColor(Color.WHITE);
+				g.setFont(glade);
+				g.drawString("S", (size/5), size-(size/5));
+				break;
+			case 2:
+				g.setColor(Color.WHITE);
+				g.setFont(glade);
+				g.drawString("B", (size/5), size-(size/5));
+				break;
+			case 3:
+				g.setColor(Color.WHITE);
+				g.setFont(glade);
+				g.drawString("G", (size/5), size-(size/5));
+				break;
+			case 4:
+				g.setColor(Color.WHITE);
+				g.setFont(glade);
+				g.drawString("T", (size/5), size-(size/5));
+				break;
+			}
+		}
 	}
 }
