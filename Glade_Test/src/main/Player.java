@@ -1,86 +1,91 @@
 package main;
 
+import java.awt.Color;
 import java.util.*;
 
 public class Player {
 
-	private int _id;
-	private int _teamColor;
-	private String _name;
-	private int _type;
-	private int _score;
+	private int ID;
+	private int team;
+	private String name;
+	private Color color;
+	private int score;
 	private List<Piece> rackPieces = new ArrayList<Piece>();
-	private List<Piece> boardPieces = new ArrayList<Piece>();
-	private Square _winningPos;
+	private List<Space> defendSpaces = new ArrayList<Space>();
 	
 
-	Player(int id){
-		this._id = id;
+	Player(int ID){
+		this.ID = ID;
 	}
-	Player(int id, int teamColor, String name){
-		this._id = id;
-		this.set_teamColor(teamColor);
-		this.set_name(name);
+	Player(int id, int team, String name){
+		this.ID = id;
+		this.setTeam(team);
+		this.setName(name);
 	}
-	Player(int id, int teamColor, String name, int type){
-		this._id = id;
-		this.set_teamColor(teamColor);
-		this.set_name(name);
-		this.set_type(type);	
+	Player(int ID, int teamColor, String name, int type){
+		this.ID = ID;
+		this.setTeam(teamColor);
+		this.setName(name);
+	
 	}
 	
-	public int get_id() {
-		return _id;
-	}
-	public int get_teamColor() {
-		return _teamColor;
-	}
-	public void set_teamColor(int _teamColor) {
-		this._teamColor = _teamColor;
-	}
-	public String get_name() {
-		return _name;
-	}
-	public void set_name(String _name) {
-		this._name = _name;
-	}
-	public int get_type() {
-		return _type;
-	}
-	public void set_type(int _type) {
-		this._type = _type;
-	}
-	public int get_score() {
-		return _score;
-	}
-	public void set_score(int _score) {
-		this._score = _score;
-	}
-	
-	
-	
-	
-	public void setWinningSquare(Square winner) {
-		this._winningPos = winner;
+	public int getID() {
+		return ID;
 	}
 
 	
-	
-	
-	
-	public int get_board_count() {
-		return this.boardPieces.size();
-	}
-	public void addBoardPiece(Piece item) {
-		this.boardPieces.add(item);
-	}
-	public void removeBoardPiece(int type) {
-		for(int i = 0; i < this.boardPieces.size(); i++) {
-			if(this.boardPieces.get(i).getPieceType() == type) {
-				this.boardPieces.remove(i);
-			}
+	public Color getTeamColorPropper() {
+		if(team == 0) {
+			return Color.BLUE;
 		}
+		else if(team == 1) {
+			return Color.RED;
+		}
+		else {
+			return Color.YELLOW;
+		}
+		
 	}
+	
+	public void setColor(Color color) {
+		this.color = color;
+	}
+	public Color getColor() {
+		return color;
+	}
+	
+	public void setTeam(int team) {
+		this.team = team;
+	}
+	public int getTeam() {
+		return team;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getScore() {
+		return score;
+	}
+	public void set_score(int score) {
+		this.score = score;
+	}
+	
+	
+	
+	
+	public void addDefendSpace(Space defendSpace) {
+		defendSpace.add(defendSpace);
+	}
+
+	
+	
+	
+	
+
 
 	
 	public int get_rack_count() {
@@ -151,5 +156,9 @@ public class Player {
 			}
 		}
 		return count;
+	}
+	
+	public int getDefendSpaceCount(){
+		return defendSpaces.size();
 	}
 }

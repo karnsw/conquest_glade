@@ -20,6 +20,7 @@ public class Piece extends JPanel {
 	private boolean _selected;
 	private int _size;
 	private List<Move> moves = new ArrayList<Move>();
+	private Color color;
 	//private List<Piece> rackPieces = new ArrayList<Piece>();
 	
 	
@@ -37,6 +38,18 @@ public class Piece extends JPanel {
 		//this._size = size;
 		this.setMoves();
 	}
+	
+	
+	Piece(Color color, int type, boolean selected){
+		this.color = color;
+		this._type = type;
+		this._selected = selected;
+		//this._size = size;
+		this.setMoves();
+
+	}
+	
+	
 	
 	
 	Piece(int team, int type, boolean selected, int size){
@@ -98,9 +111,7 @@ public class Piece extends JPanel {
 	public void paintComponent(Graphics g) {
 		int size = this.getWidth();
 		
-		System.out.println("team- " + this._team);
-		
-		if(this._team == 0) {
+		if(this.color == Color.BLUE) {
 			Font glade = new Font(Font.SERIF, Font.BOLD, size);
 			g.setColor(Color.BLACK);
 			g.fillOval(size/10, size/10, size-(size/5), size-(size/5));
@@ -148,7 +159,7 @@ public class Piece extends JPanel {
 				break;
 			}
 		}
-		if(this._team == 1) {
+		if(this.color == Color.RED) {
 			Font glade = new Font(Font.SERIF, Font.BOLD, size);
 			g.setColor(Color.BLACK);
 			g.fillOval(size/10, size/10, size-(size/5), size-(size/5));
@@ -198,7 +209,7 @@ public class Piece extends JPanel {
 		}
 		
 		
-		if(this._team == 2) {
+		if(this.color == Color.YELLOW) {
 			Font glade = new Font(Font.SERIF, Font.BOLD, size);
 			g.setColor(Color.BLACK);
 			g.fillOval(size/10, size/10, size-(size/5), size-(size/5));

@@ -32,22 +32,26 @@ public class Go {
 
 		
 		JFrame window = new JFrame("Glade");
-
-		GameManager miniTest = new GameManager(0);
+		
+		GameManager miniTest = new GameManager();
+		miniTest.setUpClassicGlade();
 
 		int columns = (miniTest.getColumns() + 4);
 		int rows = (miniTest.getRows() + 2);
+		
+		Piece pieces[][] = new Piece[columns][rows]; 
+		Space spaces[][] = new Space[columns][rows]; 
+		
+		
+		
 		
 		int mouseCoordinate[][] = new int[columns][rows];
 		int pieceCoordinate[][] = new int[columns][rows];
 		
 	
-		
-	////////////
-		Piece pieces[][] = new Piece[columns][rows]; 
-		Square spaces[][] = new Square[columns][rows]; 
-	////////////	
-		
+	
+
+	////////////	NEED WORK //// set up game dimensions	
 		
 		
 		Dimension monitor = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
@@ -66,7 +70,6 @@ public class Go {
 		
 		window.setMaximumSize(monitor_buffer_with_menuBar);
 		
-		
 		int spaceSize = (monitor_buffer.width-100)/columns; //bc columns is larger than rows
 		System.out.println("spaceSize- " + spaceSize);
 		int minSpaceSize = 330/columns;
@@ -75,140 +78,46 @@ public class Go {
 		
 		
 		
-		Player player1 = new Player(0);
-		String s1 = (String)JOptionPane.showInputDialog("Player 1, please enter your name.","???");
-		player1.set_name(s1);
 		
 		
-
-		//String c1 = (String)JOptionPane.showInputDialog(null, s1 +  " select your team color.", "team color", JOptionPane.QUESTION_MESSAGE, null, colors, colors.get(0));
-		Object[] colorChoices1 = {"blue", "red", "yellow"};
-		String c1 = (String)JOptionPane.showInputDialog(null, s1 +  " select your team color.", "team color", JOptionPane.QUESTION_MESSAGE, null, colorChoices1, colorChoices1[0]);
-		if(c1 == "blue") {
-			player1.set_teamColor(0); 
-		}
-		else if(c1 == "red") {
-			player1.set_teamColor(1);
-		}
-		else if(c1 == "yellow"){
-			player1.set_teamColor(2);
-		}
-		
-		
-//		String s1 = (String)JOptionPane.showInputDialog(s1 + " select your team color.","???");
-		player1.addRackPiece(new Piece(player1.get_teamColor(), 0, false));
-		player1.addRackPiece(new Piece(player1.get_teamColor(), 0, false));
-		player1.addRackPiece(new Piece(player1.get_teamColor(), 1, false));
-		player1.addRackPiece(new Piece(player1.get_teamColor(), 1, false));
-		player1.addRackPiece(new Piece(player1.get_teamColor(), 2, false));
-		player1.addRackPiece(new Piece(player1.get_teamColor(), 2, false));
-		player1.addRackPiece(new Piece(player1.get_teamColor(), 3, false));
-		player1.addRackPiece(new Piece(player1.get_teamColor(), 3, false));
-		player1.addRackPiece(new Piece(player1.get_teamColor(), 4, false));
+		//initalize pieces array
+		pieces[0][1] = new Piece(miniTest.Player1().getColor(),0,false);
+		pieces[0][2] = new Piece(miniTest.Player1().getColor(),1,false);
+		pieces[0][3] = new Piece(miniTest.Player1().getColor(),2,false);
+		pieces[0][4] = new Piece(miniTest.Player1().getColor(),3,false);
+		pieces[0][5] = new Piece(miniTest.Player1().getColor(),4,false);
+		miniTest.incrementTurn();
+		pieces[columns-1][1] = new Piece(miniTest.Player2().getColor(),0,false);
+		pieces[columns-1][2] = new Piece(miniTest.Player2().getColor(),1,false);
+		pieces[columns-1][3] = new Piece(miniTest.Player2().getColor(),2,false);
+		pieces[columns-1][4] = new Piece(miniTest.Player2().getColor(),3,false);
+		pieces[columns-1][5] = new Piece(miniTest.Player2().getColor(),4,false);
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		Player player2 = new Player(1);
-		String s2 = (String)JOptionPane.showInputDialog("Player 2, please enter your name.","???");
-	
-		Object[] colorChoices2 = new Object[colorChoices1.length-1];	
-		
-		int cC2pos = 0;
-		for(int i = 0; i < colorChoices1.length; i++) {
-			if(colorChoices1[i] != c1) {
-				colorChoices2[cC2pos] = colorChoices1[i];
-				cC2pos++;
-			}
-		}
-		
-		String c2 = (String)JOptionPane.showInputDialog(null, s2 +  " select your team color.", "team color", JOptionPane.QUESTION_MESSAGE, null, colorChoices2, colorChoices2[0]);
-		if(c2 == "blue") {
-			player2.set_teamColor(0); 
-		}
-		else if(c2 == "red") {
-			player2.set_teamColor(1);
-		}
-		else if(c2 == "yellow"){
-			player2.set_teamColor(2);
-		}
-		
-		
-		
-
-		System.out.println("p2 team color- " + player2.get_teamColor());
-		
-
-		
-		
-
-		player2.set_name(s2);
-		player2.addRackPiece(new Piece(player2.get_teamColor(), 0, false));
-		player2.addRackPiece(new Piece(player2.get_teamColor(), 0, false));
-		player2.addRackPiece(new Piece(player2.get_teamColor(), 1, false));
-		player2.addRackPiece(new Piece(player2.get_teamColor(), 1, false));
-		player2.addRackPiece(new Piece(player2.get_teamColor(), 2, false));
-		player2.addRackPiece(new Piece(player2.get_teamColor(), 2, false));
-		player2.addRackPiece(new Piece(player2.get_teamColor(), 3, false));
-		player2.addRackPiece(new Piece(player2.get_teamColor(), 3, false));
-		player2.addRackPiece(new Piece(player2.get_teamColor(), 4, false));
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		pieces[0][1] = new Piece(player1.get_teamColor(),0,false, spaceSize);
-		pieces[0][2] = new Piece(player1.get_teamColor(),1,false, spaceSize);
-		pieces[0][3] = new Piece(player1.get_teamColor(),2,false, spaceSize);
-		pieces[0][4] = new Piece(player1.get_teamColor(),3,false, spaceSize);
-		pieces[0][5] = new Piece(player1.get_teamColor(),4,false, spaceSize);
-		pieces[columns-1][1] = new Piece(player2.get_teamColor(),0,false, spaceSize);
-		pieces[columns-1][2] = new Piece(player2.get_teamColor(),1,false, spaceSize);
-		pieces[columns-1][3] = new Piece(player2.get_teamColor(),2,false, spaceSize);
-		pieces[columns-1][4] = new Piece(player2.get_teamColor(),3,false, spaceSize);
-		pieces[columns-1][5] = new Piece(player2.get_teamColor(),4,false, spaceSize);
-		
-		
-		
-		
-		
-		
+		//initalize spaces array
 		for(int row = 0; row < rows; row++) {
 			for(int col = 0; col < columns; col++) {
 				if(col == 0) {
-					spaces[col][row] = (new Square(1, mouseCoordinate[col][row], pieceCoordinate[col][row]));
+					spaces[col][row] = (new Space(1, 0, 0));
 					spaces[col][row].setType(3);
 				}
 				else if(col == columns-1) {
-					spaces[col][row] = (new Square(1, mouseCoordinate[col][row], pieceCoordinate[col][row]));
+					spaces[col][row] = (new Space(1, 0, 0));
 					spaces[col][row].setType(4);
 				}
 				else if(row == 0 || row == rows-1 || col == 1 || col == columns-2){
-					spaces[col][row] = (new Square(2, mouseCoordinate[col][row], pieceCoordinate[col][row]));
+					spaces[col][row] = (new Space(2, mouseCoordinate[col][row], pieceCoordinate[col][row]));
 					spaces[col][row].setType(2);
 				}
 
 				
 				else if(col%2 == row%2 || (col+1)%2 == (row+1)%2) {
-					spaces[col][row] = (new Square(0, mouseCoordinate[col][row], pieceCoordinate[col][row]));
+					spaces[col][row] = (new Space(0, mouseCoordinate[col][row], pieceCoordinate[col][row]));
 					spaces[col][row].setType(0);
 				}
 				else {
-					spaces[col][row] = (new Square(1, mouseCoordinate[col][row], pieceCoordinate[col][row]));
+					spaces[col][row] = (new Space(1, mouseCoordinate[col][row], pieceCoordinate[col][row]));
 					spaces[col][row].setType(0);
 				}			
 			}
@@ -224,150 +133,75 @@ public class Go {
 		
 		
 		
-
-
-		
-
-		
 		//initalize player 1 panel
-		JPanel player1panel = new JPanel();		
-		player1panel.setPreferredSize(new Dimension(102, spaceSize*rows)); ///102 needs to be flexible
-		player1panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
-		player1panel.setLayout(new GridLayout(rows, 1));
-		player1panel.setLayout(new BoxLayout(player1panel, BoxLayout.Y_AXIS));
-		
-		
-		player1panel.add(new Label(player1.get_name()));
-
-		JLabel p1Rabbits = new JLabel(String.format("<html>Rabbits:<br>%d</html>", player1.getRabbitCount()));
-		p1Rabbits.setAlignmentX(Component.CENTER_ALIGNMENT);
-		player1panel.add(p1Rabbits);
-
-		makePlayerSnakePanel(player1, player1panel);
-		
-		/*
-		JLabel p1Snakes = new JLabel(String.format("<html>Snakes:<br>%d</html>", player1.getSnakeCount()));
-		p1Snakes.setAlignmentX(Component.CENTER_ALIGNMENT);
-		player1panel.add(p1Snakes);
-		*/
-		
-		JLabel p1Birds = new JLabel(String.format("<html>Birds:<br>%d</html>", player1.getBirdCount()));
-		p1Birds.setAlignmentX(Component.CENTER_ALIGNMENT);
-		player1panel.add(p1Birds);
-		
-		JLabel p1Groundhogs = new JLabel(String.format("<html>Groundhogs:<br>%d</html>", player1.getGroundhogCount()));
-		p1Groundhogs.setAlignmentX(Component.CENTER_ALIGNMENT);
-		player1panel.add(p1Groundhogs);
-		
-		JLabel p1Turtles = new JLabel(String.format("<html>Turtles:<br>%d</html>", player1.getTurtleCount()));
-		p1Turtles.setAlignmentX(Component.CENTER_ALIGNMENT);
-		player1panel.add(p1Turtles);
-		
-		player1panel.add(new Label(""));
-
-		JLabel p1Score= new JLabel(String.format("<html>Score:<br>%d</html>", player1.get_score()));
-		p1Score.setAlignmentX(Component.CENTER_ALIGNMENT);
-		player1panel.add(p1Score);
-		
-		player1panel.add(new Label(""));
-		
-		
+		JPanel p1panel = new JPanel();		
+		p1panel.setPreferredSize(new Dimension(102, spaceSize*rows)); ///102 needs to be flexible to work on all monitors ()
+		p1panel.setBorder(BorderFactory.createLineBorder(miniTest.Player1().getColor(), 3));
+		p1panel.setLayout(new GridLayout(rows, 1));
+		p1panel.setLayout(new BoxLayout(p1panel, BoxLayout.Y_AXIS));
+				
+		p1panel.add(new Label(miniTest.Player1().getName()));		
+		RabbitLabel(miniTest.Player1(), p1panel, false);
+		SnakeLabel(miniTest.Player1(), p1panel, false);
+		BirdLabel(miniTest.Player1(), p1panel, false);
+		GroundhogLabel(miniTest.Player1(), p1panel, false);
+		TurtleLabel(miniTest.Player1(), p1panel, false);
+		p1panel.add(new Label(""));
+		ScoreLabel(miniTest.Player1(), p1panel, false);
+		p1panel.add(new Label(""));
 		
 		
 		//intialize player 2 panel
-		JPanel player2panel = new JPanel();
-		player2panel.setPreferredSize(new Dimension(102, spaceSize*rows)); ///102 needs to be flexible
-		player2panel.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
-		player2panel.setLayout(new GridLayout(rows, 1));
-		player2panel.setLayout(new BoxLayout(player2panel, BoxLayout.Y_AXIS));
+		JPanel p2panel = new JPanel();
+		p2panel.setPreferredSize(new Dimension(102, spaceSize*rows)); ///102 needs to be flexible
+		p2panel.setBorder(BorderFactory.createLineBorder(miniTest.Player2().getColor(), 3));
+		p2panel.setLayout(new GridLayout(rows, 1));
+		p2panel.setLayout(new BoxLayout(p2panel, BoxLayout.Y_AXIS));
 		
-		player2panel.add(new Label(player2.get_name()));
-
-		JLabel p2Rabbits = new JLabel(String.format("<html>Rabbits:<br>%d</html>", player2.getRabbitCount()));
-		p2Rabbits.setAlignmentX(Component.CENTER_ALIGNMENT);
-		player2panel.add(p2Rabbits);
-
-		makePlayerSnakePanel(player2, player2panel);
-		
-		/*
-		JLabel p2Snakes = new JLabel(String.format("<html>Snakes:<br>%d</html>", player2.getSnakeCount()));
-		p2Snakes.setAlignmentX(Component.CENTER_ALIGNMENT);
-		player2panel.add(p2Snakes);
-		*/
-		
-		JLabel p2Birds = new JLabel(String.format("<html>Birds:<br>%d</html>", player2.getBirdCount()));
-		p2Birds.setAlignmentX(Component.CENTER_ALIGNMENT);
-		player2panel.add(p2Birds);
-		
-		JLabel p2Groundhogs = new JLabel(String.format("<html>Groundhogs:<br>%d</html>", player2.getGroundhogCount()));
-		p2Groundhogs.setAlignmentX(Component.CENTER_ALIGNMENT);
-		player2panel.add(p2Groundhogs);
-		
-		JLabel p2Turtles = new JLabel(String.format("<html>Turtles:<br>%d</html>", player2.getTurtleCount()));
-		p2Turtles.setAlignmentX(Component.CENTER_ALIGNMENT);
-		player2panel.add(p2Turtles);
-		
-		player2panel.add(new Label(""));
-		
-		JLabel p2Score= new JLabel(String.format("<html>Score:<br>%d</html>", player2.get_score()));
-		p2Score.setAlignmentX(Component.CENTER_ALIGNMENT);
-		player2panel.add(p2Score);
-		
-		player2panel.add(new Label(""));
+		p2panel.add(new Label(miniTest.Player1().getName()));
+		RabbitLabel(miniTest.Player1(), p2panel, false);
+		SnakeLabel(miniTest.Player1(), p2panel, false);
+		BirdLabel(miniTest.Player1(), p2panel, false);
+		GroundhogLabel(miniTest.Player1(), p2panel, false);
+		TurtleLabel(miniTest.Player1(), p2panel, false);
+		p2panel.add(new Label(""));
+		ScoreLabel(miniTest.Player1(), p2panel, false);
+		p2panel.add(new Label(""));
 		
 		
 		
 		
-		GameManager Boss = new GameManager();
-		
-		/*
-		GameManager miniTest = new GameManager(0);
-		System.out.println("turn0 " + miniTest.getTurn() + " - player: " + miniTest.currentPlayer().get_id());
-		miniTest.incrementTurn();
-		miniTest.currentPlayer().get_id();
-		System.out.println("turn1 " + miniTest.getTurn() + " - player: " + miniTest.currentPlayer().get_id());
-		miniTest.incrementTurn();
-		miniTest.currentPlayer().get_id();
-		System.out.println("turn2 " + miniTest.getTurn() + " - player: " + miniTest.currentPlayer().get_id());
-		miniTest.incrementTurn();
-		miniTest.currentPlayer().get_id();
-		System.out.println("turn3 " + miniTest.getTurn() + " - player: " + miniTest.currentPlayer().get_id());
-		miniTest.incrementTurn();
-		miniTest.currentPlayer().get_id();
-		System.out.println("turn4 " + miniTest.getTurn() + " - player: " + miniTest.currentPlayer().get_id());
-		miniTest.incrementTurn();
-		miniTest.currentPlayer().get_id();
-		 */
 		 
 		 
 		JPanel status = new JPanel();
 		String player = null;
-		if(Boss.getTurn() == 0) {
-			 player = player1.get_name();
+
+		if(miniTest.getTurn() == 0) {
+			 player = miniTest.Player1().getName();
+				System.out.println("player1");
 		}
-		else if(Boss.getTurn() == 1) {
-			player = player2.get_name();
+		else if(miniTest.getTurn() == 1) {
+			player = miniTest.Player2().getName();
+			System.out.println("player2");
 		}
 		JLabel activePlayer = new JLabel(String.format("<html>Active Player:<br>%s</html>", player));
 		activePlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
 		status.add(activePlayer);
 		status.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		
+		JPanel messages = new JPanel();
+		messages.add(new Label("Help Messages + History"));		
+		messages.setPreferredSize(new Dimension(monitor_buffer.width, 100));
+		messages.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		
-		
-		JPanel south = new JPanel();
-		south.add(new Label("History"));		
-		south.setPreferredSize(new Dimension(monitor_buffer.width, 100));
-		south.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		
 		
 		JPanel game = new JPanel();
 		game.setLayout(new BorderLayout());
-		
 		game.add(status, BorderLayout.NORTH);
-		game.add(south, BorderLayout.SOUTH);
-		game.add(player1panel, BorderLayout.WEST);
-		game.add(player2panel, BorderLayout.EAST);
+		game.add(messages, BorderLayout.SOUTH);
+		game.add(p1panel, BorderLayout.WEST);
+		game.add(p2panel, BorderLayout.EAST);
 		
 
 		
@@ -386,9 +220,10 @@ public class Go {
 		System.out.println("Size- " + board.getSize());
 		System.out.println();
 		game.add(board, BorderLayout.CENTER);
-
 		board.setLayout(new GridLayout(rows, columns));
-
+		
+		
+		//initalize board image
 		for(int row = 0; row < rows; row++) {
 			for(int col = 0; col < columns; col++) {
 				if(pieces[col][row] != null) {
@@ -405,6 +240,10 @@ public class Go {
 		}
 		
 			
+		
+		
+		
+		
 	
 		
 		
@@ -438,17 +277,17 @@ public class Go {
 					//if piece from player1 rack is selected 
 					if(mouseXcoordinate == 0) {		
 						if(mouseYcoordinate < 6 && mouseYcoordinate > 0) {
-							if(Boss.getTurn() % 2 == player1.get_id()) {
+							if(miniTest.getTurn() % 2 == miniTest.Player1().getID()) {
 								validSelection = true;
 							}
 							
 							if(validSelection == true) {
 								//test weather player1 has pieces available in th selection
-								if(mouseYcoordinate == 1 && player1.getRabbitCount() > 0  ||
-								   mouseYcoordinate == 2 && player1.getSnakeCount() > 0  ||
-								   mouseYcoordinate == 3 && player1.getBirdCount() > 0  ||
-								   mouseYcoordinate == 4 && player1.getGroundhogCount() > 0 || 
-								   mouseYcoordinate == 5 && player1.getTurtleCount() > 0){
+								if(mouseYcoordinate == 1 && miniTest.Player1().getRabbitCount() > 0  ||
+								   mouseYcoordinate == 2 && miniTest.Player1().getSnakeCount() > 0  ||
+								   mouseYcoordinate == 3 && miniTest.Player1().getBirdCount() > 0  ||
+								   mouseYcoordinate == 4 && miniTest.Player1().getGroundhogCount() > 0 || 
+								   mouseYcoordinate == 5 && miniTest.Player1().getTurtleCount() > 0){
 														
 	
 									pieces[mouseXcoordinate][mouseYcoordinate].toggleSelection();
@@ -637,7 +476,7 @@ public class Go {
 							board.revalidate();
 							board.repaint();
 							
-							Boss.incrementTurn();
+							miniTest.incrementTurn();
 							
 							addPiece = false;
 							movePiece = false;
@@ -664,40 +503,36 @@ public class Go {
 					board.revalidate();
 					board.repaint();
 										
-					player1.removeRackPiece(tempType);
+					miniTest.currentPlayer().removeRackPiece(tempType);
 			
 					
-					if(selectionX == 0 && selectionY == 1) {
-						JLabel Rabbits = new JLabel(String.format("<html>Rabbits:<br>%d</html>", player1.getRabbitCount()));
-						Rabbits.setAlignmentX(Component.CENTER_ALIGNMENT);
-						player1panel.remove(1);
-						player1panel.add(Rabbits, 1);
+					System.out.println("here!!!");
+					JPanel panel;
+					if(miniTest.currentPlayer() == miniTest.Player1()) {
+						panel = p1panel;
 					}
-					else if(selectionX == 0 && selectionY == 2) {
-						JLabel Snakes = new JLabel(String.format("<html>Snakes:<br>%d</html>", player1.getSnakeCount()));
-						Snakes.setAlignmentX(Component.CENTER_ALIGNMENT);
-						player1panel.remove(2);
-						player1panel.add(Snakes, 2);
-					}					
-					else if(selectionX == 0 && selectionY == 3) {
-						JLabel p1Birds = new JLabel(String.format("<html>Birds:<br>%d</html>", player1.getBirdCount()));
-						p1Birds.setAlignmentX(Component.CENTER_ALIGNMENT);
-						player1panel.remove(3);
-						player1panel.add(p1Birds, 3);
+					else {
+						panel = p2panel;
 					}
-					else if(selectionX == 0 && selectionY == 4) {	
-						JLabel p1Groundhogs = new JLabel(String.format("<html>Groundhogs:<br>%d</html>", player1.getGroundhogCount()));
-						p1Groundhogs.setAlignmentX(Component.CENTER_ALIGNMENT);
-						player1panel.remove(4);
-						player1panel.add(p1Groundhogs, 4);
+						
+					switch (selectionY) {
+					case 1:
+						RabbitLabel(miniTest.currentPlayer(), panel, true);
+						break;
+					case 2:
+						System.out.println("snake!!!");
+						SnakeLabel(miniTest.currentPlayer(), panel, true);
+						break;
+					case 3:
+						BirdLabel(miniTest.currentPlayer(), panel, true);
+						break;
+					case 4:
+						GroundhogLabel(miniTest.currentPlayer(), panel, true);
+						break;
+					case 5:
+						TurtleLabel(miniTest.currentPlayer(), panel, true);
+						break;
 					}
-					else if(selectionX == 0 && selectionY == 5) {
-						JLabel p1Turtles = new JLabel(String.format("<html>Turtles:<br>%d</html>", player1.getTurtleCount()));
-						p1Turtles.setAlignmentX(Component.CENTER_ALIGNMENT);
-						player1panel.remove(5);
-						player1panel.add(p1Turtles, 5);
-					}
-					
 					
 					addPiece = false;
 					tempType = -1;
@@ -709,11 +544,11 @@ public class Go {
 				
 				JPanel status = new JPanel();
 				String player = null;
-				if(Boss.getTurn() == 0) {
-					 player = player1.get_name();
+				if(miniTest.getTurn() == 0) {
+					 player = miniTest.Player1().getName();
 				}
-				else if(Boss.getTurn() == 1) {
-					player = player2.get_name();
+				else if(miniTest.getTurn() == 1) {
+					player = miniTest.Player2().getName();
 				}
 				JLabel activePlayer = new JLabel(String.format("<html>Active Player:<br>%s</html>", player));
 				activePlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -843,15 +678,69 @@ public class Go {
 	
 	}
 
-	public static void makePlayerSnakePanel(Player player, JPanel playerPanel) {
+	
+	
+	
+	
+	
+	
+	
+	
+	//helper methods for maintaining player info panels
+	public static void RabbitLabel(Player player, JPanel playerPanel, boolean remove) {
+		if(remove == true) {
+			playerPanel.remove(1);
+		}
+		JLabel Rabbits = new JLabel(String.format("<html>Rabbits:<br>%d</html>", player.getRabbitCount()));
+		Rabbits.setAlignmentX(Component.CENTER_ALIGNMENT);
+		playerPanel.add(Rabbits, 1);	
+	}
+	
+	
+	public static void SnakeLabel(Player player, JPanel playerPanel, boolean remove) {
+		if(remove == true) {
+			playerPanel.remove(2);
+		}
 		JLabel Snakes = new JLabel(String.format("<html>Snakes:<br>%d</html>", player.getSnakeCount()));
 		Snakes.setAlignmentX(Component.CENTER_ALIGNMENT);
-		//playerPanel.remove(2);
 		playerPanel.add(Snakes, 2);
 	}
 
+	public static void BirdLabel(Player player, JPanel playerPanel, boolean remove) {
+		if(remove == true) {
+			playerPanel.remove(3);
+		}
+		JLabel Birds = new JLabel(String.format("<html>Birds:<br>%d</html>", player.getBirdCount()));
+		Birds.setAlignmentX(Component.CENTER_ALIGNMENT);
+		playerPanel.add(Birds, 3);
+	}
 	
+	public static void GroundhogLabel(Player player, JPanel playerPanel, boolean remove) {
+		if(remove == true) {
+			playerPanel.remove(4);
+		}
+		JLabel Groundhogs = new JLabel(String.format("<html>Groundhogs:<br>%d</html>", player.getGroundhogCount()));
+		Groundhogs.setAlignmentX(Component.CENTER_ALIGNMENT);
+		playerPanel.add(Groundhogs, 4);
+	}
 	
+	public static void TurtleLabel(Player player, JPanel playerPanel, boolean remove) {
+		if(remove == true) {
+			playerPanel.remove(5);
+		}
+		JLabel Turtles = new JLabel(String.format("<html>Turtles:<br>%d</html>", player.getTurtleCount()));
+		Turtles.setAlignmentX(Component.CENTER_ALIGNMENT);
+		playerPanel.add(Turtles, 5);
+	}
+	
+	public static void ScoreLabel(Player player, JPanel playerPanel, boolean remove) {
+		if(remove == true) {
+			playerPanel.remove(7);
+		}
+		JLabel Score = new JLabel(String.format("<html>Score:<br>%d</html>", player.getScore()));
+		Score.setAlignmentX(Component.CENTER_ALIGNMENT);
+		playerPanel.add(Score, 7);
+	}
 }
 
 
