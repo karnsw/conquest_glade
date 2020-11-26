@@ -14,71 +14,83 @@ import javax.swing.JPanel;
 
 public class Piece extends JPanel {
 
-
-	private int _team;
-	private int _type;
-	private boolean _selected;
-	private int _size;
+private static final int
+	RABBIT = 0,
+	SNAKE = 1,
+	BIRD = 2,
+	GROUNDHOG = 3,
+	TURTLE = 4;
+	
+	private int col;
+	private int row;
+	private int team;
+	private int type;
+	private boolean selected;
 	private List<Move> moves = new ArrayList<Move>();
 	private Color color;
-	//private List<Piece> rackPieces = new ArrayList<Piece>();
-	
-	
-	Piece(){
-		this._team = -1;
-		this._type = -1;
-		this._selected = false;
-		this._size = -1;		
-	}
 
-	Piece(int team, int type, boolean selected){
-		this._team = team;
-		this._type = type;
-		this._selected = selected;
-		//this._size = size;
-		this.setMoves();
-	}
-	
+
 	
 	Piece(Color color, int type, boolean selected){
 		this.color = color;
-		this._type = type;
-		this._selected = selected;
-		//this._size = size;
+		this.type = type;
+		this.selected = selected;
 		this.setMoves();
+	}
+	
+	Piece(Color color, int team, int type, boolean selected){
+		this.color = color;
+		this.type = type;
+		this.selected = selected;
+		this.team = team;
+		this.setMoves();
+	}
 
-	}
-	
-	
-	
-	
-	Piece(int team, int type, boolean selected, int size){
-		this._team = team;
-		this._type = type;
-		this._selected = selected;
-		this._size = size;
+	Piece(int col, int row, Color color, int team, int type, boolean selected){
+		this.color = color;
+		this.type = type;
+		this.selected = selected;
+		this.team = team;
 		this.setMoves();
 	}
+	
+	
+	
+	public int getCol() {
+		return col;
+	}
+	public void setCol(int col) {
+		this.col = col;
+	}
+	public int getRow() {
+		return row;
+	}
+	public void setRow(int row) {
+		this.row = row;
+	}
+	
 	
 	public int getPieceType() {
-		return this._type;
+		return this.type;
 	}
-	
-	public void toggleSelection() {
-		if(this._selected == true) {
-			this._selected = false;
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+	public void toggleSelected() {
+		if(this.selected == true) {
+			this.selected = false;
 		}
 		else {
-			this._selected = true;
+			this.selected = true;
 		}
 	}
 	
-	public boolean getSelection() {
-		return this._selected;
+	public boolean getSelected() {
+		return selected;
 	}
 	
 	public int getTeam() {
-		return this._team;
+		return team;
 	}
 	
 	
@@ -86,14 +98,13 @@ public class Piece extends JPanel {
 		Move move1 = new Move();
 		Move move2 = new Move();
 		
-		if(this._type == 0) {
+		if(this.type == RABBIT) {
 			move1.F1();
 			this.moves.add(move1);
 		}
-		else if(this._type == 1) {
+		else if(this.type == SNAKE) {
 			move1.FR1();
 			this.moves.add(move1);
-
 			move2.FL1();
 			this.moves.add(move2);
 		}
@@ -108,6 +119,13 @@ public class Piece extends JPanel {
 	}
 	
 	
+	public Piece copyPiece() {
+		Piece pNew = new Piece(this.color, this.team, this.type, this.selected);
+		return pNew;
+	}
+
+	
+	
 	public void paintComponent(Graphics g) {
 		int size = this.getWidth();
 		
@@ -116,14 +134,14 @@ public class Piece extends JPanel {
 			g.setColor(Color.BLACK);
 			g.fillOval(size/10, size/10, size-(size/5), size-(size/5));
 
-			if(this._selected == false) {
+			if(this.selected == false) {
 				g.setColor(Color.BLUE);
 				Graphics2D g2;
 				g2 = (Graphics2D)g; 
 				g2.setStroke(new BasicStroke(5));
 				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
 			}
-			if(this._selected == true) {
+			if(this.selected == true) {
 				g.setColor(Color.CYAN);
 				Graphics2D g2;
 				g2 = (Graphics2D)g; 
@@ -131,7 +149,7 @@ public class Piece extends JPanel {
 				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
 			}
 			
-			switch(this._type) {
+			switch(this.type) {
 			case 0:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
@@ -164,14 +182,14 @@ public class Piece extends JPanel {
 			g.setColor(Color.BLACK);
 			g.fillOval(size/10, size/10, size-(size/5), size-(size/5));
 
-			if(this._selected == false) {
+			if(this.selected == false) {
 				g.setColor(Color.RED);
 				Graphics2D g2;
 				g2 = (Graphics2D)g; 
 				g2.setStroke(new BasicStroke(5));
 				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
 			}
-			if(this._selected == true) {
+			if(this.selected == true) {
 				g.setColor(Color.MAGENTA);
 				Graphics2D g2;
 				g2 = (Graphics2D)g; 
@@ -179,28 +197,28 @@ public class Piece extends JPanel {
 				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
 			}
 			
-			switch(this._type) {
-			case 0:
+			switch(this.type) {
+			case RABBIT:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
 				g.drawString("R", (size/5), size-(size/5));
 				break;
-			case 1:
+			case SNAKE:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
 				g.drawString("S", (size/5), size-(size/5));
 				break;
-			case 2:
+			case BIRD:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
 				g.drawString("B", (size/5), size-(size/5));
 				break;
-			case 3:
+			case GROUNDHOG:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
 				g.drawString("G", (size/5), size-(size/5));
 				break;
-			case 4:
+			case TURTLE:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
 				g.drawString("T", (size/5), size-(size/5));
@@ -214,14 +232,14 @@ public class Piece extends JPanel {
 			g.setColor(Color.BLACK);
 			g.fillOval(size/10, size/10, size-(size/5), size-(size/5));
 
-			if(this._selected == false) {
+			if(this.selected == false) {
 				g.setColor(Color.YELLOW);
 				Graphics2D g2;
 				g2 = (Graphics2D)g; 
 				g2.setStroke(new BasicStroke(5));
 				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
 			}
-			if(this._selected == true) {
+			if(this.selected == true) {
 				g.setColor(Color.PINK);
 				Graphics2D g2;
 				g2 = (Graphics2D)g; 
@@ -229,28 +247,28 @@ public class Piece extends JPanel {
 				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
 			}
 			
-			switch(this._type) {
-			case 0:
+			switch(this.type) {
+			case RABBIT:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
 				g.drawString("R", (size/5), size-(size/5));
 				break;
-			case 1:
+			case SNAKE:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
 				g.drawString("S", (size/5), size-(size/5));
 				break;
-			case 2:
+			case BIRD:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
 				g.drawString("B", (size/5), size-(size/5));
 				break;
-			case 3:
+			case GROUNDHOG:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
 				g.drawString("G", (size/5), size-(size/5));
 				break;
-			case 4:
+			case TURTLE:
 				g.setColor(Color.WHITE);
 				g.setFont(glade);
 				g.drawString("T", (size/5), size-(size/5));

@@ -78,9 +78,14 @@ public class Player {
 	
 	
 	public void addDefendSpace(Space defendSpace) {
-		defendSpace.add(defendSpace);
+		defendSpaces.add(defendSpace);
 	}
-
+	public Space getDefendSpace(int index) {
+		return defendSpaces.get(index);
+	}
+	public void setDefendSpace(int index, Space defendSpace) {
+		defendSpaces.set(index, defendSpace);
+	}
 	
 	
 	

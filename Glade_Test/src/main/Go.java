@@ -27,6 +27,19 @@ import javax.swing.OverlayLayout;
 
 public class Go {
 
+	private static final int
+		RABBIT = 0,
+		SNAKE = 1,
+		BIRD = 2,
+		GROUNDHOG = 3,
+		TURTLE = 4;
+	
+	private static final boolean
+		YES = true,
+		NO = false,
+		INBOUNDS = true,
+		OUTBOUNDS = false;
+	
 	
 	public static void main(String[] args) {
 
@@ -39,6 +52,22 @@ public class Go {
 		int columns = (miniTest.getColumns() + 4);
 		int rows = (miniTest.getRows() + 2);
 		
+		int boardBufferColsCount = 4;
+		int boardBufferRowsCount = 2;
+		
+		int boardColsCount = miniTest.getColumns();
+		int boardRowsCount = miniTest.getRows();
+		
+		int boardColStart = boardBufferColsCount/2;
+		int boardRowStart = boardBufferRowsCount/2;
+		
+		int boardColEnd = boardBufferColsCount/2 + boardColsCount;
+		int boardRowEnd = boardBufferRowsCount/2 + boardRowsCount;
+		
+		int ttlGameCols = boardColsCount + boardBufferColsCount;
+		int ttlGameRows = boardRowsCount + boardBufferRowsCount;
+				
+				
 		Piece pieces[][] = new Piece[columns][rows]; 
 		Space spaces[][] = new Space[columns][rows]; 
 		
@@ -81,62 +110,80 @@ public class Go {
 		
 		
 		//initalize pieces array
-		pieces[0][1] = new Piece(miniTest.Player1().getColor(),0,false);
-		pieces[0][2] = new Piece(miniTest.Player1().getColor(),1,false);
-		pieces[0][3] = new Piece(miniTest.Player1().getColor(),2,false);
-		pieces[0][4] = new Piece(miniTest.Player1().getColor(),3,false);
-		pieces[0][5] = new Piece(miniTest.Player1().getColor(),4,false);
-		miniTest.incrementTurn();
-		pieces[columns-1][1] = new Piece(miniTest.Player2().getColor(),0,false);
-		pieces[columns-1][2] = new Piece(miniTest.Player2().getColor(),1,false);
-		pieces[columns-1][3] = new Piece(miniTest.Player2().getColor(),2,false);
-		pieces[columns-1][4] = new Piece(miniTest.Player2().getColor(),3,false);
-		pieces[columns-1][5] = new Piece(miniTest.Player2().getColor(),4,false);
+		pieces[0][1] = new Piece(miniTest.Player1().getColor(), miniTest.Player1().getTeam(), RABBIT, false);
+		pieces[0][2] = new Piece(miniTest.Player1().getColor(), miniTest.Player1().getTeam(), SNAKE, false);
+		pieces[0][3] = new Piece(miniTest.Player1().getColor(), miniTest.Player1().getTeam(), BIRD, false);
+		pieces[0][4] = new Piece(miniTest.Player1().getColor(), miniTest.Player1().getTeam(), GROUNDHOG, false);
+		pieces[0][5] = new Piece(miniTest.Player1().getColor(), miniTest.Player1().getTeam(), TURTLE, false);
+		pieces[columns-1][1] = new Piece(miniTest.Player2().getColor(), miniTest.Player1().getTeam(), RABBIT, false);
+		pieces[columns-1][2] = new Piece(miniTest.Player2().getColor(), miniTest.Player1().getTeam(), SNAKE, false);
+		pieces[columns-1][3] = new Piece(miniTest.Player2().getColor(), miniTest.Player1().getTeam(), BIRD, false);
+		pieces[columns-1][4] = new Piece(miniTest.Player2().getColor(), miniTest.Player1().getTeam(), GROUNDHOG, false);
+		pieces[columns-1][5] = new Piece(miniTest.Player2().getColor(), miniTest.Player1().getTeam(), TURTLE, false);
 		
 		
 		
-		//initalize spaces array
+		//Initialize spaces array (color=Y,zone=Y,defend=Y,teamTerritory=N,teamTerritoryColor=N,
+		//							special=N,mouseHere=Y,availableMove=Y)
 		for(int row = 0; row < rows; row++) {
 			for(int col = 0; col < columns; col++) {
-				if(col == 0) {
-					spaces[col][row] = (new Space(1, 0, 0));
-					spaces[col][row].setType(3);
+				if(col == 0) {	//player1 rack
+					spaces[col][row] = (new Space(miniTest.getRackColor(), OUTBOUNDS, NO, 0, null , 0, NO, NO, NO));
 				}
-				else if(col == columns-1) {
-					spaces[col][row] = (new Space(1, 0, 0));
-					spaces[col][row].setType(4);
+				else if(col == columns-1) {  //player2 rack
+					spaces[col][row] = (new Space(miniTest.getRackColor(), OUTBOUNDS, NO, 0, null, 0, NO, NO, NO));
 				}
 				else if(row == 0 || row == rows-1 || col == 1 || col == columns-2){
-					spaces[col][row] = (new Space(2, mouseCoordinate[col][row], pieceCoordinate[col][row]));
-					spaces[col][row].setType(2);
+					spaces[col][row] = (new Space(miniTest.getBoarderColor(), OUTBOUNDS, NO, 0, null, 0, NO, NO, NO));
 				}
-
-				
-				else if(col%2 == row%2 || (col+1)%2 == (row+1)%2) {
-					spaces[col][row] = (new Space(0, mouseCoordinate[col][row], pieceCoordinate[col][row]));
-					spaces[col][row].setType(0);
+				else if(col%2 == row%2) { // || (col+1)%2 == (row+1)%2) {
+					spaces[col][row] = (new Space(miniTest.getBoardAColor(), INBOUNDS, NO, 0, null, 0, NO, NO, NO));
 				}
 				else {
-					spaces[col][row] = (new Space(1, mouseCoordinate[col][row], pieceCoordinate[col][row]));
-					spaces[col][row].setType(0);
+					spaces[col][row] = (new Space(miniTest.getBoardBColor(), INBOUNDS, NO, 0, null, 0, NO, NO, NO));
 				}			
 			}
+		}
+		//assign team territory and color
+		for(int row = boardRowStart; row < boardRowEnd; row++) {
+			for(int col = boardColStart; col < boardColEnd; col++) {
+				if(row < (boardRowsCount/2 + boardRowStart)) {
+					spaces[col][row].setTeamTerritory(miniTest.Player1().getTeam());
+					spaces[col][row].setTeamTerritoryColor(miniTest.Player1().getColor());
+				}
+				 if((row >= boardRowsCount/2 + boardRowStart)) {
+					spaces[col][row].setTeamTerritory(miniTest.Player2().getTeam());
+					spaces[col][row].setTeamTerritoryColor(miniTest.Player2().getColor());
+				}
+			}
+		}
+
+		
+		
+		///NEED TO FIX/// -- initalizing spaces to defend
+		
+		for(int index = 0; index < miniTest.Player1().getDefendSpaceCount(); index++){
+			int col = miniTest.Player1().getDefendSpace(index).getCol() + boardColStart;
+			int row = miniTest.Player1().getDefendSpace(index).getRow() + boardRowStart;
+			spaces[col][row].setDefended(true);
+			miniTest.Player1().setDefendSpace(index, spaces[col][row]);			//unnecessary as far as i can tell
+		}
+		for(int index = 0; index < miniTest.Player2().getDefendSpaceCount(); index++){
+			int col = miniTest.Player2().getDefendSpace(index).getCol() + boardColStart;
+			int row = miniTest.Player2().getDefendSpace(index).getRow() + boardRowStart;
+			spaces[col][row].setDefended(true);
+			miniTest.Player2().setDefendSpace(index, spaces[col][row]);			//unnecessary as far as i can tell
 		}
 		
 		
 		
 		
 		
-		
-		
-		
-		
-		
-		
 		//initalize player 1 panel
-		JPanel p1panel = new JPanel();		
-		p1panel.setPreferredSize(new Dimension(102, spaceSize*rows)); ///102 needs to be flexible to work on all monitors ()
-		p1panel.setBorder(BorderFactory.createLineBorder(miniTest.Player1().getColor(), 3));
+		JPanel p1panel = new JPanel();
+		p1panel.setBackground(miniTest.getPanelColor());
+		p1panel.setPreferredSize(new Dimension(102, spaceSize*rows)); 						//102 needs to be flexible to work on all monitors ()
+		p1panel.setBorder(BorderFactory.createLineBorder(miniTest.Player1().getColor(), 4));//4 needs to be flexible
 		p1panel.setLayout(new GridLayout(rows, 1));
 		p1panel.setLayout(new BoxLayout(p1panel, BoxLayout.Y_AXIS));
 				
@@ -153,12 +200,13 @@ public class Go {
 		
 		//intialize player 2 panel
 		JPanel p2panel = new JPanel();
-		p2panel.setPreferredSize(new Dimension(102, spaceSize*rows)); ///102 needs to be flexible
-		p2panel.setBorder(BorderFactory.createLineBorder(miniTest.Player2().getColor(), 3));
+		p2panel.setBackground(miniTest.getPanelColor());
+		p2panel.setPreferredSize(new Dimension(102, spaceSize*rows)); 						//102 needs to be flexible
+		p2panel.setBorder(BorderFactory.createLineBorder(miniTest.Player2().getColor(), 4));//4 needs to be flexible
 		p2panel.setLayout(new GridLayout(rows, 1));
 		p2panel.setLayout(new BoxLayout(p2panel, BoxLayout.Y_AXIS));
 		
-		p2panel.add(new Label(miniTest.Player1().getName()));
+		p2panel.add(new Label(miniTest.Player2().getName()));
 		RabbitLabel(miniTest.Player1(), p2panel, false);
 		SnakeLabel(miniTest.Player1(), p2panel, false);
 		BirdLabel(miniTest.Player1(), p2panel, false);
@@ -173,7 +221,12 @@ public class Go {
 		
 		 
 		 
-		JPanel status = new JPanel();
+		JPanel statusPanel = new JPanel();
+		JPanel messagePanel = new JPanel();
+		
+		//messagePanel.setPreferredSize(new Dimension(monitor_buffer.width, 100));
+
+		/*
 		String player = null;
 
 		if(miniTest.getTurn() == 0) {
@@ -184,22 +237,47 @@ public class Go {
 			player = miniTest.Player2().getName();
 			System.out.println("player2");
 		}
+		*/
+		
+		/*
+		 * 		messagePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+		String player = miniTest.currentPlayer().getName();
 		JLabel activePlayer = new JLabel(String.format("<html>Active Player:<br>%s</html>", player));
 		activePlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
-		status.add(activePlayer);
-		status.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+		statusPanel.add(activePlayer);
+		statusPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
 		
-		JPanel messages = new JPanel();
-		messages.add(new Label("Help Messages + History"));		
-		messages.setPreferredSize(new Dimension(monitor_buffer.width, 100));
-		messages.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+		messagePanel.add(new Label("Help Messages + History"));		
+		messagePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+		*/
+		
+		StatusLabel(statusPanel, miniTest.currentPlayer(), false);
+		
+		List<String> messages = new ArrayList<String>();	
+		MessageLabel(messagePanel, messages, miniTest.currentPlayer().getName(), false);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
 		JPanel game = new JPanel();
 		game.setLayout(new BorderLayout());
-		game.add(status, BorderLayout.NORTH);
-		game.add(messages, BorderLayout.SOUTH);
+		game.add(statusPanel, BorderLayout.NORTH);
+		game.add(messagePanel, BorderLayout.SOUTH);
 		game.add(p1panel, BorderLayout.WEST);
 		game.add(p2panel, BorderLayout.EAST);
 		
@@ -223,7 +301,7 @@ public class Go {
 		board.setLayout(new GridLayout(rows, columns));
 		
 		
-		//initalize board image
+		//initalize game image
 		for(int row = 0; row < rows; row++) {
 			for(int col = 0; col < columns; col++) {
 				if(pieces[col][row] != null) {
@@ -241,320 +319,169 @@ public class Go {
 		
 			
 		
-		
+	
 		
 		
 	
 		
 		
 		board.addMouseListener(new MouseListener() {
-
+			
+			
 			private int tempType = -1;
 			private int tempTeam = -1;
-			private int selectionX = -1;
-			private int selectionY = -1;
-			private boolean addPiece = false;
-			private boolean movePiece = false;
-			private boolean validSelection = false;
+			private JPanel stack = new JPanel();
+			
+			private boolean engauged = false;
+			private boolean engaugedPieceZone;
+			
+			private int X2 = -1;
+			private int Y2 = -1;
 			
 			@Override
 			public void mouseClicked(MouseEvent evt) {
-				
-				int mouse_x = evt.getX();
-				int mouse_y = evt.getY();
-				int mouseXcoordinate = mouse_x / spaceSize;
-				int mouseYcoordinate = mouse_y / spaceSize;
-				
-				System.out.println("outer X- " + mouseXcoordinate);
-				System.out.println("outer Y- " + mouseYcoordinate);
-				
-				JPanel stack = new JPanel();
-				stack.setLayout(new OverlayLayout(stack));
-				
-				
-				if(movePiece == false) {
 
-					//if piece from player1 rack is selected 
-					if(mouseXcoordinate == 0) {		
-						if(mouseYcoordinate < 6 && mouseYcoordinate > 0) {
-							if(miniTest.getTurn() % 2 == miniTest.Player1().getID()) {
-								validSelection = true;
-							}
-							
-							if(validSelection == true) {
-								//test weather player1 has pieces available in th selection
-								if(mouseYcoordinate == 1 && miniTest.Player1().getRabbitCount() > 0  ||
-								   mouseYcoordinate == 2 && miniTest.Player1().getSnakeCount() > 0  ||
-								   mouseYcoordinate == 3 && miniTest.Player1().getBirdCount() > 0  ||
-								   mouseYcoordinate == 4 && miniTest.Player1().getGroundhogCount() > 0 || 
-								   mouseYcoordinate == 5 && miniTest.Player1().getTurtleCount() > 0){
-														
-	
-									pieces[mouseXcoordinate][mouseYcoordinate].toggleSelection();
-									tempType = pieces[mouseXcoordinate][mouseYcoordinate].getPieceType();
-									tempTeam = pieces[mouseXcoordinate][mouseYcoordinate].getTeam();
-									
-									stack.add(pieces[mouseXcoordinate][mouseYcoordinate]);
-									stack.add(spaces[mouseXcoordinate][mouseYcoordinate]);
-									
-									board.remove(mouseYcoordinate*columns + mouseXcoordinate);
-									board.add(stack, mouseYcoordinate*columns + mouseXcoordinate);
-									
-									selectionX = mouseXcoordinate;
-									selectionY = mouseYcoordinate;
-									addPiece = true;
-								}
-							}
-						}
-					}
-					
-					//if piece from player2 rack is selected 
-					else if(mouseXcoordinate == columns-1) {		
-						if(mouseYcoordinate < 6 && mouseYcoordinate > 0) {
-							pieces[mouseXcoordinate][mouseYcoordinate].toggleSelection();
-							tempType = pieces[mouseXcoordinate][mouseYcoordinate].getPieceType();
-							tempTeam = pieces[mouseXcoordinate][mouseYcoordinate].getTeam();
-							
-							//so piece can be highlighted
-							stack.add(pieces[mouseXcoordinate][mouseYcoordinate]);
-							stack.add(spaces[mouseXcoordinate][mouseYcoordinate]);
-							board.remove(mouseYcoordinate*columns + mouseXcoordinate);
-							board.add(stack, mouseYcoordinate*columns + mouseXcoordinate);
-							
-							selectionX = mouseXcoordinate;
-							selectionY = mouseYcoordinate;
-							addPiece = true;
-						}
-					}
-					
-				}
-					
-				if(movePiece == true && selectionX == mouseXcoordinate && selectionY == mouseYcoordinate) {
-					pieces[mouseXcoordinate][mouseYcoordinate].toggleSelection();
-					movePiece = false;
-					
-					for(int col = 0; col < columns; col++) {
-						for(int row = 0; row < rows; row++) {
-							if(spaces[col][row].get_pieceHere() == 1) {
-								spaces[col][row].togglePieceHere();
-							}
-						}
-					}
-					board.revalidate();
-					board.repaint();
-					
-					tempType = -1;
-					tempTeam = -1;
-					selectionX = -1;
-					selectionY = -1;
-				}
-					
-				
-				
-				else if(addPiece == false) {	
-					if(mouseXcoordinate > 1 && mouseXcoordinate < columns-2 && mouseYcoordinate > 0 && mouseYcoordinate < rows-1) {
-						
-						//if the selection on the board has a piece
-						if(pieces[mouseXcoordinate][mouseYcoordinate] != null && movePiece != true) {
-							movePiece = true;
-							pieces[mouseXcoordinate][mouseYcoordinate].toggleSelection();
-							tempType = pieces[mouseXcoordinate][mouseYcoordinate].getPieceType();
-							tempTeam = pieces[mouseXcoordinate][mouseYcoordinate].getTeam();
-							selectionX = mouseXcoordinate;
-							selectionY = mouseYcoordinate;
-							
-							for(int i = 0; i < pieces[mouseXcoordinate][mouseYcoordinate].getListLength(); i++) {
-								int f = pieces[mouseXcoordinate][mouseYcoordinate].possibleSpaces().get(i)._Forward;
-								int b = pieces[mouseXcoordinate][mouseYcoordinate].possibleSpaces().get(i)._Backward;
-								int r = pieces[mouseXcoordinate][mouseYcoordinate].possibleSpaces().get(i)._Right;
-								int l = pieces[mouseXcoordinate][mouseYcoordinate].possibleSpaces().get(i)._Left;
-								if(f == 1 && r == 1) {
-									//if(it is player 1's turn)
-									if(pieces[mouseXcoordinate][mouseYcoordinate].getTeam() == 1) {
-										int newX = mouseXcoordinate + 1; 
-										int newY = mouseYcoordinate + 1;
-										
-										if(spaces[newX][newY].getType() == 0) {
-											spaces[newX][newY].togglePieceHere();
-											
-											if(pieces[newX][newY] != null && pieces[newX][newY].getTeam() == 1) {
-												spaces[newX][newY].togglePieceHere();
-											}
-										}
-									}
-									//if(it is player 2's turn)
-									if(pieces[mouseXcoordinate][mouseYcoordinate].getTeam() == 0) {
-										int newX = mouseXcoordinate - 1; 
-										int newY = mouseYcoordinate - 1;
-										
-										if(spaces[newX][newY].getType() == 0) {
-											spaces[newX][newY].togglePieceHere();
-											
-											if(pieces[newX][newY] != null && pieces[newX][newY].getTeam() == 0) {
-												spaces[newX][newY].togglePieceHere();
-											}
-										}
-									}
-									
-									
-									//if the space available for a move is an active piece then toggle its color
+				int mouseX = evt.getX();
+				int mouseY = evt.getY();
+				int X1 = mouseX/spaceSize;
+				int Y1 = mouseY/spaceSize;
 
-											//if it is player 2's turn than - instead of +
-								}
-								else if(f == 1 && l == 1) {
-									if(pieces[mouseXcoordinate][mouseYcoordinate].getTeam() == 1) {
-										int newX = mouseXcoordinate - 1; 
-										int newY = mouseYcoordinate + 1;
-										
-										if(spaces[newX][newY].getType() == 0) {
-											spaces[newX][newY].togglePieceHere();
-											if(pieces[newX][newY] != null && pieces[newX][newY].getTeam() == 1) {
-												spaces[newX][newY].togglePieceHere();
-											}
-										}
-									}
-
-									if(pieces[mouseXcoordinate][mouseYcoordinate].getTeam() == 0) {
-										int newX = mouseXcoordinate + 1; 
-										int newY = mouseYcoordinate - 1;
-										
-										if(spaces[newX][newY].getType() == 0) {
-											spaces[newX][newY].togglePieceHere();
-											if(pieces[newX][newY] != null && pieces[newX][newY].getTeam() == 0) {
-												spaces[newX][newY].togglePieceHere();
-											}
-										}
+				
+			if(pieces[X1][Y1] != null && pieces[X1][Y1].getSelected() == false) {	       	//there is a piece the piece was not selected already
+					if(pieces[X1][Y1].getTeam() == miniTest.currentPlayer().getTeam()) {	//correct team piece has been selected
+						if(spaces[X1][Y1].getZone() == OUTBOUNDS) {	 						//the piece is on current players rack
+							pieces[X1][Y1].setSelected(true);
+							engauged = true;
+							engaugedPieceZone = OUTBOUNDS;					
+							System.out.println("if");
+							System.out.println("X1- " + X1 + "   X2- " + X2);
+							System.out.println("Y1- " + Y1 + "   Y2- " + Y2);
+							X2 = X1;
+							Y2 = Y1;
+							for(int row = boardRowStart; row < boardRowEnd; row++) {
+								for(int col = boardColStart; col < boardColEnd; col++) {
+									if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
+										spaces[col][row].setAddPiece(true);				//show spaces piece can be placed
 									}
 								}
 							}
-						}	
-					}
-					board.revalidate();
-					board.repaint();
-				}
-				
-					
-
-				if(movePiece == true) {
-					
-					if(spaces[mouseXcoordinate][mouseYcoordinate].get_pieceHere() == 1) {	
-
-							stack.removeAll();
-							System.out.println("its true!");
-							System.out.println("type- " + tempType);
-							
-							if(pieces[mouseXcoordinate][mouseYcoordinate] != null) {
-								if(pieces[mouseXcoordinate][mouseYcoordinate].getTeam() != pieces[selectionX][selectionY].getTeam()) {
-									pieces[mouseXcoordinate][mouseYcoordinate] = new Piece(tempTeam, tempType, false);
-									stack.add(pieces[mouseXcoordinate][mouseYcoordinate]);
-									stack.add(spaces[mouseXcoordinate][mouseYcoordinate]);			
-									board.remove(mouseYcoordinate*columns + mouseXcoordinate);
-									board.add(stack, mouseYcoordinate*columns + mouseXcoordinate);
-								}
-							}
-							
-							else {
-								pieces[mouseXcoordinate][mouseYcoordinate] = new Piece(tempTeam, tempType, false);
-								stack.add(pieces[mouseXcoordinate][mouseYcoordinate]);
-								stack.add(spaces[mouseXcoordinate][mouseYcoordinate]);						
-								board.add(stack, mouseYcoordinate*columns + mouseXcoordinate);
-							}
-							
-							pieces[selectionX][selectionY] = null;
-							board.remove(selectionY*columns + selectionX);
-							board.add(spaces[selectionX][selectionY], selectionY*columns + selectionX);
-						
-							
-							for(int col = 0; col < columns; col++) {
-								for(int row = 0; row < rows; row++) {
-									if(spaces[col][row].get_pieceHere() == 1) {
-										spaces[col][row].togglePieceHere();
-									}
-								}
-							}
-	
 							board.revalidate();
 							board.repaint();
-							
-							miniTest.incrementTurn();
-							
-							addPiece = false;
-							movePiece = false;
-							tempType = -1;
-							tempTeam = -1;
-							selectionX = -1;
-							selectionY = -1;	
+							return;
+						}
 					}
-					
-				
+					return; //incorrect teams piece was selected
 				}
-				
-				
-				if(pieces[mouseXcoordinate][mouseYcoordinate] == null && addPiece == true) {
-					stack.removeAll();
-					pieces[mouseXcoordinate][mouseYcoordinate] = new Piece(tempTeam, tempType, false);
-					stack.add(pieces[mouseXcoordinate][mouseYcoordinate]);
-					stack.add(spaces[mouseXcoordinate][mouseYcoordinate]);
-					//board.remove(mouseYcoordinate*columns + mouseXcoordinate);
-					board.add(stack, mouseYcoordinate*columns + mouseXcoordinate);
-
-					pieces[selectionX][selectionY].toggleSelection();
-
-					board.revalidate();
-					board.repaint();
-										
-					miniTest.currentPlayer().removeRackPiece(tempType);
-			
-					
-					System.out.println("here!!!");
-					JPanel panel;
-					if(miniTest.currentPlayer() == miniTest.Player1()) {
-						panel = p1panel;
+				else if(pieces[X1][Y1] == null) {			//new location selected is does not have a piece occupying it
+					System.out.println("EPZ- " + engaugedPieceZone);
+					if(engaugedPieceZone == INBOUNDS) {
+						pieces[X1][Y1] = pieces[X2][Y2];	//move piece from starting location to new location
+						pieces[X2][Y2] = null;				//remove piece from starting loaction
+						X1 = -1;
+						X2 = -1;
+						Y1 = -1;
+						Y2 = -1;
+						engauged = false;
+						board.revalidate();
+						board.repaint();
+						return;
 					}
-					else {
-						panel = p2panel;
-					}
+				
+					else if(engaugedPieceZone == OUTBOUNDS){
+						System.out.println("Y2- " + Y2);
+						switch(Y2) {
+							case RABBIT:
+								if(miniTest.currentPlayer().getRabbitCount() > 0){
+									miniTest.currentPlayer().removeRackPiece(RABBIT);
+									JPanel playerPanel = passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel);
+									RabbitLabel(miniTest.currentPlayer(), playerPanel, true);	
+								}
+								break;
+							case SNAKE:
+								if(miniTest.currentPlayer().getSnakeCount() > 0){
+									miniTest.currentPlayer().removeRackPiece(SNAKE);
+									JPanel playerPanel = passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel);
+									SnakeLabel(miniTest.currentPlayer(), playerPanel, true);
+									System.out.println("SNAKE: " + tempTeam);
+								}
+								break;
+							case BIRD:
+								if(miniTest.currentPlayer().getBirdCount() > 0){
+									miniTest.currentPlayer().removeRackPiece(BIRD);
+									JPanel playerPanel = passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel);
+									BirdLabel(miniTest.currentPlayer(), playerPanel, true);
+								}
+								break;
+							case GROUNDHOG:
+								if(miniTest.currentPlayer().getGroundhogCount() > 0){
+									miniTest.currentPlayer().removeRackPiece(GROUNDHOG);
+									JPanel playerPanel = passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel);
+									GroundhogLabel(miniTest.currentPlayer(), playerPanel, true);
+								}
+								break;
+							case TURTLE:
+								if(miniTest.currentPlayer().getTurtleCount() > 0) {
+									miniTest.currentPlayer().removeRackPiece(TURTLE);
+									JPanel playerPanel = passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel);
+									TurtleLabel(miniTest.currentPlayer(), playerPanel, true);
+								}
+								break;
+						}
+
 						
-					switch (selectionY) {
-					case 1:
-						RabbitLabel(miniTest.currentPlayer(), panel, true);
-						break;
-					case 2:
-						System.out.println("snake!!!");
-						SnakeLabel(miniTest.currentPlayer(), panel, true);
-						break;
-					case 3:
-						BirdLabel(miniTest.currentPlayer(), panel, true);
-						break;
-					case 4:
-						GroundhogLabel(miniTest.currentPlayer(), panel, true);
-						break;
-					case 5:
-						TurtleLabel(miniTest.currentPlayer(), panel, true);
-						break;
+						
+						pieces[X2][Y2].toggleSelected();
+						
+						
+						tempType = pieces[X2][Y2].getPieceType();
+						tempTeam = pieces[X2][Y2].getTeam();
+						System.out.println("p2,type: " + tempType);
+						System.out.println("p2,team: " + tempTeam);
+						
+						//so piece can be highlighted
+						Piece temp = pieces[X2][Y2].copyPiece();
+						stack.add(temp);
+						stack.add(spaces[X1][Y1]);
+						board.remove(Y1*columns + X1);
+						board.add(stack, Y1*columns + X1);
+						
+
+						
+						
+						
+						X1 = -1;
+						X2 = -1;
+						Y1 = -1;
+						Y2 = -1;
+						engauged = false;
+						board.revalidate();
+						board.repaint();
+						return;
 					}
 					
-					addPiece = false;
-					tempType = -1;
-					tempTeam = -1;
-					selectionX = -1;
-					selectionY = -1;		
-				}		
-				
-				
-				JPanel status = new JPanel();
-				String player = null;
-				if(miniTest.getTurn() == 0) {
-					 player = miniTest.Player1().getName();
+					
 				}
-				else if(miniTest.getTurn() == 1) {
-					player = miniTest.Player2().getName();
+				else if(pieces[X1][Y1].getSelected() == true) {
+					System.out.println("else");
+					System.out.println("X1- " + X1 + "   X2- " + X2);
+					System.out.println("Y1- " + Y1 + "   Y2- " + Y2);
+					
+															//piece selected == true
+					if(X1 == X2 && Y1 == Y2) {				//if selected piece has been clicked on again...
+						pieces[X1][Y1].setSelected(false);	//deselect
+						X1 = -1;
+						X2 = -1;
+						Y1 = -1;
+						Y2 = -1;
+						engauged = false;
+						board.revalidate();
+						board.repaint();
+						return;
+					}
 				}
-				JLabel activePlayer = new JLabel(String.format("<html>Active Player:<br>%s</html>", player));
-				activePlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
-				status.add(activePlayer);
-				status.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 			}
+			
+			
 			
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -586,24 +513,18 @@ public class Go {
 			private boolean initalize = true;
 
 			public void mouseMoved(MouseEvent evt) {
-				
 				int mouse_x = evt.getX();
 				int mouse_y = evt.getY();
 				int mouseXcoordinate = mouse_x / spaceSize;
 				int mouseYcoordinate = mouse_y / spaceSize;
-				
 				if(initalize == true) {
 					spaces[prevX][prevY].toggleMouseHere();
 					initalize = false;
 				}
-				
 				if(prevX != mouseXcoordinate || prevY != mouseYcoordinate) {
-					
 					for(int col = 0; col < columns; col++) {	
 						for(int row = 0; row < rows; row++) {
-	
 							if(mouseXcoordinate == col && mouseYcoordinate == row) {
-									
 								spaces[col][row].toggleMouseHere();
 								spaces[prevX][prevY].toggleMouseHere();
 							}
@@ -615,7 +536,6 @@ public class Go {
 					prevY = mouseYcoordinate;
 				}
 			}
-			
 			@Override
 			public void mouseDragged(MouseEvent evt) {
 				// TODO Auto-generated method stub
@@ -635,7 +555,7 @@ public class Go {
 		
 	/*
 		
-		//only works to expand the board currently
+		//only works to expand the board currently  +++++ ADD UPDATE TO SPACE SIZE SO MOUSE EVENTS WILL CORELEATE
 		window.addComponentListener(new ComponentAdapter(){ 
 			public void componentResized(ComponentEvent evt) {
 				
@@ -681,8 +601,16 @@ public class Go {
 	
 	
 	
-	
-	
+	public static JPanel passPlayerPanel(Player p, JPanel p1, JPanel p2) {
+		JPanel playerPanel;
+		if(p.getTeam() == 1) {
+			playerPanel = p1;
+		}
+		else {
+			playerPanel = p2;
+		}
+		return playerPanel;
+	}
 	
 	
 	
@@ -740,6 +668,38 @@ public class Go {
 		JLabel Score = new JLabel(String.format("<html>Score:<br>%d</html>", player.getScore()));
 		Score.setAlignmentX(Component.CENTER_ALIGNMENT);
 		playerPanel.add(Score, 7);
+	}
+	
+	public static void StatusLabel(JPanel statusPanel, Player player, boolean remove){
+		if(remove == true) {
+			statusPanel.removeAll();
+		}
+		JLabel activePlayer = new JLabel(String.format("<html>Active Player:<br>%s</html>", player.getName()));
+		activePlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
+		statusPanel.add(activePlayer);
+		statusPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+	}
+	
+	
+	
+	public static void MessageLabel(JPanel messagePanel, List<String> messages, String newMessage, boolean remove){
+		if(remove == true) {
+			messagePanel.removeAll();
+		}
+		if(messages.size() > 0) {
+			messages.remove(messages.size()-1);
+		}
+		
+		List<String> newMessages = new ArrayList<String>();
+		newMessages.add(newMessage);
+		messages.forEach(message -> newMessages.add(newMessage));
+		
+		StringBuilder labelString = (new StringBuilder()).append("<html>");
+		newMessages.forEach(message -> labelString.append(message).append("<br>"));
+		labelString.append("</html>");
+
+		JLabel finalMessage = (new JLabel(String.format(labelString.toString())));
+		messagePanel.add(finalMessage);		
 	}
 }
 

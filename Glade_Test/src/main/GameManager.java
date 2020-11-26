@@ -8,12 +8,25 @@ import javax.swing.JOptionPane;
 
 public class GameManager {
 
+	private static final int
+	RABBIT = 0,
+	SNAKE = 1,
+	BIRD = 2,
+	GROUNDHOG = 3,
+	TURTLE = 4;
+
 	private List<Object> colors = new ArrayList<Object>() {{
 		add("blue");
 		add("red");
 		add("yellow");
 	}};
-
+	
+	private Color boardAColor;
+	private Color boardBColor;
+	private Color boarderColor;
+	private Color rackColor;
+	private Color panelColor;
+		
 	private int _rows;
 	private int _columns;
 	private int _turn;
@@ -28,17 +41,26 @@ public class GameManager {
 		_turn = 0;
 		_rows = 8;
 		_columns = 8;
+		setBoardAColor(Color.GRAY);
+		setBoardBColor(Color.LIGHT_GRAY);
+		setBoarderColor(Color.BLACK);
+		setRackColor(Color.GRAY);
+		setPanelColor(Color.LIGHT_GRAY);
 		
 		Player p1 = new Player(1);
-		setPlayerName(p1);
-		setTeamColor(p1);
+		setPlayerNameMenu(p1);
+		setTeamColorMenu(p1);
+		p1.setTeam(1);
 		initializePiecesClassicGlade(p1);
+		initializeSpacesToDefendClassicGlade(p1);
 		players.add(p1);
 		
 		Player p2 = new Player(2);
-		setPlayerName(p2);
-		setTeamColor(p2);
+		setPlayerNameMenu(p2);
+		setTeamColorMenu(p2);
+		p2.setTeam(2);
 		initializePiecesClassicGlade(p2);
+		initializeSpacesToDefendClassicGlade(p2);
 		players.add(p2);	
 	}
 	
@@ -85,7 +107,7 @@ public class GameManager {
 		return this._turn;
 	}
 	
-	private void setTeamColor(Player p) {
+	private void setTeamColorMenu(Player p) {
 		String name = p.getName();
 		Object[] colorChoices = new Object[colors.size()];
 		System.out.println("length of colors- " + colors.size());
@@ -107,22 +129,37 @@ public class GameManager {
 	}
 	
 	
-	private void setPlayerName(Player p) {
+	private void setPlayerNameMenu(Player p) {
 		String name = (String)JOptionPane.showInputDialog("Player " + p.getID() + ", please enter your name.");
 		p.setName(name);
 	}
 	
 	private void initializePiecesClassicGlade(Player p) {
-		p.addRackPiece(new Piece(p.getColor(), 0, false));
-		p.addRackPiece(new Piece(p.getColor(), 0, false));
-		p.addRackPiece(new Piece(p.getColor(), 1, false));
-		p.addRackPiece(new Piece(p.getColor(), 1, false));
-		p.addRackPiece(new Piece(p.getColor(), 2, false));
-		p.addRackPiece(new Piece(p.getColor(), 2, false));
-		p.addRackPiece(new Piece(p.getColor(), 3, false));
-		p.addRackPiece(new Piece(p.getColor(), 3, false));
-		p.addRackPiece(new Piece(p.getColor(), 4, false));
+		p.addRackPiece(new Piece(p.getColor(), RABBIT, false));
+		p.addRackPiece(new Piece(p.getColor(), RABBIT, false));
+		p.addRackPiece(new Piece(p.getColor(), SNAKE, false));
+		p.addRackPiece(new Piece(p.getColor(), SNAKE, false));
+		p.addRackPiece(new Piece(p.getColor(), BIRD, false));
+		p.addRackPiece(new Piece(p.getColor(), BIRD, false));
+		p.addRackPiece(new Piece(p.getColor(), GROUNDHOG, false));
+		p.addRackPiece(new Piece(p.getColor(), GROUNDHOG, false));
+		p.addRackPiece(new Piece(p.getColor(), TURTLE, false));
 	}
+	
+	private void initializeSpacesToDefendClassicGlade(Player p) {
+		int row;
+		for(int col = 0; col < _columns; col++) {
+			if(p.getTeam() == 1) {
+				row = 0;
+				p.addDefendSpace(new Space(col, row));	//top row
+			}
+			else if(p.getTeam() == 2) {
+				row = _rows-1;
+				p.addDefendSpace(new Space(col, row));	//bottom row
+			}
+		}
+	}
+	
 	
 	public Player Player1() {
 		return players.get(0);
@@ -131,6 +168,54 @@ public class GameManager {
 	public Player Player2() {
 		return players.get(1);
 	}
+
+	
+	
+	
+	
+	
+	
+	
+	public Color getBoardAColor() {
+		return boardAColor;
+	}
+
+	public void setBoardAColor(Color boardAColor) {
+		this.boardAColor = boardAColor;
+	}
+
+	public Color getBoardBColor() {
+		return boardBColor;
+	}
+
+	public void setBoardBColor(Color boardBColor) {
+		this.boardBColor = boardBColor;
+	}
+
+	public Color getBoarderColor() {
+		return boarderColor;
+	}
+
+	public void setBoarderColor(Color boarderColor) {
+		this.boarderColor = boarderColor;
+	}
+
+	public Color getRackColor() {
+		return rackColor;
+	}
+
+	public void setRackColor(Color rackColor) {
+		this.rackColor = rackColor;
+	}
+
+	public Color getPanelColor() {
+		return panelColor;
+	}
+
+	public void setPanelColor(Color panelColor) {
+		this.panelColor = panelColor;
+	}
+	
 	
 }
 

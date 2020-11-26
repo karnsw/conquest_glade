@@ -1,8 +1,10 @@
 package main;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -11,137 +13,173 @@ import javax.swing.JPanel;
 
 public class Space extends JPanel{
 	
+	private static final boolean
+		YES = true,
+		NO = false,
+		INBOUNDS = true,
+		OUTBOUNDS = false;
 	
-		private int _color;
-		private int _minDim;
-		private int _mouseHere;
-		private int _pieceHere;
-		private int _type;
-		
-		private Color color;
-		private boolean mouseHere;
-		private boolean availbeMove;
-		
-		
-		Space(int color, int minDim, int mouseHere, int pieceHere){
-			this._color = color;
-			this._minDim = minDim;
-			this._mouseHere = mouseHere;
-			this._pieceHere = pieceHere;
-		}
-		
-		Space(Color color, boolean mouseHere, boolean availableMove){
+	private int col;
+	private int row;
+	private Color color;				//what color is the piece (generally)
+	private boolean zone;				//INBOUNDS or OUTBOUNDS
+	private boolean defended;			//is this piece being defended by a team
+	private int teamTerritory;			//where teams can place pieces
+	private Color teamTerritoryColor;	//color for team that controls territory
+	private int special;				//special ability (fire, ice, wind, none)
+	private boolean mouseHere;			//is the mouse hovering over current location
+	private boolean availableMove;		//what locations engaged piece can move to
+	private boolean addPiece;			//is a piece being added to the board?
+	
+	
+	Space(int col, int row){
+		setCol(col);
+		setRow(row);
+	}
+	
+	Space(Color color, boolean zone, boolean defended, int teamTerritory, Color teamTerritoryColor,
+			  int special, boolean mouseHere, boolean availableMove, boolean addPiece){
+			
 			this.color = color;
+			setZone(zone);
+			setDefended(defended);
+			this.setTeamTerritory(teamTerritory);
+			this.setTeamTerritoryColor(teamTerritoryColor);
+			this.setSpecial(special);
 			this.mouseHere = mouseHere;
-			this.availbeMove = availableMove;
+			this.availableMove = availableMove;
+			this.addPiece = addPiece;
 		}
 
-		Space(int color, int mouseHere, int pieceHere){
-			this._color = color;
-			//this._minDim = minDim;
-			this._mouseHere = mouseHere;
-			this._pieceHere = pieceHere;
-		}
-		
-		Space(int color, int minDim){
-			this._color = color;
-			this._minDim = minDim;
-		}
-	
-		
-		public int get_color() {
-			return this._color;
-		}
-		public int get_minDim() {
-			return this._minDim;
-		}
-		public int get_mouseHere() {
-			return this._mouseHere;
-		}
-		public int get_pieceHere() {
-			return this._pieceHere;
-		}
-		
-		public void toggleMouseHere() {
-			if(this._mouseHere == 0) {
-				this._mouseHere = 1;
-			}
-			else {
-				this._mouseHere = 0;
-			}
-		}
 
-		public void togglePieceHere() {
-			if(this._pieceHere == 0) {
-				this._pieceHere = 1;
-			}
-			else {
-				this._pieceHere = 0;
-			}
-		}
-		
-		
-		// 0 = active game square
-		// 1 = edge
-		// 2 = Out of Bounds
-		// 3 = player 1 rack
-		// 4 = player 2 rack
-		public void setType(int type) {
-			this._type = type;
-		}
-		public int getType() {
-			return this._type;
-		}
-		
-	
-		public void paintComponent(Graphics g) {
-				
-				super.paintComponent(g);
-				int width = getWidth();
-				int height = getHeight();
-				int dim = _minDim;
-				if(width > _minDim || height > _minDim) {
-					if(width > height) {
-						dim = width;
-					}
-					else {
-						dim = height;
-					}
-				}
-				
-				//System.out.println("SpaceWidth- " + width);
-			//	System.out.println("SpaceHeight- " + height);
-				
-				if(this._mouseHere == 0) {
-					switch(this._color) {
-					case 0:
-						g.setColor(Color.LIGHT_GRAY);
-						break;
-					case 1:
-						g.setColor(Color.GRAY);
-						break;
-					case 2:
-						g.setColor(Color.BLACK);
-						break;
-					case 3:
-						g.setColor(Color.CYAN);
-						break;
-					}
-				}
-				else {
-					g.setColor(Color.YELLOW);
-				}
-				
-				if(this._pieceHere == 1) {
-					g.setColor(Color.ORANGE);
-				}
-	
-				g.fillRect(0, 0, dim, dim);
-				
+	public int getCol() {
+		return col;
+	}
+	public void setCol(int col) {
+		this.col = col;
+	}
 
+	public int getRow() {
+		return row;
+	}
+	public void setRow(int row) {
+		this.row = row;
+	}
 	
-				}
-			}
-		
+	public boolean getZone() {
+		return zone;
+	}
+	public void setZone(boolean zone) {
+		this.zone = zone;
+	}
 	
+	public boolean getDefended() {
+		return defended;
+	}
+	public void setDefended(boolean defended) {
+		this.defended = defended;
+	}
+	
+	public int getTeamTerritory() {
+		return teamTerritory;
+	}
+	public void setTeamTerritory(int teamTerritory) {
+		this.teamTerritory = teamTerritory;
+	}
 
+	public Color getTeamTerritoryColor() {
+		return teamTerritoryColor;
+	}
+	public void setTeamTerritoryColor(Color teamTerritoryColor) {
+		this.teamTerritoryColor = teamTerritoryColor;
+	}
+	
+	public int getSpecial() {
+		return special;
+	}
+	public void setSpecial(int special) {
+		this.special = special;
+	}
+
+	public boolean getMouseHere() {
+		return mouseHere;
+	}
+	public void setMouseHere(boolean mouseHere) {
+		this.mouseHere = mouseHere;
+	}
+	public void toggleMouseHere() {
+		if(this.mouseHere == NO) {
+			this.mouseHere = YES;
+		}
+		else {
+			this.mouseHere = NO;
+		}
+	}
+
+	public boolean getAvailableMove() {
+		return availableMove;
+	}
+	public void setAvailableMove(boolean availableMove) {
+		this.availableMove = availableMove;
+	}
+	public void toggleAvailableMove() {
+		if(this.availableMove == NO) {
+			this.availableMove = YES;
+		}
+		else {
+			this.availableMove = NO;
+		}
+	}
+
+	public boolean AddPiece() {
+		return addPiece;
+	}
+	public void setAddPiece(boolean addPiece) {
+		this.addPiece = addPiece;
+	}
+	public void toggleAddPiece() {
+		if(this.addPiece == NO) {
+			this.addPiece = YES;
+		}
+		else {
+			this.addPiece = NO;
+		}
+	}
+
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2;
+		int dim = getWidth();
+		if(getHeight() < dim) {
+			dim = getHeight();
+		}
+		if(this.availableMove == YES) {
+			g.setColor(Color.ORANGE);
+
+		}
+		else {
+			g.setColor(this.color);
+		}
+		g.fillRect(0, 0, dim, dim);
+		
+		if(defended == true) {
+			g2 = (Graphics2D)g; 
+			g2.setStroke(new BasicStroke(2));
+			g2.setColor(teamTerritoryColor);
+			g2.drawRoundRect(2, 2, dim-4, dim-4, 5, 5);
+		}
+		if(this.availableMove == YES) {
+			g2 = (Graphics2D)g; 
+			g2.setStroke(new BasicStroke(3));
+			g2.setColor(Color.BLACK);
+			g2.drawRect(0, 0, dim, dim);
+		}
+		else if(addPiece == YES) {
+			g2 = (Graphics2D)g;
+			g2.setStroke(new BasicStroke(2));
+			g2.setColor(teamTerritoryColor);
+			g2.drawRect(2, 2, dim-4, dim-4);
+		}
+	}
+
+}
