@@ -51,6 +51,7 @@ public class GameManager {
 		setPlayerNameMenu(p1);
 		setTeamColorMenu(p1);
 		p1.setTeam(1);
+		p1.setTerritory(new char[]{'T','4'});
 		initializePiecesClassicGlade(p1);
 		initializeSpacesToDefendClassicGlade(p1);
 		players.add(p1);
@@ -59,6 +60,7 @@ public class GameManager {
 		setPlayerNameMenu(p2);
 		setTeamColorMenu(p2);
 		p2.setTeam(2);
+		p2.setTerritory(new char[]{'B','4'});
 		initializePiecesClassicGlade(p2);
 		initializeSpacesToDefendClassicGlade(p2);
 		players.add(p2);	
@@ -103,7 +105,7 @@ public class GameManager {
 	public void incrementTurn() {
 		this._turn++;
 	}
-	public int getTurn() {
+	public int getTotalTurns() {
 		return this._turn;
 	}
 	
@@ -135,15 +137,15 @@ public class GameManager {
 	}
 	
 	private void initializePiecesClassicGlade(Player p) {
-		p.addRackPiece(new Piece(p.getColor(), RABBIT, false));
-		p.addRackPiece(new Piece(p.getColor(), RABBIT, false));
-		p.addRackPiece(new Piece(p.getColor(), SNAKE, false));
-		p.addRackPiece(new Piece(p.getColor(), SNAKE, false));
-		p.addRackPiece(new Piece(p.getColor(), BIRD, false));
-		p.addRackPiece(new Piece(p.getColor(), BIRD, false));
-		p.addRackPiece(new Piece(p.getColor(), GROUNDHOG, false));
-		p.addRackPiece(new Piece(p.getColor(), GROUNDHOG, false));
-		p.addRackPiece(new Piece(p.getColor(), TURTLE, false));
+		p.addRackPiece(new Piece(p.getColor(), p.getID(), p.getTerritory()[0], p.getTeam(), RABBIT, false));
+		p.addRackPiece(new Piece(p.getColor(), p.getID(), p.getTerritory()[0], p.getTeam(), RABBIT, false));
+		p.addRackPiece(new Piece(p.getColor(), p.getID(), p.getTerritory()[0], p.getTeam(), SNAKE, false));
+		p.addRackPiece(new Piece(p.getColor(), p.getID(), p.getTerritory()[0], p.getTeam(), SNAKE, false));
+		p.addRackPiece(new Piece(p.getColor(), p.getID(), p.getTerritory()[0], p.getTeam(), BIRD, false));
+		p.addRackPiece(new Piece(p.getColor(), p.getID(), p.getTerritory()[0], p.getTeam(), BIRD, false));
+		p.addRackPiece(new Piece(p.getColor(), p.getID(), p.getTerritory()[0], p.getTeam(), GROUNDHOG, false));
+		p.addRackPiece(new Piece(p.getColor(), p.getID(), p.getTerritory()[0], p.getTeam(), GROUNDHOG, false));
+		p.addRackPiece(new Piece(p.getColor(), p.getID(), p.getTerritory()[0], p.getTeam(), TURTLE, false));
 	}
 	
 	private void initializeSpacesToDefendClassicGlade(Player p) {
@@ -169,7 +171,9 @@ public class GameManager {
 		return players.get(1);
 	}
 
-	
+	public List<Player> getPlayers(){
+		return players;
+	}
 	
 	
 	

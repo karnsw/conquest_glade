@@ -5,13 +5,22 @@ import java.util.*;
 
 public class Player {
 
+	private static final int
+	RABBIT = 0,
+	SNAKE = 1,
+	BIRD = 2,
+	GROUNDHOG = 3,
+	TURTLE = 4;
+	
 	private int ID;
 	private int team;
 	private String name;
 	private Color color;
+	private char territory[]  = new char[2];
 	private int score;
 	private List<Piece> rackPieces = new ArrayList<Piece>();
 	private List<Space> defendSpaces = new ArrayList<Space>();
+	private List<Piece> scoringPieces = new ArrayList<Piece>();
 	
 
 	Player(int ID){
@@ -70,7 +79,7 @@ public class Player {
 	public int getScore() {
 		return score;
 	}
-	public void set_score(int score) {
+	public void setScore(int score) {
 		this.score = score;
 	}
 	
@@ -101,7 +110,7 @@ public class Player {
 	}
 	public void removeRackPiece(int type) {
 		for(int i = 0; i < this.rackPieces.size(); i++) {
-			if(this.rackPieces.get(i).getPieceType() == type) {
+			if(this.rackPieces.get(i).getType() == type) {
 				this.rackPieces.remove(i);
 			}
 		}
@@ -116,7 +125,7 @@ public class Player {
 	public int getRabbitCount(){
 		int count = 0;
 		for(int i = 0; i < this.rackPieces.size(); i++) {
-			if(this.rackPieces.get(i).getPieceType() == 0) {
+			if(this.rackPieces.get(i).getType() == RABBIT) {
 				count++;
 			}
 		}
@@ -126,7 +135,7 @@ public class Player {
 	public int getSnakeCount(){
 		int count = 0;
 		for(int i = 0; i < this.rackPieces.size(); i++) {
-			if(this.rackPieces.get(i).getPieceType() == 1) {
+			if(this.rackPieces.get(i).getType() == SNAKE) {
 				count++;
 			}
 		}
@@ -136,7 +145,7 @@ public class Player {
 	public int getBirdCount(){
 		int count = 0;
 		for(int i = 0; i < this.rackPieces.size(); i++) {
-			if(this.rackPieces.get(i).getPieceType() == 2) {
+			if(this.rackPieces.get(i).getType() == BIRD) {
 				count++;
 			}
 		}
@@ -146,7 +155,7 @@ public class Player {
 	public int getGroundhogCount(){
 		int count = 0;
 		for(int i = 0; i < this.rackPieces.size(); i++) {
-			if(this.rackPieces.get(i).getPieceType() == 3) {
+			if(this.rackPieces.get(i).getType() == GROUNDHOG) {
 				count++;
 			}
 		}
@@ -156,7 +165,7 @@ public class Player {
 	public int getTurtleCount(){
 		int count = 0;
 		for(int i = 0; i < this.rackPieces.size(); i++) {
-			if(this.rackPieces.get(i).getPieceType() == 4) {
+			if(this.rackPieces.get(i).getType() == TURTLE) {
 				count++;
 			}
 		}
@@ -166,4 +175,27 @@ public class Player {
 	public int getDefendSpaceCount(){
 		return defendSpaces.size();
 	}
+	
+	
+	
+	public char[] getTerritory() {
+		return territory;
+	}
+	public void setTerritory(char territory[]) {
+		this.territory = territory;
+	}
+	
+	
+	
+	
+	public List<Piece> getScoringPieces() {
+		return scoringPieces;
+	}
+	public void addScoringPiece(Piece piece) {
+		this.scoringPieces.add(piece);
+	}
+	public void clearScoringPiece(Piece piece) {
+		this.scoringPieces.clear();
+	}
+	
 }

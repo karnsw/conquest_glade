@@ -153,9 +153,14 @@ public class Space extends JPanel{
 		if(getHeight() < dim) {
 			dim = getHeight();
 		}
+
+		
 		if(this.availableMove == YES) {
 			g.setColor(Color.ORANGE);
 
+		}
+		else if(this.mouseHere == YES) {
+			g.setColor(Color.GREEN);
 		}
 		else {
 			g.setColor(this.color);
@@ -164,13 +169,13 @@ public class Space extends JPanel{
 		
 		if(defended == true) {
 			g2 = (Graphics2D)g; 
-			g2.setStroke(new BasicStroke(2));
+			g2.setStroke(new BasicStroke(3));
 			g2.setColor(teamTerritoryColor);
 			g2.drawRoundRect(2, 2, dim-4, dim-4, 5, 5);
 		}
 		if(this.availableMove == YES) {
 			g2 = (Graphics2D)g; 
-			g2.setStroke(new BasicStroke(3));
+			g2.setStroke(new BasicStroke(2));
 			g2.setColor(Color.BLACK);
 			g2.drawRect(0, 0, dim, dim);
 		}

@@ -23,35 +23,42 @@ private static final int
 	
 	private int col;
 	private int row;
+	private int playerID;
 	private int team;
+	private char playerTerritory;
 	private int type;
 	private boolean selected;
 	private List<Move> moves = new ArrayList<Move>();
-	private Color color;
-
+	private Color primaryColor;
+	private Color selectedColor;
+	
+	private int consecutiveTurnsInEnemyTerritory;
 
 	
-	Piece(Color color, int type, boolean selected){
-		this.color = color;
+	Piece(Color primaryColor, int type, boolean selected){
+		this.primaryColor = primaryColor;
 		this.type = type;
 		this.selected = selected;
-		this.setMoves();
+		setMoves();
 	}
 	
-	Piece(Color color, int team, int type, boolean selected){
-		this.color = color;
+	Piece(Color primaryColor, int team, int type, boolean selected){
+		this.primaryColor = primaryColor;
 		this.type = type;
 		this.selected = selected;
 		this.team = team;
-		this.setMoves();
+		setMoves();
 	}
 
-	Piece(int col, int row, Color color, int team, int type, boolean selected){
-		this.color = color;
-		this.type = type;
+	Piece(Color primaryColor, int playerID, char playerTerritory, int team, int type, boolean selected){
+		this.primaryColor = primaryColor;
+		setType(type);
+		setPlayerID(playerID);
 		this.selected = selected;
 		this.team = team;
-		this.setMoves();
+		setPlayerTerritory(playerTerritory);
+		setMoves();
+		setSelectedColor();
 	}
 	
 	
@@ -70,9 +77,36 @@ private static final int
 	}
 	
 	
-	public int getPieceType() {
-		return this.type;
+	public int getPlayerID() {
+		return playerID;
 	}
+
+	public void setPlayerID(int playerID) {
+		this.playerID = playerID;
+	}
+
+	public char getPlayerTerritory() {
+		return playerTerritory;
+	}
+
+	public void setPlayerTerritory(char playerTerritory) {
+		this.playerTerritory = playerTerritory;
+	}
+
+	public int getType() {
+		return type;
+	}
+	public void setType(int type) {
+		this.type = type;
+	}
+		
+	public int getTeam(){
+		return team;
+	}
+	public void setTeam(int team){
+		this.team = team;
+	}
+	
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
@@ -89,9 +123,20 @@ private static final int
 		return selected;
 	}
 	
-	public int getTeam() {
-		return team;
+	
+	
+	
+	
+	public Color getPrimaryColor() {
+		return primaryColor;
 	}
+	public void setPrimaryColor(Color color) {
+		this.primaryColor = color;
+	};
+	
+	
+	
+	
 	
 	
 	private void setMoves() {
@@ -99,181 +144,128 @@ private static final int
 		Move move2 = new Move();
 		
 		if(this.type == RABBIT) {
-			move1.F1();
+			move1.F1(this.playerTerritory);
 			this.moves.add(move1);
 		}
 		else if(this.type == SNAKE) {
-			move1.FR1();
+			move1.FR1(this.playerTerritory);
 			this.moves.add(move1);
-			move2.FL1();
+			move2.FL1(this.playerTerritory);
 			this.moves.add(move2);
+		}
+		else if(this.type == BIRD) {
+			move1.F2(this.playerTerritory);
+			this.moves.add(move1);
+		}
+		else if(this.type == GROUNDHOG) {
+			move1.B1(this.playerTerritory);
+			this.moves.add(move1);
+		}
+		else if(this.type == TURTLE) {
 		}
 	}
 	
-	public int getListLength() {
+	
+	public void setSelectedColor() {
+		if(this.primaryColor == Color.BLUE) {
+			this.selectedColor = Color.CYAN;
+		}
+		else if(this.primaryColor == Color.RED) {
+			this.selectedColor = Color.MAGENTA;
+		}
+		else if(this.primaryColor == Color.YELLOW) {
+			this.selectedColor = Color.PINK;
+		}
+	}
+	
+	
+	
+	public int getMovesListLength() {
 		return this.moves.size();
 	}
 	
-	public List<Move> possibleSpaces() {
+	public List<Move> getMovesList() {
 		return this.moves;
 	}
+	public Move getMove(int index) {
+		return this.moves.get(index);
+	}	
 	
-	
-	public Piece copyPiece() {
-		Piece pNew = new Piece(this.color, this.team, this.type, this.selected);
-		return pNew;
+	Piece(Piece p) {
+		setPrimaryColor(p.primaryColor);
+		setPlayerID(p.playerID);
+		setPlayerTerritory(p.playerTerritory);
+		setTeam(p.team);
+		setType(p.type);
+		setSelected(p.selected);
+		setMoves();
 	}
-
+	
+	
 	
 	
 	public void paintComponent(Graphics g) {
 		int size = this.getWidth();
-		
-		if(this.color == Color.BLUE) {
-			Font glade = new Font(Font.SERIF, Font.BOLD, size);
-			g.setColor(Color.BLACK);
-			g.fillOval(size/10, size/10, size-(size/5), size-(size/5));
+		Font glade = new Font(Font.SERIF, Font.BOLD, size);
+		g.setColor(Color.BLACK);
+		g.fillOval(size/10, size/10, size-(size/5), size-(size/5));
 
-			if(this.selected == false) {
-				g.setColor(Color.BLUE);
-				Graphics2D g2;
-				g2 = (Graphics2D)g; 
-				g2.setStroke(new BasicStroke(5));
-				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
-			}
-			if(this.selected == true) {
-				g.setColor(Color.CYAN);
-				Graphics2D g2;
-				g2 = (Graphics2D)g; 
-				g2.setStroke(new BasicStroke(5));
-				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
-			}
-			
-			switch(this.type) {
-			case 0:
-				g.setColor(Color.WHITE);
-				g.setFont(glade);
-				g.drawString("R", (size/5), size-(size/5));
-				break;
-			case 1:
-				g.setColor(Color.WHITE);
-				g.setFont(glade);
-				g.drawString("S", (size/5), size-(size/5));
-				break;
-			case 2:
-				g.setColor(Color.WHITE);
-				g.setFont(glade);
-				g.drawString("B", (size/5), size-(size/5));
-				break;
-			case 3:
-				g.setColor(Color.WHITE);
-				g.setFont(glade);
-				g.drawString("G", (size/5), size-(size/5));
-				break;
-			case 4:
-				g.setColor(Color.WHITE);
-				g.setFont(glade);
-				g.drawString("T", (size/5), size-(size/5));
-				break;
-			}
+		if(this.selected == false) {
+			g.setColor(this.primaryColor);
 		}
-		if(this.color == Color.RED) {
-			Font glade = new Font(Font.SERIF, Font.BOLD, size);
-			g.setColor(Color.BLACK);
-			g.fillOval(size/10, size/10, size-(size/5), size-(size/5));
-
-			if(this.selected == false) {
-				g.setColor(Color.RED);
-				Graphics2D g2;
-				g2 = (Graphics2D)g; 
-				g2.setStroke(new BasicStroke(5));
-				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
-			}
-			if(this.selected == true) {
-				g.setColor(Color.MAGENTA);
-				Graphics2D g2;
-				g2 = (Graphics2D)g; 
-				g2.setStroke(new BasicStroke(5));
-				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
-			}
-			
-			switch(this.type) {
-			case RABBIT:
-				g.setColor(Color.WHITE);
-				g.setFont(glade);
-				g.drawString("R", (size/5), size-(size/5));
-				break;
-			case SNAKE:
-				g.setColor(Color.WHITE);
-				g.setFont(glade);
-				g.drawString("S", (size/5), size-(size/5));
-				break;
-			case BIRD:
-				g.setColor(Color.WHITE);
-				g.setFont(glade);
-				g.drawString("B", (size/5), size-(size/5));
-				break;
-			case GROUNDHOG:
-				g.setColor(Color.WHITE);
-				g.setFont(glade);
-				g.drawString("G", (size/5), size-(size/5));
-				break;
-			case TURTLE:
-				g.setColor(Color.WHITE);
-				g.setFont(glade);
-				g.drawString("T", (size/5), size-(size/5));
-				break;
-			}
+		else if(this.selected == true) {
+			g.setColor(this.selectedColor);
+		}
+		Graphics2D g2;
+		g2 = (Graphics2D)g; 
+		g2.setStroke(new BasicStroke(5));
+		g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
+		
+		if(this.getConsecutiveTurnsInEnemyTerritory() >= 1) {
+			g2.setStroke(new BasicStroke(3));
+			g2.setColor(this.primaryColor);
+			g2.drawRoundRect(2, 2, size-4, size-4, 5, 5);
+		}
+		if(this.getConsecutiveTurnsInEnemyTerritory() >= 2) {
+			g2.setStroke(new BasicStroke(3));
+			g2.setColor(this.primaryColor);
+			g2.drawRoundRect(6, 6, size-12, size-12, 3, 3);
+		}
+		if(this.getConsecutiveTurnsInEnemyTerritory() == 3) {
+			g2.setStroke(new BasicStroke(3));
+			g2.setColor(this.primaryColor);
+			g2.drawRoundRect(10, 10, size-20, size-20, 2, 2);
 		}
 		
 		
-		if(this.color == Color.YELLOW) {
-			Font glade = new Font(Font.SERIF, Font.BOLD, size);
-			g.setColor(Color.BLACK);
-			g.fillOval(size/10, size/10, size-(size/5), size-(size/5));
-
-			if(this.selected == false) {
-				g.setColor(Color.YELLOW);
-				Graphics2D g2;
-				g2 = (Graphics2D)g; 
-				g2.setStroke(new BasicStroke(5));
-				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
-			}
-			if(this.selected == true) {
-				g.setColor(Color.PINK);
-				Graphics2D g2;
-				g2 = (Graphics2D)g; 
-				g2.setStroke(new BasicStroke(5));
-				g2.drawOval(size/10, size/10, size-(size/5), size-(size/5));
-			}
-			
-			switch(this.type) {
-			case RABBIT:
-				g.setColor(Color.WHITE);
-				g.setFont(glade);
-				g.drawString("R", (size/5), size-(size/5));
-				break;
-			case SNAKE:
-				g.setColor(Color.WHITE);
-				g.setFont(glade);
-				g.drawString("S", (size/5), size-(size/5));
-				break;
-			case BIRD:
-				g.setColor(Color.WHITE);
-				g.setFont(glade);
-				g.drawString("B", (size/5), size-(size/5));
-				break;
-			case GROUNDHOG:
-				g.setColor(Color.WHITE);
-				g.setFont(glade);
-				g.drawString("G", (size/5), size-(size/5));
-				break;
-			case TURTLE:
-				g.setColor(Color.WHITE);
-				g.setFont(glade);
-				g.drawString("T", (size/5), size-(size/5));
-				break;
-			}
+		g.setColor(Color.WHITE);
+		g.setFont(glade);
+		switch(this.type) {
+		case RABBIT:
+			g.drawString("R", (size/5), size-(size/5));
+			break;
+		case SNAKE:
+			g.drawString("S", (size/5), size-(size/5));
+			break;
+		case BIRD:
+			g.drawString("B", (size/5), size-(size/5));
+			break;
+		case GROUNDHOG:
+			g.drawString("G", (size/5), size-(size/5));
+			break;
+		case TURTLE:
+			g.drawString("T", (size/5), size-(size/5));
+			break;
 		}
 	}
+
+	public int getConsecutiveTurnsInEnemyTerritory() {
+		return consecutiveTurnsInEnemyTerritory;
+	}
+
+	public void setConsecutiveTurnsInEnemyTerritory(int turns) {
+		this.consecutiveTurnsInEnemyTerritory = turns;
+	}
 }
+	
+

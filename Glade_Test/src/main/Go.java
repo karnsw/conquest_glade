@@ -38,7 +38,9 @@ public class Go {
 		YES = true,
 		NO = false,
 		INBOUNDS = true,
-		OUTBOUNDS = false;
+		OUTBOUNDS = false,
+		BOARD = true,
+		RACK = false;
 	
 	
 	public static void main(String[] args) {
@@ -68,8 +70,7 @@ public class Go {
 		int ttlGameRows = boardRowsCount + boardBufferRowsCount;
 				
 				
-		Piece pieces[][] = new Piece[columns][rows]; 
-		Space spaces[][] = new Space[columns][rows]; 
+
 		
 		
 		
@@ -105,21 +106,32 @@ public class Go {
 		System.out.println("minSpaceSize- " + minSpaceSize);
 		
 		
+		Piece pieces[][] = new Piece[columns][rows]; 
+		Space spaces[][] = new Space[columns][rows]; 
+		
+		for(int row = 0; row < rows; row++) {
+			for(int col = 0; col < columns; col++) {
+				pieces[col][row] = null;
+			}
+		}
 		
 		
-		
-		
+		char player1Territory = miniTest.Player1().getTerritory()[0];
+		System.out.println("teritory char p1- " + player1Territory);
+		char player2Territory = miniTest.Player2().getTerritory()[0];
+		System.out.println("teritory char p2- " + player2Territory);
+				
 		//initalize pieces array
-		pieces[0][1] = new Piece(miniTest.Player1().getColor(), miniTest.Player1().getTeam(), RABBIT, false);
-		pieces[0][2] = new Piece(miniTest.Player1().getColor(), miniTest.Player1().getTeam(), SNAKE, false);
-		pieces[0][3] = new Piece(miniTest.Player1().getColor(), miniTest.Player1().getTeam(), BIRD, false);
-		pieces[0][4] = new Piece(miniTest.Player1().getColor(), miniTest.Player1().getTeam(), GROUNDHOG, false);
-		pieces[0][5] = new Piece(miniTest.Player1().getColor(), miniTest.Player1().getTeam(), TURTLE, false);
-		pieces[columns-1][1] = new Piece(miniTest.Player2().getColor(), miniTest.Player1().getTeam(), RABBIT, false);
-		pieces[columns-1][2] = new Piece(miniTest.Player2().getColor(), miniTest.Player1().getTeam(), SNAKE, false);
-		pieces[columns-1][3] = new Piece(miniTest.Player2().getColor(), miniTest.Player1().getTeam(), BIRD, false);
-		pieces[columns-1][4] = new Piece(miniTest.Player2().getColor(), miniTest.Player1().getTeam(), GROUNDHOG, false);
-		pieces[columns-1][5] = new Piece(miniTest.Player2().getColor(), miniTest.Player1().getTeam(), TURTLE, false);
+		pieces[0][1] = new Piece(miniTest.Player1().getColor(), miniTest.Player1().getID(), miniTest.Player1().getTerritory()[0], miniTest.Player1().getTeam(), RABBIT, false);
+		pieces[0][2] = new Piece(miniTest.Player1().getColor(), miniTest.Player1().getID(), miniTest.Player1().getTerritory()[0], miniTest.Player1().getTeam(), SNAKE, false);
+		pieces[0][3] = new Piece(miniTest.Player1().getColor(), miniTest.Player1().getID(), miniTest.Player1().getTerritory()[0], miniTest.Player1().getTeam(), BIRD, false);
+		pieces[0][4] = new Piece(miniTest.Player1().getColor(), miniTest.Player1().getID(), miniTest.Player1().getTerritory()[0], miniTest.Player1().getTeam(), GROUNDHOG, false);
+		pieces[0][5] = new Piece(miniTest.Player1().getColor(), miniTest.Player1().getID(), miniTest.Player1().getTerritory()[0], miniTest.Player1().getTeam(), TURTLE, false);
+		pieces[columns-1][1] = new Piece(miniTest.Player2().getColor(), miniTest.Player2().getID(), miniTest.Player2().getTerritory()[0], miniTest.Player2().getTeam(), RABBIT, false);
+		pieces[columns-1][2] = new Piece(miniTest.Player2().getColor(), miniTest.Player2().getID(), miniTest.Player2().getTerritory()[0], miniTest.Player2().getTeam(), SNAKE, false);
+		pieces[columns-1][3] = new Piece(miniTest.Player2().getColor(), miniTest.Player2().getID(), miniTest.Player2().getTerritory()[0], miniTest.Player2().getTeam(), BIRD, false);
+		pieces[columns-1][4] = new Piece(miniTest.Player2().getColor(), miniTest.Player2().getID(), miniTest.Player2().getTerritory()[0], miniTest.Player2().getTeam(), GROUNDHOG, false);
+		pieces[columns-1][5] = new Piece(miniTest.Player2().getColor(), miniTest.Player2().getID(), miniTest.Player2().getTerritory()[0], miniTest.Player2().getTeam(), TURTLE, false);
 		
 		
 		
@@ -147,13 +159,54 @@ public class Go {
 		//assign team territory and color
 		for(int row = boardRowStart; row < boardRowEnd; row++) {
 			for(int col = boardColStart; col < boardColEnd; col++) {
-				if(row < (boardRowsCount/2 + boardRowStart)) {
-					spaces[col][row].setTeamTerritory(miniTest.Player1().getTeam());
-					spaces[col][row].setTeamTerritoryColor(miniTest.Player1().getColor());
-				}
-				 if((row >= boardRowsCount/2 + boardRowStart)) {
-					spaces[col][row].setTeamTerritory(miniTest.Player2().getTeam());
-					spaces[col][row].setTeamTerritoryColor(miniTest.Player2().getColor());
+				for(int i = 0; i < miniTest.getPlayers().size(); i++) {
+					//if territory is not currently neutral			
+					
+
+						int tCount = (miniTest.getPlayers().get(i).getTerritory()[1]) - '0';
+
+						if(miniTest.getPlayers().get(i).getTerritory()[0] == 'T' && (row-boardRowStart) < tCount) {
+							if(spaces[col][row].getTeamTerritory() != 0) {
+								spaces[col][row].setTeamTerritory(-1);					//if territory == -1, no one can drop piece there
+								spaces[col][row].setTeamTerritoryColor(Color.BLACK);
+							}
+							else {
+								spaces[col][row].setTeamTerritory(miniTest.getPlayers().get(i).getTeam());
+								spaces[col][row].setTeamTerritoryColor(miniTest.getPlayers().get(i).getColor());
+							}
+						}
+						else if(miniTest.getPlayers().get(i).getTerritory()[0] == 'B' && row >= (boardRowEnd-tCount)) {
+							if(spaces[col][row].getTeamTerritory() != 0) {
+								System.out.println("lets go black");
+								spaces[col][row].setTeamTerritory(-1);					//if territory == -1, no one can drop piece there
+								spaces[col][row].setTeamTerritoryColor(Color.BLACK);
+							}
+							else{
+								spaces[col][row].setTeamTerritory(miniTest.getPlayers().get(i).getTeam());
+								spaces[col][row].setTeamTerritoryColor(miniTest.getPlayers().get(i).getColor());
+							}
+						}
+						else if(miniTest.getPlayers().get(i).getTerritory()[0] == 'L' && (col-boardColStart) < tCount) {
+							if(spaces[col][row].getTeamTerritory() != 0) {
+								spaces[col][row].setTeamTerritory(-1);					//if territory == -1, no one can drop piece there
+								spaces[col][row].setTeamTerritoryColor(Color.BLACK);
+							}
+							else{
+								spaces[col][row].setTeamTerritory(miniTest.getPlayers().get(i).getTeam());
+								spaces[col][row].setTeamTerritoryColor(miniTest.getPlayers().get(i).getColor());
+							}
+						}
+						else if(miniTest.getPlayers().get(i).getTerritory()[0] == 'R' && col >= (boardColEnd-tCount)) {
+							if(spaces[col][row].getTeamTerritory() != 0) {
+								spaces[col][row].setTeamTerritory(-1);					//if territory == -1, no one can drop piece there
+								spaces[col][row].setTeamTerritoryColor(Color.BLACK);
+							}
+							else{
+								spaces[col][row].setTeamTerritory(miniTest.getPlayers().get(i).getTeam());
+								spaces[col][row].setTeamTerritoryColor(miniTest.getPlayers().get(i).getColor());
+							}
+						}
+					
 				}
 			}
 		}
@@ -224,37 +277,12 @@ public class Go {
 		JPanel statusPanel = new JPanel();
 		JPanel messagePanel = new JPanel();
 		
-		//messagePanel.setPreferredSize(new Dimension(monitor_buffer.width, 100));
-
-		/*
-		String player = null;
-
-		if(miniTest.getTurn() == 0) {
-			 player = miniTest.Player1().getName();
-				System.out.println("player1");
-		}
-		else if(miniTest.getTurn() == 1) {
-			player = miniTest.Player2().getName();
-			System.out.println("player2");
-		}
-		*/
+		messagePanel.setPreferredSize(new Dimension(monitor_buffer.width, 100));
 		
-		/*
-		 * 		messagePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
-		String player = miniTest.currentPlayer().getName();
-		JLabel activePlayer = new JLabel(String.format("<html>Active Player:<br>%s</html>", player));
-		activePlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
-		statusPanel.add(activePlayer);
-		statusPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
-		
-		messagePanel.add(new Label("Help Messages + History"));		
-		messagePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
-		*/
-		
-		StatusLabel(statusPanel, miniTest.currentPlayer(), false);
+		StatusLabel(statusPanel, miniTest.getTotalTurns(), miniTest.currentPlayer());
 		
 		List<String> messages = new ArrayList<String>();	
-		MessageLabel(messagePanel, messages, miniTest.currentPlayer().getName(), false);
+		MessageLabel(messagePanel, messages, "Let's Play Glade!", null);
 		
 		
 		
@@ -327,13 +355,9 @@ public class Go {
 		
 		board.addMouseListener(new MouseListener() {
 			
-			
-			private int tempType = -1;
-			private int tempTeam = -1;
-			private JPanel stack = new JPanel();
-			
-			private boolean engauged = false;
-			private boolean engaugedPieceZone;
+			private boolean selected = false;
+			private boolean selectedPieceZone;
+			boolean moveFound = false;
 			
 			private int X2 = -1;
 			private int Y2 = -1;
@@ -341,148 +365,452 @@ public class Go {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
 
+				JPanel stack = new JPanel();
+				stack.setLayout(new OverlayLayout(stack));
+				
 				int mouseX = evt.getX();
 				int mouseY = evt.getY();
 				int X1 = mouseX/spaceSize;
 				int Y1 = mouseY/spaceSize;
 
 				
-			if(pieces[X1][Y1] != null && pieces[X1][Y1].getSelected() == false) {	       	//there is a piece the piece was not selected already
-					if(pieces[X1][Y1].getTeam() == miniTest.currentPlayer().getTeam()) {	//correct team piece has been selected
-						if(spaces[X1][Y1].getZone() == OUTBOUNDS) {	 						//the piece is on current players rack
-							pieces[X1][Y1].setSelected(true);
-							engauged = true;
-							engaugedPieceZone = OUTBOUNDS;					
-							System.out.println("if");
-							System.out.println("X1- " + X1 + "   X2- " + X2);
-							System.out.println("Y1- " + Y1 + "   Y2- " + Y2);
-							X2 = X1;
-							Y2 = Y1;
+				if(selected == true) {
+					if(X1 == X2 && Y1 == Y2) {										//the player want to deselect the current piece
+						if(moveFound == true) {										//the current piece has available moves to remove
+							int newX, newY;
+							for(int index = 0; index < pieces[X1][Y1].getMovesListLength(); index++) {
+								newX = X1 + pieces[X1][Y1].getMove(index).getLeft() + pieces[X1][Y1].getMove(index).getRight();
+								newY = Y1 + pieces[X1][Y1].getMove(index).getUp() + pieces[X1][Y1].getMove(index).getDown();
+								if(spaces[newX][newY].getZone() == INBOUNDS && pieces[newX][newY] == null ||
+										//or possible space is inbounds, occupied and of the other team 	
+										spaces[newX][newY].getZone() == INBOUNDS && pieces[newX][newY] != null && pieces[newX][newY].getTeam() != miniTest.currentPlayer().getTeam()) {
+										moveFound = true; 
+									spaces[newX][newY].setAvailableMove(false);									
+								}
+							}
+						}
+						//player was planning to add piece. the spaces that showed valid placement need to be reverted to neutral
+						else {						
 							for(int row = boardRowStart; row < boardRowEnd; row++) {
 								for(int col = boardColStart; col < boardColEnd; col++) {
 									if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
-										spaces[col][row].setAddPiece(true);				//show spaces piece can be placed
+										spaces[col][row].setAddPiece(false);				//show spaces piece can be placed
 									}
 								}
 							}
-							board.revalidate();
-							board.repaint();
+						}	
+						pieces[X1][Y1].setSelected(false);
+						selected = false;
+						X2 = -1;
+						Y2 = -1;
+						board.revalidate();
+						board.repaint();
+						String newMessage = "Your prior selection has been deselcted. Choose a new piece.";
+						MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+						return;
+					}
+					if(selectedPieceZone == BOARD) {
+						if(moveFound == true) {	
+							if(spaces[X1][Y1].getAvailableMove() == false) {
+								String newMessage = "You must select one of the valid moves (highlighted) "
+										+ "or deselect your current piece to start over. Try again.";
+								MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+								return;
+							}
+							else if(spaces[X1][Y1].getAvailableMove() == true) {
+								if(pieces[X1][Y1] != null){ 						//space clicked has opponents piece
+									
+									int scoreTemp = miniTest.currentPlayer().getScore();
+									scoreTemp = scoreTemp + 10;
+									miniTest.currentPlayer().setScore(scoreTemp);		//fix for different piece type
+									
+									String pieceName = "";
+									switch(pieces[X2][Y2].getType()) {
+									case RABBIT:
+										pieceName = "Rabbit";
+										break;
+									case SNAKE:
+										pieceName = "Snake";
+										break;
+									case BIRD:
+										pieceName = "Bird";
+										break;
+									case GROUNDHOG:
+										pieceName = "Groundhog";
+										break;
+									case TURTLE:
+										pieceName = "Turtle";
+										break;
+									};
+									String opponentPieceName = "";
+									switch(pieces[X1][Y1].getType()) {
+									case RABBIT:
+										opponentPieceName = "Rabbit";
+										break;
+									case SNAKE:
+										opponentPieceName = "Snake";
+										break;
+									case BIRD:
+										opponentPieceName = "Bird";
+										break;
+									case GROUNDHOG:
+										opponentPieceName = "Groundhog";
+										break;
+									case TURTLE:
+										opponentPieceName = "Turtle";
+										break;
+									};
+									
+									System.out.println("name- " + miniTest.currentPlayer().getName());
+									System.out.println("score " + miniTest.currentPlayer().getScore());
+									
+									ScoreLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
+									StatusLabel(statusPanel, miniTest.getTotalTurns(), miniTest.currentPlayer());
+									
+									StringBuilder newMessage = new StringBuilder("Your ").append(pieceName).append(" has overtaken your opponents ")
+																				.append(opponentPieceName).append(". Score +10"); ///fix for all scores
+									
+									MessageLabel(messagePanel, messages, newMessage.toString(), miniTest.currentPlayer());
+									
+									
+									pieces[X2][Y2].setSelected(false);
+									pieces[X1][Y1] = pieces[X2][Y2];
+									pieces[X2][Y2] = null;
+									moveFound = false;
+									selected = false;
+
+									
+									
+									
+									for(int row = boardRowStart; row < boardRowEnd; row++) {
+										for(int col = boardColStart; col < boardColEnd; col++) {
+											if(spaces[col][row].getAvailableMove() == true) {
+												spaces[col][row].setAvailableMove(false);
+											}
+										}
+									}
+									
+									stack.removeAll();
+									stack.add(pieces[X1][Y1]);
+									stack.add(spaces[X1][Y1]);
+									board.remove(Y1*columns + X1);
+									board.add(stack, Y1*columns + X1);
+									board.revalidate();
+									board.repaint();
+									
+									miniTest.incrementTurn();
+									MessageLabel(messagePanel, messages, miniTest.currentPlayer().getName() + " your turn!", null);
+									return;
+								}
+								//space clicked is not occupied by a piece (empty)
+								else if(pieces[X1][Y1] == null) {									
+									String pieceName = "";
+									switch(pieces[X2][Y2].getType()) {
+									case RABBIT:
+										pieceName = "Rabbit";
+										break;
+									case SNAKE:
+										pieceName = "Snake";
+										break;
+									case BIRD:
+										pieceName = "Bird";
+										break;
+									case GROUNDHOG:
+										pieceName = "Groundhog";
+										break;
+									case TURTLE:
+										pieceName = "Turtle";
+										break;
+									};
+									StringBuilder newMessage = new StringBuilder("You have moved a ").append(pieceName).append(".");
+									MessageLabel(messagePanel, messages, newMessage.toString(), miniTest.currentPlayer());
+									
+									pieces[X2][Y2].setSelected(false);
+									pieces[X1][Y1] = pieces[X2][Y2];
+									pieces[X2][Y2] = null;
+									moveFound = false;
+									selected = false;
+									
+									for(int row = boardRowStart; row < boardRowEnd; row++) {
+										for(int col = boardColStart; col < boardColEnd; col++) {
+											if(spaces[col][row].getAvailableMove() == true) {
+												spaces[col][row].setAvailableMove(false);
+											}
+										}
+									}
+									
+									stack.removeAll();
+									stack.add(pieces[X1][Y1]);
+									stack.add(spaces[X1][Y1]);
+									board.add(stack, Y1*columns + X1);
+									board.revalidate();
+									board.repaint();
+									
+									miniTest.incrementTurn();
+									MessageLabel(messagePanel, messages, miniTest.currentPlayer().getName() + " your turn!", null);
+									return;								
+								}	
+							}
+						}	
+					}
+					//piece selected is from player rack
+					if(selectedPieceZone == RACK) {				
+						//location selected is already occupied piece
+						if(pieces[X1][Y1] != null) {					
+							String newMessage = "Your selection is already occupied by a piece. You must select one of the valid moves (outlined) "
+									+ "or deselect your current piece to start over. Try again.";
+							MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
 							return;
 						}
-					}
-					return; //incorrect teams piece was selected
-				}
-				else if(pieces[X1][Y1] == null) {			//new location selected is does not have a piece occupying it
-					System.out.println("EPZ- " + engaugedPieceZone);
-					if(engaugedPieceZone == INBOUNDS) {
-						pieces[X1][Y1] = pieces[X2][Y2];	//move piece from starting location to new location
-						pieces[X2][Y2] = null;				//remove piece from starting loaction
-						X1 = -1;
-						X2 = -1;
-						Y1 = -1;
-						Y2 = -1;
-						engauged = false;
-						board.revalidate();
-						board.repaint();
-						return;
-					}
-				
-					else if(engaugedPieceZone == OUTBOUNDS){
-						System.out.println("Y2- " + Y2);
-						switch(Y2) {
+						//location selected is not valid territory for current piece
+						else if(spaces[X1][Y1].getTeamTerritory() != miniTest.currentPlayer().getTeam()) { 	
+							String newMessage = "Your selection is outside of your teritory. You must select one of the valid moves (outlined) "
+									+ "or deselect your current piece to start over. Try again.";
+							MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+							return;
+						}
+						//copy piece type from rack to board, remove one from rack
+						else {
+							pieces[X2][Y2].setSelected(false);
+							pieces[X1][Y1] = new Piece(pieces[X2][Y2]);
+							selected = false;
+																
+							String pieceName = "";
+							miniTest.currentPlayer().removeRackPiece(pieces[X1][Y1].getType());
+							switch(pieces[X1][Y1].getType()) {
 							case RABBIT:
-								if(miniTest.currentPlayer().getRabbitCount() > 0){
-									miniTest.currentPlayer().removeRackPiece(RABBIT);
-									JPanel playerPanel = passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel);
-									RabbitLabel(miniTest.currentPlayer(), playerPanel, true);	
-								}
+								pieceName = "Rabbit";
+								RabbitLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
 								break;
 							case SNAKE:
-								if(miniTest.currentPlayer().getSnakeCount() > 0){
-									miniTest.currentPlayer().removeRackPiece(SNAKE);
-									JPanel playerPanel = passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel);
-									SnakeLabel(miniTest.currentPlayer(), playerPanel, true);
-									System.out.println("SNAKE: " + tempTeam);
-								}
+								pieceName = "Snake";
+								SnakeLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
 								break;
 							case BIRD:
-								if(miniTest.currentPlayer().getBirdCount() > 0){
-									miniTest.currentPlayer().removeRackPiece(BIRD);
-									JPanel playerPanel = passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel);
-									BirdLabel(miniTest.currentPlayer(), playerPanel, true);
-								}
+								pieceName = "Bird";
+								BirdLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
 								break;
 							case GROUNDHOG:
-								if(miniTest.currentPlayer().getGroundhogCount() > 0){
-									miniTest.currentPlayer().removeRackPiece(GROUNDHOG);
-									JPanel playerPanel = passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel);
-									GroundhogLabel(miniTest.currentPlayer(), playerPanel, true);
-								}
+								pieceName = "Groundhog";
+								GroundhogLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
 								break;
 							case TURTLE:
-								if(miniTest.currentPlayer().getTurtleCount() > 0) {
-									miniTest.currentPlayer().removeRackPiece(TURTLE);
-									JPanel playerPanel = passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel);
-									TurtleLabel(miniTest.currentPlayer(), playerPanel, true);
-								}
+								pieceName = "Turtle";
+								TurtleLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
 								break;
+							};
+							
+							for(int row = boardRowStart; row < boardRowEnd; row++) {
+								for(int col = boardColStart; col < boardColEnd; col++) {
+									if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
+										spaces[col][row].setAddPiece(false);				//hide spaces piece could be placed (b/c it is now) 
+									}
+								}
+							}
+							
+							StringBuilder newMessage = new StringBuilder("You have added a ").append(pieceName).append(" to the board.");	
+							MessageLabel(messagePanel, messages, newMessage.toString(), miniTest.currentPlayer());
+														
+							stack.removeAll();
+							stack.add(pieces[X1][Y1]);
+							stack.add(spaces[X1][Y1]);
+							board.add(stack, Y1*columns + X1);
+
+							board.revalidate();
+							board.repaint();
+														
+							miniTest.incrementTurn();
+							MessageLabel(messagePanel, messages, miniTest.currentPlayer().getName() + " your turn!", null);
+							return;		
 						}
-
-						
-						
-						pieces[X2][Y2].toggleSelected();
-						
-						
-						tempType = pieces[X2][Y2].getPieceType();
-						tempTeam = pieces[X2][Y2].getTeam();
-						System.out.println("p2,type: " + tempType);
-						System.out.println("p2,team: " + tempTeam);
-						
-						//so piece can be highlighted
-						Piece temp = pieces[X2][Y2].copyPiece();
-						stack.add(temp);
-						stack.add(spaces[X1][Y1]);
-						board.remove(Y1*columns + X1);
-						board.add(stack, Y1*columns + X1);
-						
-
-						
-						
-						
-						X1 = -1;
-						X2 = -1;
-						Y1 = -1;
-						Y2 = -1;
-						engauged = false;
-						board.revalidate();
-						board.repaint();
-						return;
-					}
-					
-					
-				}
-				else if(pieces[X1][Y1].getSelected() == true) {
-					System.out.println("else");
-					System.out.println("X1- " + X1 + "   X2- " + X2);
-					System.out.println("Y1- " + Y1 + "   Y2- " + Y2);
-					
-															//piece selected == true
-					if(X1 == X2 && Y1 == Y2) {				//if selected piece has been clicked on again...
-						pieces[X1][Y1].setSelected(false);	//deselect
-						X1 = -1;
-						X2 = -1;
-						Y1 = -1;
-						Y2 = -1;
-						engauged = false;
-						board.revalidate();
-						board.repaint();
-						return;
 					}
 				}
+				
+				else if(selected == false) {															//no piece is currently selected
+					if(pieces[X1][Y1] == null) {												//location clicked does not have a piece
+						String newMessage = "You must select a piece. Try again.";
+						MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+						return;
+					}
+					else {																		//location clicked does have a piece
+						if(pieces[X1][Y1].getPlayerID() != miniTest.currentPlayer().getID()) {	//piece does not belong to player
+							String newMessage = "You must select your own piece. Try again.";
+							MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+							return;
+						}
+						else {																	//piece does belong to current player
+							if(spaces[X1][Y1].getZone() == OUTBOUNDS) {							//piece is on current players rack
+								selectedPieceZone = RACK;
+								if(pieces[X1][Y1].getType() == RABBIT) {						
+									if(miniTest.currentPlayer().getRabbitCount() <= 0){			//player does not have any rabbits in reserve
+										String newMessage = "You do not have any Rabbits in reserve. Try again.";
+										MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+										return;
+									}
+									else {
+										pieces[X1][Y1].setSelected(true);						//player does have rabbits in reserve
+										selected = true;
+										X2 = X1;
+										Y2 = Y1;
+										for(int row = boardRowStart; row < boardRowEnd; row++) {
+											for(int col = boardColStart; col < boardColEnd; col++) {
+												if(pieces[col][row] == null) {					//location must be empty 
+													if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
+														spaces[col][row].setAddPiece(true);				//show spaces piece can be placed
+													}
+												}
+											}
+										}
+										board.revalidate();
+										board.repaint();
+										System.out.println("set");
+										return;
+									}
+								}
+								else if(pieces[X1][Y1].getType() == SNAKE) {						
+									if(miniTest.currentPlayer().getSnakeCount() <= 0){			//player does not have any snakes in reserve
+										String newMessage = "You do not have any Snakes in reserve. Try again.";
+										MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+										return;
+									}
+									else {
+										pieces[X1][Y1].setSelected(true);						//player does have snakes in reserve
+										selected = true;
+										X2 = X1;
+										Y2 = Y1;
+										for(int row = boardRowStart; row < boardRowEnd; row++) {
+											for(int col = boardColStart; col < boardColEnd; col++) {
+												if(pieces[col][row] == null) {					//location must be empty 
+													if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
+														spaces[col][row].setAddPiece(true);				//show spaces piece can be placed
+													}
+												}
+											}
+										}
+										board.revalidate();
+										board.repaint();
+										return;
+									}
+								}
+								else if(pieces[X1][Y1].getType() == BIRD) {						
+									if(miniTest.currentPlayer().getBirdCount() <= 0){			//player does not have any birds in reserve
+										String newMessage = "You do not have any Birds in reserve. Try again.";
+										MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+										return;
+									}
+									else {
+										pieces[X1][Y1].setSelected(true);						//player does have birds in reserve
+										selected = true;
+										X2 = X1;
+										Y2 = Y1;
+										for(int row = boardRowStart; row < boardRowEnd; row++) {
+											for(int col = boardColStart; col < boardColEnd; col++) {
+												if(pieces[col][row] == null) {					//location must be empty 
+													if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
+														spaces[col][row].setAddPiece(true);				//show spaces piece can be placed
+													}
+												}
+											}
+										}
+										board.revalidate();
+										board.repaint();
+										return;
+									}
+								}
+								else if(pieces[X1][Y1].getType() == GROUNDHOG) {						
+									if(miniTest.currentPlayer().getGroundhogCount() <= 0){		//player does not have any groundhogs in reserve
+										String newMessage = "You do not have any Groundhogs in reserve. Try again.";
+										MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+										return;
+									}
+									else {
+										pieces[X1][Y1].setSelected(true);						//player does have groundhogs in reserve
+										selected = true;
+										X2 = X1;
+										Y2 = Y1;
+										for(int row = boardRowStart; row < boardRowEnd; row++) {
+											for(int col = boardColStart; col < boardColEnd; col++) {
+												if(pieces[col][row] == null) {					//location must be empty 
+													if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
+														spaces[col][row].setAddPiece(true);				//show spaces piece can be placed
+													}
+												}
+											}
+										}
+										board.revalidate();
+										board.repaint();
+										return;
+									}
+								}
+								else if(pieces[X1][Y1].getType() == TURTLE) {						
+									if(miniTest.currentPlayer().getSnakeCount() <= 0){			//player does not have any turtles in reserve
+										String newMessage = "You do not have any Turtles in reserve. Try again.";
+										MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+										return;
+									}
+									else {
+										pieces[X1][Y1].setSelected(true);						//player does have turtles in reserve
+										selected = true;
+										X2 = X1;
+										Y2 = Y1;
+										for(int row = boardRowStart; row < boardRowEnd; row++) {
+											for(int col = boardColStart; col < boardColEnd; col++) {
+												if(pieces[col][row] == null) {					//location must be empty 
+													if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
+														spaces[col][row].setAddPiece(true);				//show spaces piece can be placed
+													}
+												}
+											}
+										}
+										board.revalidate();
+										board.repaint();
+										return;
+									}
+								}
+							}
+							else if(spaces[X1][Y1].getZone() == INBOUNDS) {						//selected location is inbounds		
+								selectedPieceZone = BOARD;
+								
+								//FIND AVAILABLE MOVES
+								int newX, newY;
+								System.out.println("moves list length- " + pieces[X1][Y1].getMovesListLength());
+								for(int index = 0; index < pieces[X1][Y1].getMovesListLength(); index++) {
+									newX = X1 - pieces[X1][Y1].getMove(index).getLeft() + pieces[X1][Y1].getMove(index).getRight();
+									newY = Y1 - pieces[X1][Y1].getMove(index).getUp() + pieces[X1][Y1].getMove(index).getDown();
+									//possible space is inbounds and empty
+									if(spaces[newX][newY].getZone() == INBOUNDS && pieces[newX][newY] == null ||
+										//or possible space is inbounds, occupied and of the other team 	
+										spaces[newX][newY].getZone() == INBOUNDS && pieces[newX][newY] != null && pieces[newX][newY].getTeam() != miniTest.currentPlayer().getTeam()) {
+										moveFound = true; 
+										
+										System.out.println("available moves- ");
+										spaces[newX][newY].setAvailableMove(true);
+										//selected = true;
+										//pieces[X1][Y1].setSelected(true);
+									}
+								}
+								if(moveFound == true) {
+									pieces[X1][Y1].setSelected(true);
+									selected = true;
+									X2 = X1;
+									Y2 = Y1;	
+									board.revalidate();
+									board.repaint();
+									return;
+								}
+								else {
+									String newMessage = "You have chosen a piece with no available moves. Try again.";
+									MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+									return;
+								}
+							}
+						}
+					}
+				}
+				
+				
+				
 			}
-			
-			
-			
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
 				// TODO Auto-generated method stub
@@ -598,18 +926,42 @@ public class Go {
 	
 	}
 
+	//consecutiveTurns(miniTest.currentPlayer(), pieces, spaces, boardColStart, boardColEnd, boardRowStart, boardRowEnd)
+	
+	/*
+	public static void consecutiveTurns(GameManager game, Piece[][] pieces, Space[][] spaces, int startColumns, int endColumns, int startRows, int endRows) {
+		Player p = game.currentPlayer();
+		int index = -1;
+		for(int col = startColumns; col < endColumns; col++) {	
+			for(int row = startRows; row < endRows; row++) {
+				if(pieces[col][row].getTeam() != p.getTeam() && spaces[col][row].getDefended() == true && spaces[col][row].getTeamTerritory() == p.getTeam()) {
+					pieces[col][row].setConsecutiveTurnsInEnemyTerritory((pieces[col][row].getConsecutiveTurnsInEnemyTerritory())+1);
+					
+					int scoringPlayerID = pieces[col][row].getPlayerID();
+					for(int i = 0; i < game.getPlayers().size(); i++) {
+						if(game.getPlayers().get(i).getID() == scoringPlayerID) {
+							index = i;
+							game.getPlayers().get(index).addScoringPiece(pieces[col][row]);
+						}
+					}
+				}
+			}
+		}
+	}
+	*/
 	
 	
 	
+	
+	
+	//only good for 2 players
 	public static JPanel passPlayerPanel(Player p, JPanel p1, JPanel p2) {
-		JPanel playerPanel;
 		if(p.getTeam() == 1) {
-			playerPanel = p1;
+			return p1;
 		}
 		else {
-			playerPanel = p2;
+			return p2;
 		}
-		return playerPanel;
 	}
 	
 	
@@ -621,7 +973,9 @@ public class Go {
 		}
 		JLabel Rabbits = new JLabel(String.format("<html>Rabbits:<br>%d</html>", player.getRabbitCount()));
 		Rabbits.setAlignmentX(Component.CENTER_ALIGNMENT);
-		playerPanel.add(Rabbits, 1);	
+		playerPanel.add(Rabbits, 1);
+		playerPanel.revalidate();
+		playerPanel.repaint();
 	}
 	
 	
@@ -632,6 +986,8 @@ public class Go {
 		JLabel Snakes = new JLabel(String.format("<html>Snakes:<br>%d</html>", player.getSnakeCount()));
 		Snakes.setAlignmentX(Component.CENTER_ALIGNMENT);
 		playerPanel.add(Snakes, 2);
+		playerPanel.revalidate();
+		playerPanel.repaint();
 	}
 
 	public static void BirdLabel(Player player, JPanel playerPanel, boolean remove) {
@@ -641,6 +997,8 @@ public class Go {
 		JLabel Birds = new JLabel(String.format("<html>Birds:<br>%d</html>", player.getBirdCount()));
 		Birds.setAlignmentX(Component.CENTER_ALIGNMENT);
 		playerPanel.add(Birds, 3);
+		playerPanel.revalidate();
+		playerPanel.repaint();
 	}
 	
 	public static void GroundhogLabel(Player player, JPanel playerPanel, boolean remove) {
@@ -650,6 +1008,8 @@ public class Go {
 		JLabel Groundhogs = new JLabel(String.format("<html>Groundhogs:<br>%d</html>", player.getGroundhogCount()));
 		Groundhogs.setAlignmentX(Component.CENTER_ALIGNMENT);
 		playerPanel.add(Groundhogs, 4);
+		playerPanel.revalidate();
+		playerPanel.repaint();
 	}
 	
 	public static void TurtleLabel(Player player, JPanel playerPanel, boolean remove) {
@@ -659,6 +1019,8 @@ public class Go {
 		JLabel Turtles = new JLabel(String.format("<html>Turtles:<br>%d</html>", player.getTurtleCount()));
 		Turtles.setAlignmentX(Component.CENTER_ALIGNMENT);
 		playerPanel.add(Turtles, 5);
+		playerPanel.revalidate();
+		playerPanel.repaint();
 	}
 	
 	public static void ScoreLabel(Player player, JPanel playerPanel, boolean remove) {
@@ -668,38 +1030,51 @@ public class Go {
 		JLabel Score = new JLabel(String.format("<html>Score:<br>%d</html>", player.getScore()));
 		Score.setAlignmentX(Component.CENTER_ALIGNMENT);
 		playerPanel.add(Score, 7);
+		playerPanel.revalidate();
+		playerPanel.repaint();
 	}
 	
-	public static void StatusLabel(JPanel statusPanel, Player player, boolean remove){
-		if(remove == true) {
-			statusPanel.removeAll();
-		}
-		JLabel activePlayer = new JLabel(String.format("<html>Active Player:<br>%s</html>", player.getName()));
+	
+	
+	
+	public static void StatusLabel(JPanel statusPanel, int ttlTurns, Player player){
+		statusPanel.removeAll();
+		JLabel activePlayer = new JLabel(String.format("<html>Total turns:  %d<br>Active Player:  %s</html>", ttlTurns, player.getName()));
 		activePlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
 		statusPanel.add(activePlayer);
 		statusPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+		statusPanel.revalidate();
+		statusPanel.repaint();
 	}
 	
-	
-	
-	public static void MessageLabel(JPanel messagePanel, List<String> messages, String newMessage, boolean remove){
-		if(remove == true) {
-			messagePanel.removeAll();
+	public static void MessageLabel(JPanel messagePanel, List<String> messages, String newMessage, Player player){
+		messagePanel.removeAll();
+		
+		if(player != null) {
+			StringBuilder newMsgBldr = new StringBuilder();
+			newMsgBldr.append(player.getName() + ":  ");
+			newMsgBldr.append(newMessage);
+			newMessage = newMsgBldr.toString();
 		}
-		if(messages.size() > 0) {
+		
+		if(messages.size() == 5) {
 			messages.remove(messages.size()-1);
 		}
 		
 		List<String> newMessages = new ArrayList<String>();
 		newMessages.add(newMessage);
-		messages.forEach(message -> newMessages.add(newMessage));
+		messages.forEach(message -> newMessages.add(message));
+		messages.clear();
+		newMessages.forEach(message -> messages.add(message));
 		
 		StringBuilder labelString = (new StringBuilder()).append("<html>");
-		newMessages.forEach(message -> labelString.append(message).append("<br>"));
+		messages.forEach(message -> labelString.append(message).append("<br>"));
 		labelString.append("</html>");
-
+		
 		JLabel finalMessage = (new JLabel(String.format(labelString.toString())));
-		messagePanel.add(finalMessage);		
+		messagePanel.add(finalMessage);	
+		messagePanel.revalidate();
+		messagePanel.repaint();
 	}
 }
 
