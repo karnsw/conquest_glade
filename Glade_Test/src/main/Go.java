@@ -206,7 +206,8 @@ public class Go {
 								spaces[col][row].setTeamTerritoryColor(miniTest.getPlayers().get(i).getColor());
 							}
 						}
-					
+						
+						
 				}
 			}
 		}
@@ -332,15 +333,16 @@ public class Go {
 		//initalize game image
 		for(int row = 0; row < rows; row++) {
 			for(int col = 0; col < columns; col++) {
+				JPanel stack = new JPanel();
+				stack.setLayout(new OverlayLayout(stack));
 				if(pieces[col][row] != null) {
-					JPanel stack = new JPanel();
-					stack.setLayout(new OverlayLayout(stack));
 					stack.add(pieces[col][row]);
 					stack.add(spaces[col][row]);
 					board.add(stack, row*columns + col);
 				}
 				else {
-					board.add(spaces[col][row], row*columns + col);					
+					stack.add(spaces[col][row]);
+					board.add(stack, row*columns + col);			
 				}
 			}
 		}
@@ -350,7 +352,7 @@ public class Go {
 	
 		
 		
-	
+
 		
 		
 		board.addMouseListener(new MouseListener() {
@@ -362,454 +364,14 @@ public class Go {
 			private int X2 = -1;
 			private int Y2 = -1;
 			
+			private int PX1;
+			private int PY1;
+			private int RX1;
+			private int RY1;
+
+			
 			@Override
-			public void mouseClicked(MouseEvent evt) {
-
-				JPanel stack = new JPanel();
-				stack.setLayout(new OverlayLayout(stack));
-				
-				int mouseX = evt.getX();
-				int mouseY = evt.getY();
-				int X1 = mouseX/spaceSize;
-				int Y1 = mouseY/spaceSize;
-
-				
-				if(selected == true) {
-					if(X1 == X2 && Y1 == Y2) {										//the player want to deselect the current piece
-						if(moveFound == true) {										//the current piece has available moves to remove
-							int newX, newY;
-							for(int index = 0; index < pieces[X1][Y1].getMovesListLength(); index++) {
-								newX = X1 + pieces[X1][Y1].getMove(index).getLeft() + pieces[X1][Y1].getMove(index).getRight();
-								newY = Y1 + pieces[X1][Y1].getMove(index).getUp() + pieces[X1][Y1].getMove(index).getDown();
-								if(spaces[newX][newY].getZone() == INBOUNDS && pieces[newX][newY] == null ||
-										//or possible space is inbounds, occupied and of the other team 	
-										spaces[newX][newY].getZone() == INBOUNDS && pieces[newX][newY] != null && pieces[newX][newY].getTeam() != miniTest.currentPlayer().getTeam()) {
-										moveFound = true; 
-									spaces[newX][newY].setAvailableMove(false);									
-								}
-							}
-						}
-						//player was planning to add piece. the spaces that showed valid placement need to be reverted to neutral
-						else {						
-							for(int row = boardRowStart; row < boardRowEnd; row++) {
-								for(int col = boardColStart; col < boardColEnd; col++) {
-									if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
-										spaces[col][row].setAddPiece(false);				//show spaces piece can be placed
-									}
-								}
-							}
-						}	
-						pieces[X1][Y1].setSelected(false);
-						selected = false;
-						X2 = -1;
-						Y2 = -1;
-						board.revalidate();
-						board.repaint();
-						String newMessage = "Your prior selection has been deselcted. Choose a new piece.";
-						MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-						return;
-					}
-					if(selectedPieceZone == BOARD) {
-						if(moveFound == true) {	
-							if(spaces[X1][Y1].getAvailableMove() == false) {
-								String newMessage = "You must select one of the valid moves (highlighted) "
-										+ "or deselect your current piece to start over. Try again.";
-								MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-								return;
-							}
-							else if(spaces[X1][Y1].getAvailableMove() == true) {
-								if(pieces[X1][Y1] != null){ 						//space clicked has opponents piece
-									
-									int scoreTemp = miniTest.currentPlayer().getScore();
-									scoreTemp = scoreTemp + 10;
-									miniTest.currentPlayer().setScore(scoreTemp);		//fix for different piece type
-									
-									String pieceName = "";
-									switch(pieces[X2][Y2].getType()) {
-									case RABBIT:
-										pieceName = "Rabbit";
-										break;
-									case SNAKE:
-										pieceName = "Snake";
-										break;
-									case BIRD:
-										pieceName = "Bird";
-										break;
-									case GROUNDHOG:
-										pieceName = "Groundhog";
-										break;
-									case TURTLE:
-										pieceName = "Turtle";
-										break;
-									};
-									String opponentPieceName = "";
-									switch(pieces[X1][Y1].getType()) {
-									case RABBIT:
-										opponentPieceName = "Rabbit";
-										break;
-									case SNAKE:
-										opponentPieceName = "Snake";
-										break;
-									case BIRD:
-										opponentPieceName = "Bird";
-										break;
-									case GROUNDHOG:
-										opponentPieceName = "Groundhog";
-										break;
-									case TURTLE:
-										opponentPieceName = "Turtle";
-										break;
-									};
-									
-									System.out.println("name- " + miniTest.currentPlayer().getName());
-									System.out.println("score " + miniTest.currentPlayer().getScore());
-									
-									ScoreLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
-									StatusLabel(statusPanel, miniTest.getTotalTurns(), miniTest.currentPlayer());
-									
-									StringBuilder newMessage = new StringBuilder("Your ").append(pieceName).append(" has overtaken your opponents ")
-																				.append(opponentPieceName).append(". Score +10"); ///fix for all scores
-									
-									MessageLabel(messagePanel, messages, newMessage.toString(), miniTest.currentPlayer());
-									
-									
-									pieces[X2][Y2].setSelected(false);
-									pieces[X1][Y1] = pieces[X2][Y2];
-									pieces[X2][Y2] = null;
-									moveFound = false;
-									selected = false;
-
-									
-									
-									
-									for(int row = boardRowStart; row < boardRowEnd; row++) {
-										for(int col = boardColStart; col < boardColEnd; col++) {
-											if(spaces[col][row].getAvailableMove() == true) {
-												spaces[col][row].setAvailableMove(false);
-											}
-										}
-									}
-									
-									stack.removeAll();
-									stack.add(pieces[X1][Y1]);
-									stack.add(spaces[X1][Y1]);
-									board.remove(Y1*columns + X1);
-									board.add(stack, Y1*columns + X1);
-									board.revalidate();
-									board.repaint();
-									
-									miniTest.incrementTurn();
-									MessageLabel(messagePanel, messages, miniTest.currentPlayer().getName() + " your turn!", null);
-									return;
-								}
-								//space clicked is not occupied by a piece (empty)
-								else if(pieces[X1][Y1] == null) {									
-									String pieceName = "";
-									switch(pieces[X2][Y2].getType()) {
-									case RABBIT:
-										pieceName = "Rabbit";
-										break;
-									case SNAKE:
-										pieceName = "Snake";
-										break;
-									case BIRD:
-										pieceName = "Bird";
-										break;
-									case GROUNDHOG:
-										pieceName = "Groundhog";
-										break;
-									case TURTLE:
-										pieceName = "Turtle";
-										break;
-									};
-									StringBuilder newMessage = new StringBuilder("You have moved a ").append(pieceName).append(".");
-									MessageLabel(messagePanel, messages, newMessage.toString(), miniTest.currentPlayer());
-									
-									pieces[X2][Y2].setSelected(false);
-									pieces[X1][Y1] = pieces[X2][Y2];
-									pieces[X2][Y2] = null;
-									moveFound = false;
-									selected = false;
-									
-									for(int row = boardRowStart; row < boardRowEnd; row++) {
-										for(int col = boardColStart; col < boardColEnd; col++) {
-											if(spaces[col][row].getAvailableMove() == true) {
-												spaces[col][row].setAvailableMove(false);
-											}
-										}
-									}
-									
-									stack.removeAll();
-									stack.add(pieces[X1][Y1]);
-									stack.add(spaces[X1][Y1]);
-									board.add(stack, Y1*columns + X1);
-									board.revalidate();
-									board.repaint();
-									
-									miniTest.incrementTurn();
-									MessageLabel(messagePanel, messages, miniTest.currentPlayer().getName() + " your turn!", null);
-									return;								
-								}	
-							}
-						}	
-					}
-					//piece selected is from player rack
-					if(selectedPieceZone == RACK) {				
-						//location selected is already occupied piece
-						if(pieces[X1][Y1] != null) {					
-							String newMessage = "Your selection is already occupied by a piece. You must select one of the valid moves (outlined) "
-									+ "or deselect your current piece to start over. Try again.";
-							MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-							return;
-						}
-						//location selected is not valid territory for current piece
-						else if(spaces[X1][Y1].getTeamTerritory() != miniTest.currentPlayer().getTeam()) { 	
-							String newMessage = "Your selection is outside of your teritory. You must select one of the valid moves (outlined) "
-									+ "or deselect your current piece to start over. Try again.";
-							MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-							return;
-						}
-						//copy piece type from rack to board, remove one from rack
-						else {
-							pieces[X2][Y2].setSelected(false);
-							pieces[X1][Y1] = new Piece(pieces[X2][Y2]);
-							selected = false;
-																
-							String pieceName = "";
-							miniTest.currentPlayer().removeRackPiece(pieces[X1][Y1].getType());
-							switch(pieces[X1][Y1].getType()) {
-							case RABBIT:
-								pieceName = "Rabbit";
-								RabbitLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
-								break;
-							case SNAKE:
-								pieceName = "Snake";
-								SnakeLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
-								break;
-							case BIRD:
-								pieceName = "Bird";
-								BirdLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
-								break;
-							case GROUNDHOG:
-								pieceName = "Groundhog";
-								GroundhogLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
-								break;
-							case TURTLE:
-								pieceName = "Turtle";
-								TurtleLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
-								break;
-							};
-							
-							for(int row = boardRowStart; row < boardRowEnd; row++) {
-								for(int col = boardColStart; col < boardColEnd; col++) {
-									if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
-										spaces[col][row].setAddPiece(false);				//hide spaces piece could be placed (b/c it is now) 
-									}
-								}
-							}
-							
-							StringBuilder newMessage = new StringBuilder("You have added a ").append(pieceName).append(" to the board.");	
-							MessageLabel(messagePanel, messages, newMessage.toString(), miniTest.currentPlayer());
-														
-							stack.removeAll();
-							stack.add(pieces[X1][Y1]);
-							stack.add(spaces[X1][Y1]);
-							board.add(stack, Y1*columns + X1);
-
-							board.revalidate();
-							board.repaint();
-														
-							miniTest.incrementTurn();
-							MessageLabel(messagePanel, messages, miniTest.currentPlayer().getName() + " your turn!", null);
-							return;		
-						}
-					}
-				}
-				
-				else if(selected == false) {															//no piece is currently selected
-					if(pieces[X1][Y1] == null) {												//location clicked does not have a piece
-						String newMessage = "You must select a piece. Try again.";
-						MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-						return;
-					}
-					else {																		//location clicked does have a piece
-						if(pieces[X1][Y1].getPlayerID() != miniTest.currentPlayer().getID()) {	//piece does not belong to player
-							String newMessage = "You must select your own piece. Try again.";
-							MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-							return;
-						}
-						else {																	//piece does belong to current player
-							if(spaces[X1][Y1].getZone() == OUTBOUNDS) {							//piece is on current players rack
-								selectedPieceZone = RACK;
-								if(pieces[X1][Y1].getType() == RABBIT) {						
-									if(miniTest.currentPlayer().getRabbitCount() <= 0){			//player does not have any rabbits in reserve
-										String newMessage = "You do not have any Rabbits in reserve. Try again.";
-										MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-										return;
-									}
-									else {
-										pieces[X1][Y1].setSelected(true);						//player does have rabbits in reserve
-										selected = true;
-										X2 = X1;
-										Y2 = Y1;
-										for(int row = boardRowStart; row < boardRowEnd; row++) {
-											for(int col = boardColStart; col < boardColEnd; col++) {
-												if(pieces[col][row] == null) {					//location must be empty 
-													if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
-														spaces[col][row].setAddPiece(true);				//show spaces piece can be placed
-													}
-												}
-											}
-										}
-										board.revalidate();
-										board.repaint();
-										System.out.println("set");
-										return;
-									}
-								}
-								else if(pieces[X1][Y1].getType() == SNAKE) {						
-									if(miniTest.currentPlayer().getSnakeCount() <= 0){			//player does not have any snakes in reserve
-										String newMessage = "You do not have any Snakes in reserve. Try again.";
-										MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-										return;
-									}
-									else {
-										pieces[X1][Y1].setSelected(true);						//player does have snakes in reserve
-										selected = true;
-										X2 = X1;
-										Y2 = Y1;
-										for(int row = boardRowStart; row < boardRowEnd; row++) {
-											for(int col = boardColStart; col < boardColEnd; col++) {
-												if(pieces[col][row] == null) {					//location must be empty 
-													if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
-														spaces[col][row].setAddPiece(true);				//show spaces piece can be placed
-													}
-												}
-											}
-										}
-										board.revalidate();
-										board.repaint();
-										return;
-									}
-								}
-								else if(pieces[X1][Y1].getType() == BIRD) {						
-									if(miniTest.currentPlayer().getBirdCount() <= 0){			//player does not have any birds in reserve
-										String newMessage = "You do not have any Birds in reserve. Try again.";
-										MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-										return;
-									}
-									else {
-										pieces[X1][Y1].setSelected(true);						//player does have birds in reserve
-										selected = true;
-										X2 = X1;
-										Y2 = Y1;
-										for(int row = boardRowStart; row < boardRowEnd; row++) {
-											for(int col = boardColStart; col < boardColEnd; col++) {
-												if(pieces[col][row] == null) {					//location must be empty 
-													if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
-														spaces[col][row].setAddPiece(true);				//show spaces piece can be placed
-													}
-												}
-											}
-										}
-										board.revalidate();
-										board.repaint();
-										return;
-									}
-								}
-								else if(pieces[X1][Y1].getType() == GROUNDHOG) {						
-									if(miniTest.currentPlayer().getGroundhogCount() <= 0){		//player does not have any groundhogs in reserve
-										String newMessage = "You do not have any Groundhogs in reserve. Try again.";
-										MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-										return;
-									}
-									else {
-										pieces[X1][Y1].setSelected(true);						//player does have groundhogs in reserve
-										selected = true;
-										X2 = X1;
-										Y2 = Y1;
-										for(int row = boardRowStart; row < boardRowEnd; row++) {
-											for(int col = boardColStart; col < boardColEnd; col++) {
-												if(pieces[col][row] == null) {					//location must be empty 
-													if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
-														spaces[col][row].setAddPiece(true);				//show spaces piece can be placed
-													}
-												}
-											}
-										}
-										board.revalidate();
-										board.repaint();
-										return;
-									}
-								}
-								else if(pieces[X1][Y1].getType() == TURTLE) {						
-									if(miniTest.currentPlayer().getSnakeCount() <= 0){			//player does not have any turtles in reserve
-										String newMessage = "You do not have any Turtles in reserve. Try again.";
-										MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-										return;
-									}
-									else {
-										pieces[X1][Y1].setSelected(true);						//player does have turtles in reserve
-										selected = true;
-										X2 = X1;
-										Y2 = Y1;
-										for(int row = boardRowStart; row < boardRowEnd; row++) {
-											for(int col = boardColStart; col < boardColEnd; col++) {
-												if(pieces[col][row] == null) {					//location must be empty 
-													if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
-														spaces[col][row].setAddPiece(true);				//show spaces piece can be placed
-													}
-												}
-											}
-										}
-										board.revalidate();
-										board.repaint();
-										return;
-									}
-								}
-							}
-							else if(spaces[X1][Y1].getZone() == INBOUNDS) {						//selected location is inbounds		
-								selectedPieceZone = BOARD;
-								
-								//FIND AVAILABLE MOVES
-								int newX, newY;
-								System.out.println("moves list length- " + pieces[X1][Y1].getMovesListLength());
-								for(int index = 0; index < pieces[X1][Y1].getMovesListLength(); index++) {
-									newX = X1 - pieces[X1][Y1].getMove(index).getLeft() + pieces[X1][Y1].getMove(index).getRight();
-									newY = Y1 - pieces[X1][Y1].getMove(index).getUp() + pieces[X1][Y1].getMove(index).getDown();
-									//possible space is inbounds and empty
-									if(spaces[newX][newY].getZone() == INBOUNDS && pieces[newX][newY] == null ||
-										//or possible space is inbounds, occupied and of the other team 	
-										spaces[newX][newY].getZone() == INBOUNDS && pieces[newX][newY] != null && pieces[newX][newY].getTeam() != miniTest.currentPlayer().getTeam()) {
-										moveFound = true; 
-										
-										System.out.println("available moves- ");
-										spaces[newX][newY].setAvailableMove(true);
-										//selected = true;
-										//pieces[X1][Y1].setSelected(true);
-									}
-								}
-								if(moveFound == true) {
-									pieces[X1][Y1].setSelected(true);
-									selected = true;
-									X2 = X1;
-									Y2 = Y1;	
-									board.revalidate();
-									board.repaint();
-									return;
-								}
-								else {
-									String newMessage = "You have chosen a piece with no available moves. Try again.";
-									MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-									return;
-								}
-							}
-						}
-					}
-				}
-				
-				
-				
+			public void mouseClicked(MouseEvent evt) {		
 			}
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -822,14 +384,493 @@ public class Go {
 			@Override
 			public void mousePressed(MouseEvent arg0) {
 				// TODO Auto-generated method stub
+				int mouseX = arg0.getX();
+				int mouseY = arg0.getY();
+				PX1 = mouseX/spaceSize;
+				PY1 = mouseY/spaceSize;
+				System.out.println("PX1- " + PX1 + "       PY1- " + PY1);
+				
 			}
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 				// TODO Auto-generated method stub
+				int mouseX = arg0.getX();
+				int mouseY = arg0.getY();
+				RX1 = mouseX/spaceSize;
+				RY1 = mouseY/spaceSize;
+				System.out.println("RX1- " + RX1 + "       RY1- " + RY1);
+				
+				if(PX1 == RX1 && PY1 == RY1) {
+					//int mouseX = evt.getX();
+					//int mouseY = evt.getY();
+					int X1 = mouseX/spaceSize;
+					int Y1 = mouseY/spaceSize;
+					
+
+					//System.out.println("Y1- " + Y1);
+					
+					if(selected == true) {
+						if(X1 == X2 && Y1 == Y2) {										//the player want to deselect the current piece
+							if(moveFound == true) {										//the current piece has available moves to remove
+								int newX, newY;
+								for(int index = 0; index < pieces[X1][Y1].getMovesListLength(); index++) {
+									newX = X1 - pieces[X1][Y1].getMove(index).getLeft() + pieces[X1][Y1].getMove(index).getRight();
+									newY = Y1 - pieces[X1][Y1].getMove(index).getUp() + pieces[X1][Y1].getMove(index).getDown();
+									if(spaces[newX][newY].getZone() == INBOUNDS && pieces[newX][newY] == null ||
+										//or possible space is inbounds, occupied and of the other team 	
+										spaces[newX][newY].getZone() == INBOUNDS && pieces[newX][newY] != null && pieces[newX][newY].getTeam() != miniTest.currentPlayer().getTeam()) {
+										
+										moveFound = false; 
+										spaces[newX][newY].setAvailableMove(false);									
+									}
+								}
+							}
+							//player was planning to add piece. the spaces that showed valid placement need to be reverted to neutral
+							else {						
+								for(int row = boardRowStart; row < boardRowEnd; row++) {
+									for(int col = boardColStart; col < boardColEnd; col++) {
+										if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
+											spaces[col][row].setAddPiece(false);				//show spaces piece can be placed
+										}
+									}
+								}
+							}	
+							pieces[X1][Y1].setSelected(false);
+							selected = false;
+							X2 = -1;
+							Y2 = -1;
+							board.revalidate();
+							board.repaint();
+							String newMessage = "Your prior selection has been deselcted. Choose a new piece.";
+							MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+							System.out.println("done");
+							return;
+						}
+						else if(selectedPieceZone == BOARD) {
+							if(moveFound == true) {	
+								if(spaces[X1][Y1].getAvailableMove() == false) {
+									String newMessage = "You must select one of the valid moves (highlighted) "
+											+ "or deselect your current piece to start over. Try again.";
+									MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+									System.out.println("done");
+									return;
+								}
+								else if(spaces[X1][Y1].getAvailableMove() == true) {
+									if(pieces[X1][Y1] != null){ 						//space clicked has opponents piece
+										
+										int scoreTemp = miniTest.currentPlayer().getScore();
+										scoreTemp = scoreTemp + 10;
+										miniTest.currentPlayer().setScore(scoreTemp);		//fix for different piece type
+										
+										String pieceName = "";
+										switch(pieces[X2][Y2].getType()) {
+										case RABBIT:
+											pieceName = "Rabbit";
+											break;
+										case SNAKE:
+											pieceName = "Snake";
+											break;
+										case BIRD:
+											pieceName = "Bird";
+											break;
+										case GROUNDHOG:
+											pieceName = "Groundhog";
+											break;
+										case TURTLE:
+											pieceName = "Turtle";
+											break;
+										};
+										String opponentPieceName = "";
+										switch(pieces[X1][Y1].getType()) {
+										case RABBIT:
+											opponentPieceName = "Rabbit";
+											break;
+										case SNAKE:
+											opponentPieceName = "Snake";
+											break;
+										case BIRD:
+											opponentPieceName = "Bird";
+											break;
+										case GROUNDHOG:
+											opponentPieceName = "Groundhog";
+											break;
+										case TURTLE:
+											opponentPieceName = "Turtle";
+											break;
+										};
+										
+										System.out.println("name- " + miniTest.currentPlayer().getName());
+										System.out.println("score " + miniTest.currentPlayer().getScore());
+										
+										ScoreLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
+										StatusLabel(statusPanel, miniTest.getTotalTurns(), miniTest.currentPlayer());
+										
+										StringBuilder newMessage = new StringBuilder("Your ").append(pieceName).append(" has overtaken your opponents ")
+																					.append(opponentPieceName).append(". Score +10"); ///fix for all scores
+										
+										MessageLabel(messagePanel, messages, newMessage.toString(), miniTest.currentPlayer());
+										
+										pieces[X2][Y2].setSelected(false);
+										pieces[X1][Y1] = pieces[X2][Y2];
+										pieces[X2][Y2] = null;
+										moveFound = false;
+										selected = false;
+
+										for(int row = boardRowStart; row < boardRowEnd; row++) {
+											for(int col = boardColStart; col < boardColEnd; col++) {
+												if(spaces[col][row].getAvailableMove() == true) {
+													spaces[col][row].setAvailableMove(false);
+												}
+											}
+										}
+										
+										JPanel stack = new JPanel();
+										stack.setLayout(new OverlayLayout(stack));
+										//stack.removeAll();
+										stack.add(pieces[X1][Y1]);
+										stack.add(spaces[X1][Y1]);
+										
+										board.remove(Y1*columns + X1);
+										board.add(stack, Y1*columns + X1);
+										
+										board.revalidate();
+										board.repaint();
+										
+										miniTest.incrementTurn();
+										MessageLabel(messagePanel, messages, miniTest.currentPlayer().getName() + " your turn!", null);
+										System.out.println("done - OCC");
+										return;
+									}
+									//space clicked is not occupied by a piece (empty)
+									else if(pieces[X1][Y1] == null) {									
+										String pieceName = "";
+										switch(pieces[X2][Y2].getType()) {
+										case RABBIT:
+											pieceName = "Rabbit";
+											break;
+										case SNAKE:
+											pieceName = "Snake";
+											break;
+										case BIRD:
+											pieceName = "Bird";
+											break;
+										case GROUNDHOG:
+											pieceName = "Groundhog";
+											break;
+										case TURTLE:
+											pieceName = "Turtle";
+											break;
+										};
+										StringBuilder newMessage = new StringBuilder("You have moved a ").append(pieceName).append(".");
+										MessageLabel(messagePanel, messages, newMessage.toString(), miniTest.currentPlayer());
+										
+										pieces[X2][Y2].setSelected(false);
+										pieces[X1][Y1] = pieces[X2][Y2];
+										pieces[X2][Y2] = null;
+										moveFound = false;
+										selected = false;
+										
+										for(int row = boardRowStart; row < boardRowEnd; row++) {
+											for(int col = boardColStart; col < boardColEnd; col++) {
+												if(spaces[col][row].getAvailableMove() == true) {
+													spaces[col][row].setAvailableMove(false);
+												}
+											}
+										}
+										
+										JPanel stack = new JPanel();
+										stack.setLayout(new OverlayLayout(stack));
+										//stack.removeAll();
+										stack.add(pieces[X1][Y1]);
+										stack.add(spaces[X1][Y1]);
+
+										board.remove(Y1*columns + X1);
+										board.add(stack, Y1*columns + X1);
+										
+										board.revalidate();
+										board.repaint();
+										
+										miniTest.incrementTurn();
+										MessageLabel(messagePanel, messages, miniTest.currentPlayer().getName() + " your turn!", null);
+										System.out.println("done - BLANK");
+										return;
+									}	
+								}
+							}	
+						}
+						//piece selected is from player rack
+						else if(selectedPieceZone == RACK) {		
+							//location selected is already occupied piece
+							if(pieces[X1][Y1] != null) {					
+								String newMessage = "Your selection is already occupied by a piece. You must select one of the valid moves (outlined) "
+										+ "or deselect your current piece to start over. Try again.";
+								MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+								System.out.println("done");
+								return;
+							}
+							//location selected is not valid territory for current piece
+							else if(spaces[X1][Y1].getTeamTerritory() != miniTest.currentPlayer().getTeam()) { 	
+								String newMessage = "Your selection is outside of your teritory. You must select one of the valid moves (outlined) "
+										+ "or deselect your current piece to start over. Try again.";
+								MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+								System.out.println("done");
+								return;
+							}
+							//copy piece type from rack to board, remove one from rack
+							else {
+								pieces[X2][Y2].setSelected(false);
+								pieces[X1][Y1] = new Piece(pieces[X2][Y2]);
+								selected = false;
+																	
+								String pieceName = "";
+								miniTest.currentPlayer().removeRackPiece(pieces[X1][Y1].getType());
+								switch(pieces[X1][Y1].getType()) {
+								case RABBIT:
+									pieceName = "Rabbit";
+									RabbitLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
+									break;
+								case SNAKE:
+									pieceName = "Snake";
+									SnakeLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
+									break;
+								case BIRD:
+									pieceName = "Bird";
+									BirdLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
+									break;
+								case GROUNDHOG:
+									pieceName = "Groundhog";
+									GroundhogLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
+									break;
+								case TURTLE:
+									pieceName = "Turtle";
+									TurtleLabel(miniTest.currentPlayer(), passPlayerPanel(miniTest.currentPlayer(), p1panel, p2panel), true);
+									break;
+								};
+								
+								for(int row = boardRowStart; row < boardRowEnd; row++) {
+									for(int col = boardColStart; col < boardColEnd; col++) {
+										if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
+											spaces[col][row].setAddPiece(false);				//hide spaces piece could be placed (b/c it is now) 
+										}
+									}
+								}
+								
+								StringBuilder newMessage = new StringBuilder("You have added a ").append(pieceName).append(" to the board.");	
+								MessageLabel(messagePanel, messages, newMessage.toString(), miniTest.currentPlayer());
+										
+								JPanel stack = new JPanel();
+								stack.setLayout(new OverlayLayout(stack));
+								//stack.removeAll();
+								stack.add(pieces[X1][Y1]);
+								stack.add(spaces[X1][Y1]);
+								
+								board.remove(Y1*columns + X1);
+								board.add(stack, Y1*columns + X1);
+								
+								board.revalidate();
+								board.repaint();
+															
+								miniTest.incrementTurn();
+								MessageLabel(messagePanel, messages, miniTest.currentPlayer().getName() + " your turn!", null);
+								System.out.println("done - ADDED");
+								return;		
+							}
+						}
+					}
+					
+					else if(selected == false) {															//no piece is currently selected
+						if(pieces[X1][Y1] == null) {												//location clicked does not have a piece
+							String newMessage = "You must select a piece. Try again.";
+							MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+							System.out.println("done");
+							return;
+						}
+						else if(pieces[X1][Y1] != null){																		//location clicked does have a piece
+							if(pieces[X1][Y1].getPlayerID() != miniTest.currentPlayer().getID()) {	//piece does not belong to player
+								String newMessage = "You must select your own piece. Try again.";
+								MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+								System.out.println("done");
+								return;
+							}
+							else {																	//piece does belong to current player
+								if(spaces[X1][Y1].getZone() == OUTBOUNDS) {							//piece is on current players rack
+									selectedPieceZone = RACK;
+									if(pieces[X1][Y1].getType() == RABBIT) {						
+										if(miniTest.currentPlayer().getRabbitCount() == 0){			//player does not have any rabbits in reserve
+											String newMessage = "You do not have any Rabbits in reserve. Try again.";
+											MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+											System.out.println("done");
+											return;
+										}
+										else {
+											pieces[X1][Y1].setSelected(true);						//player does have rabbits in reserve
+											selected = true;
+											X2 = X1;
+											Y2 = Y1;
+											for(int row = boardRowStart; row < boardRowEnd; row++) {
+												for(int col = boardColStart; col < boardColEnd; col++) {
+													if(pieces[col][row] == null) {					//location must be empty 
+														if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
+															spaces[col][row].setAddPiece(true);				//show spaces piece can be placed
+														}
+													}
+												}
+											}
+											board.revalidate();
+											board.repaint();
+											System.out.println("done - SELECTED + RABBIT");
+											return;
+										}
+									}
+									else if(pieces[X1][Y1].getType() == SNAKE) {						
+										if(miniTest.currentPlayer().getSnakeCount() <= 0){			//player does not have any snakes in reserve
+											String newMessage = "You do not have any Snakes in reserve. Try again.";
+											MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+											System.out.println("done");
+											return;
+										}
+										else {
+											pieces[X1][Y1].setSelected(true);						//player does have snakes in reserve
+											selected = true;
+											X2 = X1;
+											Y2 = Y1;
+											for(int row = boardRowStart; row < boardRowEnd; row++) {
+												for(int col = boardColStart; col < boardColEnd; col++) {
+													if(pieces[col][row] == null) {					//location must be empty 
+														if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
+															spaces[col][row].setAddPiece(true);				//show spaces piece can be placed
+														}
+													}
+												}
+											}
+											board.revalidate();
+											board.repaint();
+											System.out.println("done - SELECTED SNAKE");
+											return;
+										}
+									}
+									else if(pieces[X1][Y1].getType() == BIRD) {						
+										if(miniTest.currentPlayer().getBirdCount() <= 0){			//player does not have any birds in reserve
+											String newMessage = "You do not have any Birds in reserve. Try again.";
+											MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+											System.out.println("done");
+											return;
+										}
+										else {
+											pieces[X1][Y1].setSelected(true);						//player does have birds in reserve
+											selected = true;
+											X2 = X1;
+											Y2 = Y1;
+											for(int row = boardRowStart; row < boardRowEnd; row++) {
+												for(int col = boardColStart; col < boardColEnd; col++) {
+													if(pieces[col][row] == null) {					//location must be empty 
+														if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
+															spaces[col][row].setAddPiece(true);				//show spaces piece can be placed
+														}
+													}
+												}
+											}
+											board.revalidate();
+											board.repaint();
+											System.out.println("done - SELECTED BIRD");
+											return;
+										}
+									}
+									else if(pieces[X1][Y1].getType() == GROUNDHOG) {						
+										if(miniTest.currentPlayer().getGroundhogCount() <= 0){		//player does not have any groundhogs in reserve
+											String newMessage = "You do not have any Groundhogs in reserve. Try again.";
+											MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+											System.out.println("done");
+											return;
+										}
+										else {
+											pieces[X1][Y1].setSelected(true);						//player does have groundhogs in reserve
+											selected = true;
+											X2 = X1;
+											Y2 = Y1;
+											for(int row = boardRowStart; row < boardRowEnd; row++) {
+												for(int col = boardColStart; col < boardColEnd; col++) {
+													if(pieces[col][row] == null) {					//location must be empty 
+														if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
+															spaces[col][row].setAddPiece(true);				//show spaces piece can be placed
+														}
+													}
+												}
+											}
+											board.revalidate();
+											board.repaint();
+											System.out.println("done - SELECTED GROUNDHOG");
+											return;
+										}
+									}
+									else if(pieces[X1][Y1].getType() == TURTLE) {						
+										if(miniTest.currentPlayer().getSnakeCount() <= 0){			//player does not have any turtles in reserve
+											String newMessage = "You do not have any Turtles in reserve. Try again.";
+											MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+											System.out.println("done");
+											return;
+										}
+										else {
+											pieces[X1][Y1].setSelected(true);						//player does have turtles in reserve
+											selected = true;
+											X2 = X1;
+											Y2 = Y1;
+											for(int row = boardRowStart; row < boardRowEnd; row++) {
+												for(int col = boardColStart; col < boardColEnd; col++) {
+													if(pieces[col][row] == null) {					//location must be empty 
+														if(spaces[col][row].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
+															spaces[col][row].setAddPiece(true);				//show spaces piece can be placed
+														}
+													}
+												}
+											}
+											board.revalidate();
+											board.repaint();
+											System.out.println("done - SELECTED TURTLE");
+											return;
+										}
+									}
+								}
+								else if(spaces[X1][Y1].getZone() == INBOUNDS) {						//selected location is inbounds		
+									selectedPieceZone = BOARD;
+									
+									//FIND AVAILABLE MOVES
+									int newX, newY;
+									for(int index = 0; index < pieces[X1][Y1].getMovesListLength(); index++) {
+										newX = X1 - pieces[X1][Y1].getMove(index).getLeft() + pieces[X1][Y1].getMove(index).getRight();
+										newY = Y1 - pieces[X1][Y1].getMove(index).getUp() + pieces[X1][Y1].getMove(index).getDown();
+										//possible space is inbounds and empty
+										if(spaces[newX][newY].getZone() == INBOUNDS && pieces[newX][newY] == null ||
+											//or possible space is inbounds, occupied and of the other team 	
+											spaces[newX][newY].getZone() == INBOUNDS && pieces[newX][newY] != null && pieces[newX][newY].getTeam() != miniTest.currentPlayer().getTeam()) {
+												
+												moveFound = true; 
+												spaces[newX][newY].setAvailableMove(true);
+										}
+									}
+									if(moveFound == true) {
+										pieces[X1][Y1].setSelected(true);
+										selected = true;
+										X2 = X1;
+										Y2 = Y1;
+										board.revalidate();
+										board.repaint();
+										System.out.println("done - SELECTED + MOVE");
+										return;
+									}
+									else {
+										String newMessage = "You have chosen a piece with no available moves. Try again.";
+										MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+										System.out.println("done - SELECTED + NO MOVE");
+										return;
+									}
+								}
+							}
+						}
+					}	
+				}
 			}
 		});
-		
-		
 		
 		
 		
