@@ -265,8 +265,8 @@ private static final int
 		return consecutiveTurnsInEnemyTerritory;
 	}
 
-	public void setConsecutiveTurnsInEnemyTerritory(int turns) {
-		this.consecutiveTurnsInEnemyTerritory = turns;
+	public void incConsecutiveTurnsInEnemyTerritory() {
+		this.consecutiveTurnsInEnemyTerritory++;
 	}
 }
 	

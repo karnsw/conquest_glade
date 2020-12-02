@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.TextArea;
@@ -402,7 +403,7 @@ public class Go {
 				RY1 = mouseY/spaceSize;
 				System.out.println("RX1- " + RX1 + "       RY1- " + RY1);
 				
-				if(PX1 != RX1 && PY1 != RY1) {
+				if(PX1 != RX1 || PY1 != RY1) {
 					String newMessage = "To select a piece, your cursor must remain in the same space "
 							+ "when you press and release. Try again";
 					MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
@@ -457,7 +458,6 @@ public class Go {
 									String newMessage = "You must select one of the valid moves (highlighted) "
 											+ "or deselect your current piece to start over. Try again.";
 									MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-									System.out.println("done");
 									return;
 								}
 								else if(spaces[X1][Y1].getAvailableMove() == true) {
@@ -508,6 +508,7 @@ public class Go {
 																					.append(opponentPieceName).append(". Score +10"); ///fix for all scores
 										
 										MessageLabel(messagePanel, messages, newMessage.toString(), miniTest.currentPlayer());
+					
 										
 										pieces[X2][Y2].setSelected(false);
 										pieces[X1][Y1] = pieces[X2][Y2];
@@ -522,6 +523,9 @@ public class Go {
 												}
 											}
 										}
+										consecutiveTurns(pieces, spaces, miniTest.currentPlayer(), boardRowStart, boardRowEnd, 
+												boardColStart, boardColEnd, board, columns, rows);
+										//////////////////////////////////
 										
 										JPanel stack = new JPanel();
 										stack.setLayout(new OverlayLayout(stack));
@@ -537,7 +541,8 @@ public class Go {
 										
 										miniTest.incrementTurn();
 										MessageLabel(messagePanel, messages, miniTest.currentPlayer().getName() + " your turn!", null);
-										//System.out.println("done - OCC");
+										
+										
 										return;
 									}
 									//space clicked is not occupied by a piece (empty)
@@ -573,6 +578,12 @@ public class Go {
 												}
 											}
 										}
+										
+										
+										consecutiveTurns(pieces, spaces, miniTest.currentPlayer(), boardRowStart, boardRowEnd, 
+												boardColStart, boardColEnd, board, columns, rows);
+										////////////////////////////////////////
+										
 										
 										JPanel stack = new JPanel();
 										stack.setLayout(new OverlayLayout(stack));
@@ -651,6 +662,10 @@ public class Go {
 									}
 								}
 								
+								consecutiveTurns(pieces, spaces, miniTest.currentPlayer(), boardRowStart, boardRowEnd, 
+										boardColStart, boardColEnd, board, columns, rows);
+								//////////////////////////////
+								
 								StringBuilder newMessage = new StringBuilder("You have added a ").append(pieceName).append(" to the board.");	
 								MessageLabel(messagePanel, messages, newMessage.toString(), miniTest.currentPlayer());
 										
@@ -667,8 +682,11 @@ public class Go {
 								board.repaint();
 															
 								miniTest.incrementTurn();
+								
 								MessageLabel(messagePanel, messages, miniTest.currentPlayer().getName() + " your turn!", null);
 								StatusLabel(statusPanel, miniTest.getTotalTurns(), miniTest.currentPlayer());
+								
+								
 								return;		
 							}
 						}
@@ -678,14 +696,12 @@ public class Go {
 						if(pieces[X1][Y1] == null) {												//location clicked does not have a piece
 							String newMessage = "You must select a piece. Try again.";
 							MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-							System.out.println("done");
 							return;
 						}
 						else if(pieces[X1][Y1] != null){																		//location clicked does have a piece
 							if(pieces[X1][Y1].getPlayerID() != miniTest.currentPlayer().getID()) {	//piece does not belong to player
 								String newMessage = "You must select your own piece. Try again.";
 								MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-								System.out.println("done");
 								return;
 							}
 							else {																	//piece does belong to current player
@@ -695,7 +711,6 @@ public class Go {
 										if(miniTest.currentPlayer().getRabbitCount() == 0){			//player does not have any rabbits in reserve
 											String newMessage = "You do not have any Rabbits in reserve. Try again.";
 											MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-											System.out.println("done");
 											return;
 										}
 										else {
@@ -714,7 +729,6 @@ public class Go {
 											}
 											board.revalidate();
 											board.repaint();
-											System.out.println("done - SELECTED + RABBIT");
 											return;
 										}
 									}
@@ -722,7 +736,6 @@ public class Go {
 										if(miniTest.currentPlayer().getSnakeCount() <= 0){			//player does not have any snakes in reserve
 											String newMessage = "You do not have any Snakes in reserve. Try again.";
 											MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-											System.out.println("done");
 											return;
 										}
 										else {
@@ -741,7 +754,6 @@ public class Go {
 											}
 											board.revalidate();
 											board.repaint();
-											System.out.println("done - SELECTED SNAKE");
 											return;
 										}
 									}
@@ -749,7 +761,6 @@ public class Go {
 										if(miniTest.currentPlayer().getBirdCount() <= 0){			//player does not have any birds in reserve
 											String newMessage = "You do not have any Birds in reserve. Try again.";
 											MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-											System.out.println("done");
 											return;
 										}
 										else {
@@ -768,7 +779,6 @@ public class Go {
 											}
 											board.revalidate();
 											board.repaint();
-											System.out.println("done - SELECTED BIRD");
 											return;
 										}
 									}
@@ -776,7 +786,6 @@ public class Go {
 										if(miniTest.currentPlayer().getGroundhogCount() <= 0){		//player does not have any groundhogs in reserve
 											String newMessage = "You do not have any Groundhogs in reserve. Try again.";
 											MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
-											System.out.println("done");
 											return;
 										}
 										else {
@@ -795,7 +804,6 @@ public class Go {
 											}
 											board.revalidate();
 											board.repaint();
-											System.out.println("done - SELECTED GROUNDHOG");
 											return;
 										}
 									}
@@ -822,7 +830,6 @@ public class Go {
 											}
 											board.revalidate();
 											board.repaint();
-											System.out.println("done - SELECTED TURTLE");
 											return;
 										}
 									}
@@ -971,34 +978,77 @@ public class Go {
 	
 	}
 
-	//consecutiveTurns(miniTest.currentPlayer(), pieces, spaces, boardColStart, boardColEnd, boardRowStart, boardRowEnd)
-	
-	/*
-	public static void consecutiveTurns(GameManager game, Piece[][] pieces, Space[][] spaces, int startColumns, int endColumns, int startRows, int endRows) {
-		Player p = game.currentPlayer();
-		int index = -1;
-		for(int col = startColumns; col < endColumns; col++) {	
-			for(int row = startRows; row < endRows; row++) {
-				if(pieces[col][row].getTeam() != p.getTeam() && spaces[col][row].getDefended() == true && spaces[col][row].getTeamTerritory() == p.getTeam()) {
-					pieces[col][row].setConsecutiveTurnsInEnemyTerritory((pieces[col][row].getConsecutiveTurnsInEnemyTerritory())+1);
-					
-					int scoringPlayerID = pieces[col][row].getPlayerID();
-					for(int i = 0; i < game.getPlayers().size(); i++) {
-						if(game.getPlayers().get(i).getID() == scoringPlayerID) {
-							index = i;
-							game.getPlayers().get(index).addScoringPiece(pieces[col][row]);
+	public static void consecutiveTurns(Piece[][] pieces, Space[][] spaces, Player p,
+										int boardRowStart, int boardRowEnd, int boardColStart, int boardColEnd,
+										JPanel board, int columns, int rows){
+		
+		for(int row = boardRowStart; row < boardRowEnd; row++) {
+			for(int col = boardColStart; col < boardColEnd; col++) {
+				if(pieces[col][row] != null && pieces[col][row].getTeam() != p.getTeam()) {  //piece belongs to other team 
+					if(pieces[col][row].getTeam() != spaces[col][row].getTeamTerritory() && spaces[col][row].getDefended() == true) {	//piece is in enemy territory
+						pieces[col][row].incConsecutiveTurnsInEnemyTerritory();				//increments count piece has been in enemy territory
+					}
+					if(pieces[col][row].getConsecutiveTurnsInEnemyTerritory() >= 3) {
+						
+						/*
+						for(int row2 = boardRowStart; row2 < boardRowEnd; row2++) {
+							for(int col2 = boardColStart; col2 < boardColEnd; col2++) {
+								spaces[col2][row2] = null;
+								spaces[col2][row2] = new Space(Color.WHITE);
+								if(pieces[col2][row2] != null && pieces[col2][row2].getTeam() == p.getTeam()) {
+									pieces[col2][row2] = null;
+								}
+								
+								board.remove(row2*columns + col2);
+								JPanel stack = new JPanel();
+								stack.setLayout(new OverlayLayout(stack));
+								if(pieces[col2][row2] != null) {
+									stack.add(pieces[col2][row2]);
+									stack.add(spaces[col2][row2]);
+									board.add(stack, row2*columns + col2);
+								}
+								else {
+									stack.add(spaces[col2][row2]);
+									board.add(stack, row2*columns + col2);			
+								}
+							}
 						}
+						*/
+						board.removeAll();
+						int x = board.getX();
+						int y = board.getY();
+						int width = board.getWidth();
+						int height = board.getHeight();
+
+						
+						//board.setLayout();
+						board.revalidate();
+						
+						System.out.println("height- " + board.getWidth());
+						System.out.println("width- " + board.getWidth());
+						System.out.println("X- " + board.getX());
+						System.out.println("Y- " + board.getY());
+						board.setBounds(x, y, width, height);
+						JLabel winner = new JLabel(String.format("<html>Player: %s<br>YOU LOSE!</html>", p.getName()), JLabel.CENTER);
+						winner.setForeground(p.getColor());
+						winner.setBounds(x, y, width, height);
+						Font glade = new Font(Font.SERIF, Font.BOLD, 20);
+						winner.setFont(glade);
+						board.add(winner);
+						board.revalidate();
+						board.repaint();
+						
+						return;
 					}
 				}
 			}
 		}
 	}
-	*/
 	
 	
 	
 	
-	
+
 	//only good for 2 players
 	public static JPanel passPlayerPanel(Player p, JPanel p1, JPanel p2) {
 		if(p.getTeam() == 1) {

@@ -37,6 +37,11 @@ public class Space extends JPanel{
 		setRow(row);
 	}
 	
+	Space(Color color){
+		this.color = color;
+	}
+	
+	
 	Space(Color color, boolean zone, boolean defended, int teamTerritory, Color teamTerritoryColor,
 			  int special, boolean mouseHere, boolean availableMove, boolean addPiece){
 			
