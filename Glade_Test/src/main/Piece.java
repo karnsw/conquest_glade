@@ -154,8 +154,10 @@ private static final int
 			this.moves.add(move2);
 		}
 		else if(this.type == BIRD) {
-			move1.F2(this.playerTerritory);
+			move1.L1(this.playerTerritory);
 			this.moves.add(move1);
+			move2.R1(this.playerTerritory);
+			this.moves.add(move2);
 		}
 		else if(this.type == GROUNDHOG) {
 			move1.B1(this.playerTerritory);

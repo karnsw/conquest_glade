@@ -133,6 +133,14 @@ public class GameManager {
 	
 	private void setPlayerNameMenu(Player p) {
 		String name = (String)JOptionPane.showInputDialog("Player " + p.getID() + ", please enter your name.");
+		if(name.length() > 15) {
+			char[] arr = new char[15];
+			for(int i = 0; i < 15; i++) {
+				arr[i] = name.charAt(i);
+			}
+			String shortName = String.valueOf(arr);
+			name = shortName;
+		}
 		p.setName(name);
 	}
 	

@@ -21,6 +21,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
@@ -48,6 +50,18 @@ public class Go {
 		
 		JFrame window = new JFrame("Glade");
 		
+		
+		JMenuBar menuBar = new JMenuBar();
+		JMenu rules = new JMenu("Rules");
+		JMenu restart = new JMenu("Restart");
+		//menu.getAccessibleContext().setAccessibleDescription("snakes are great");
+		
+		
+		menuBar.add(rules);
+		menuBar.add(restart);
+		
+		window.setJMenuBar(menuBar);
+		
 		GameManager miniTest = new GameManager();
 		miniTest.setUpClassicGlade();
 
@@ -65,18 +79,6 @@ public class Go {
 		
 		int boardColEnd = boardBufferColsCount/2 + boardColsCount;
 		int boardRowEnd = boardBufferRowsCount/2 + boardRowsCount;
-		
-		int ttlGameCols = boardColsCount + boardBufferColsCount;
-		int ttlGameRows = boardRowsCount + boardBufferRowsCount;
-				
-				
-
-		
-		
-		
-		
-		int mouseCoordinate[][] = new int[columns][rows];
-		int pieceCoordinate[][] = new int[columns][rows];
 		
 	
 	
@@ -400,14 +402,17 @@ public class Go {
 				RY1 = mouseY/spaceSize;
 				System.out.println("RX1- " + RX1 + "       RY1- " + RY1);
 				
-				if(PX1 == RX1 && PY1 == RY1) {
-					//int mouseX = evt.getX();
-					//int mouseY = evt.getY();
+				if(PX1 != RX1 && PY1 != RY1) {
+					String newMessage = "To select a piece, your cursor must remain in the same space "
+							+ "when you press and release. Try again";
+					MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+					return;
+				}
+				
+				else {
 					int X1 = mouseX/spaceSize;
 					int Y1 = mouseY/spaceSize;
-					
 
-					//System.out.println("Y1- " + Y1);
 					
 					if(selected == true) {
 						if(X1 == X2 && Y1 == Y2) {										//the player want to deselect the current piece
@@ -476,9 +481,6 @@ public class Go {
 										case GROUNDHOG:
 											pieceName = "Groundhog";
 											break;
-										case TURTLE:
-											pieceName = "Turtle";
-											break;
 										};
 										String opponentPieceName = "";
 										switch(pieces[X1][Y1].getType()) {
@@ -493,9 +495,6 @@ public class Go {
 											break;
 										case GROUNDHOG:
 											opponentPieceName = "Groundhog";
-											break;
-										case TURTLE:
-											opponentPieceName = "Turtle";
 											break;
 										};
 										
@@ -538,7 +537,7 @@ public class Go {
 										
 										miniTest.incrementTurn();
 										MessageLabel(messagePanel, messages, miniTest.currentPlayer().getName() + " your turn!", null);
-										System.out.println("done - OCC");
+										//System.out.println("done - OCC");
 										return;
 									}
 									//space clicked is not occupied by a piece (empty)
@@ -556,9 +555,6 @@ public class Go {
 											break;
 										case GROUNDHOG:
 											pieceName = "Groundhog";
-											break;
-										case TURTLE:
-											pieceName = "Turtle";
 											break;
 										};
 										StringBuilder newMessage = new StringBuilder("You have moved a ").append(pieceName).append(".");
@@ -592,7 +588,7 @@ public class Go {
 										
 										miniTest.incrementTurn();
 										MessageLabel(messagePanel, messages, miniTest.currentPlayer().getName() + " your turn!", null);
-										System.out.println("done - BLANK");
+										StatusLabel(statusPanel, miniTest.getTotalTurns(), miniTest.currentPlayer());
 										return;
 									}	
 								}
@@ -672,7 +668,7 @@ public class Go {
 															
 								miniTest.incrementTurn();
 								MessageLabel(messagePanel, messages, miniTest.currentPlayer().getName() + " your turn!", null);
-								System.out.println("done - ADDED");
+								StatusLabel(statusPanel, miniTest.getTotalTurns(), miniTest.currentPlayer());
 								return;		
 							}
 						}
@@ -804,7 +800,7 @@ public class Go {
 										}
 									}
 									else if(pieces[X1][Y1].getType() == TURTLE) {						
-										if(miniTest.currentPlayer().getSnakeCount() <= 0){			//player does not have any turtles in reserve
+										if(miniTest.currentPlayer().getTurtleCount() <= 0){			//player does not have any turtles in reserve
 											String newMessage = "You do not have any Turtles in reserve. Try again.";
 											MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
 											System.out.println("done");
@@ -842,7 +838,9 @@ public class Go {
 										//possible space is inbounds and empty
 										if(spaces[newX][newY].getZone() == INBOUNDS && pieces[newX][newY] == null ||
 											//or possible space is inbounds, occupied and of the other team 	
-											spaces[newX][newY].getZone() == INBOUNDS && pieces[newX][newY] != null && pieces[newX][newY].getTeam() != miniTest.currentPlayer().getTeam()) {
+											spaces[newX][newY].getZone() == INBOUNDS && pieces[newX][newY] != null && 
+											pieces[newX][newY].getTeam() != miniTest.currentPlayer().getTeam() &&
+											pieces[newX][newY].getType() != TURTLE){
 												
 												moveFound = true; 
 												spaces[newX][newY].setAvailableMove(true);
@@ -856,6 +854,12 @@ public class Go {
 										board.revalidate();
 										board.repaint();
 										System.out.println("done - SELECTED + MOVE");
+										return;
+									}
+									else if(pieces[X1][Y1].getType() == TURTLE) {
+										String newMessage = "Turtles can not be moved. Try again.";
+										MessageLabel(messagePanel, messages, newMessage, miniTest.currentPlayer());
+										System.out.println("done - SELECTED + NO MOVE");
 										return;
 									}
 									else {
