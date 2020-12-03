@@ -8,7 +8,8 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-
+import java.util.Random;
+import java.util.Math;
 import javax.swing.JPanel;
 
 public class Space extends JPanel{
@@ -31,7 +32,7 @@ public class Space extends JPanel{
 	private boolean availableMove;		//what locations engaged piece can move to
 	private boolean addPiece;			//is a piece being added to the board?
 	
-	
+	Random Rand=new Random();
 	Space(int col, int row){
 		setCol(col);
 		setRow(row);
@@ -98,7 +99,8 @@ public class Space extends JPanel{
 		return special;
 	}
 	public void setSpecial(int special) {
-		this.special = special;
+		this.special = Rand.nextInt(3);
+
 	}
 
 	public boolean getMouseHere() {

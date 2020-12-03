@@ -20,6 +20,7 @@ private static final int
 	BIRD = 2,
 	GROUNDHOG = 3,
 	TURTLE = 4;
+	SPECIAL = 5
 	
 	private int col;
 	private int row;
@@ -33,6 +34,7 @@ private static final int
 	private Color selectedColor;
 	
 	private int consecutiveTurnsInEnemyTerritory;
+	private int frozenTurns;
 
 	
 	Piece(Color primaryColor, int type, boolean selected){
@@ -142,6 +144,8 @@ private static final int
 	private void setMoves() {
 		Move move1 = new Move();
 		Move move2 = new Move();
+		Move move3 = new Move();
+		Move move4 = new Move();
 		
 		if(this.type == RABBIT) {
 			move1.F1(this.playerTerritory);
@@ -163,6 +167,7 @@ private static final int
 			move1.B1(this.playerTerritory);
 			this.moves.add(move1);
 		}
+		else if(special)
 		else if(this.type == TURTLE) {
 		}
 	}
@@ -267,6 +272,12 @@ private static final int
 
 	public void setConsecutiveTurnsInEnemyTerritory(int turns) {
 		this.consecutiveTurnsInEnemyTerritory = turns;
+	}
+	public int frozenTurns(){
+		return frozenTurns;
+	}
+	public void setfrozenTurns(int turns){
+		this.frozenTurns;
 	}
 }
 	

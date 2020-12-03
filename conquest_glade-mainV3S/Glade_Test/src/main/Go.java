@@ -216,18 +216,7 @@ public class Go {
 				}
 			}
 		}
-			//Create special spaces.
-		for(int SpecialCount=0;SpecialCount <5;SpecialCount++)
-		{
-			int RandomY =1+Rand.nextInt(columns-4);
-			int RandomX =2+Rand.nextInt(rows-3);
-			spaces[RandomX][RandomY] = (new Space(miniTest.getBoardSColor(), INBOUNDS, NO, 0, null, 0, NO, NO, NO));
-			if(spaces[RandomX][RandomY].getTeamTerritory() == miniTest.currentPlayer().getTeam())
-			{
-				spaces[RandomX][RandomY].setTeamTerritory(miniTest.getPlayers().get(SpecialCount).getTeam());
-				spaces[RandomX][RandomY].setTeamTerritoryColor(miniTest.getPlayers().get(SpecialCount).getColor());
-			}
-		}
+
 		///NEED TO FIX/// -- initalizing spaces to defend
 		
 		for(int index = 0; index < miniTest.Player1().getDefendSpaceCount(); index++){
@@ -300,19 +289,9 @@ public class Go {
 		MessageLabel(messagePanel, messages, "Let's Play Glade!", null);
 		
 		
+
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 		
 		
 		
@@ -360,9 +339,61 @@ public class Go {
 				}
 			}
 		}
-		
-			
-		
+
+							//Create special spaces move to 351 change initializer.
+							for(int SpecialCount=0;SpecialCount <5;SpecialCount++)
+							{
+								int SpecHold=Rand.nextInt(3);
+								int RandomY =2+Rand.nextInt(columns-6);
+								int RandomX =2+Rand.nextInt(rows-4);
+								if(spaces[RandomX][RandomY].getTeamTerritory()!=miniTest.currentPlayer().getTeam()){
+								spaces[RandomX][RandomY] = (new Space(miniTest.getBoardSColor(), INBOUNDS, NO,3, null, SpecHold, YES, YES, YES));
+									spaces[RandomX][RandomY].setSpecial(SpecHold);
+									spaces[RandomX][RandomY].getSpecial();
+					
+								}	
+									else if(spaces[RandomX][RandomY].getTeamTerritory() == miniTest.currentPlayer().getTeam()) {
+										spaces[RandomX][RandomY].getTeamTerritoryColor();
+										spaces[RandomX][RandomY].setAvailableMove(true);
+										spaces[RandomX][RandomY].setAddPiece(true);
+										spaces[RandomX][RandomY].setSpecial(SpecHold);
+										spaces[RandomX][RandomY].getSpecial();
+									
+									}
+									//This section will be moved.
+								switch(spaces[RandomX][RandomY].getSpecial()){
+									//make it so turn does count as soon as piece is moved to the special space.
+									case 0:
+										//wind
+										pieces[X2][Y2].setSelected(true);
+										//pick location to move piece too
+										//change piece type so it is capable of moving up,down,left,or right for 1 turn.
+										pieces[X2][Y2].setMove();
+										pieces[X2][Y2].setMove();
+										pieces[X2][Y2].setMove();
+										pieces[X2][Y2].setMove();
+										//return piece to it's original type 
+										break;
+									case 1:
+										//fire	
+										//make it so that the piece that was moved to special space can attack any piece in a space radias
+										pieces[X2][Y2].setSelected(false);
+										pieces[X1][Y1] = pieces[X2][Y2];
+										pieces[X2][Y2] = null;
+										moveFound = false;
+										selected = false;
+										break;
+									case 2:
+										//ice
+										while(this.turn!=this.turn+2)
+										{
+										//Make it so selected piece cannot move for 2 turns
+										pieces[X2][Y2].setMove();
+										}
+										break;
+								}
+								
+							}
 	
 		
 		
@@ -888,7 +919,8 @@ public class Go {
 			}
 		});
 		
-		
+	
+				
 		
 		
 		board.addMouseMotionListener(new MouseMotionListener(){

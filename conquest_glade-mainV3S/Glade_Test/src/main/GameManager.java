@@ -41,7 +41,7 @@ public class GameManager {
 		_turn = 0;
 		_rows = 8;
 		_columns = 8;
-		setBoardSColor(Color.PINK);
+		setBoardSColor(Color.pink);
 		setBoardAColor(Color.GRAY);
 		setBoardBColor(Color.LIGHT_GRAY);
 		setBoarderColor(Color.BLACK);
