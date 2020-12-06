@@ -7,26 +7,24 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Label;
-import java.awt.TextArea;
 import java.awt.Toolkit;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.OverlayLayout;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 public class Go {
 
@@ -38,7 +36,7 @@ public class Go {
 		TURTLE = 4;
 	
 	private static final boolean
-		YES = true,
+		//YES = true,
 		NO = false,
 		INBOUNDS = true,
 		OUTBOUNDS = false,
@@ -50,21 +48,105 @@ public class Go {
 
 		
 		JFrame window = new JFrame("Glade");
-		
+		GameManager miniTest = new GameManager();
+		miniTest.setUpClassicGlade();
 		
 		JMenuBar menuBar = new JMenuBar();
-		JMenu rules = new JMenu("Rules");
-		JMenu restart = new JMenu("Restart");
-		//menu.getAccessibleContext().setAccessibleDescription("snakes are great");
+		JMenu rulesMenu = new JMenu("Rules");
+		JMenu restartMenu = new JMenu("Restart Game");
+		
+		JMenuItem clickForYES = new JMenuItem("Click for YES... this doesnt work");
+		restartMenu.add(clickForYES);
+		
+		JFrame rulesWindow = new JFrame("Classic Glade Rules");
+		JTextArea rulesTxtBox = new JTextArea();
+		rulesWindow.setPreferredSize(new Dimension(350,400));
+		rulesWindow.setLocation(100, 100);
+		rulesTxtBox.append("- player1 will begin\n");
+		rulesTxtBox.append("- turns will alternate\n");
+		rulesTxtBox.append("- turns can be used to place a piece on the board or move\n");
+		rulesTxtBox.append("  one already in play\n");
+		rulesTxtBox.append("- when moved from rack to board, pieces can only be placed\n");
+		rulesTxtBox.append("  on your defensive side of board. these are signified by\n");
+		rulesTxtBox.append("  correlating with current players designated color\n\n");
+		rulesTxtBox.append("- Piece Movement:\n");
+		rulesTxtBox.append("    (R) Rabbit    - F1\n");
+		rulesTxtBox.append("    (B) Bird      - L1 or R1\n");
+		rulesTxtBox.append("    (S) Snake     - F1L1 or F1R1\n");
+		rulesTxtBox.append("    (G) Groundhog - B1\n");
+		rulesTxtBox.append("    (T) Turtle    - Can Not Be Overtaken\n\n");
+		rulesTxtBox.append("- Scoring:\n");
+		rulesTxtBox.append("	-Stalemates are common.\n");
+		rulesTxtBox.append("	-Winning can only be achieved through holding\n");
+		rulesTxtBox.append("	 position in a single backspace on opponents\n");
+		rulesTxtBox.append("	 side for 3 consecutive turns.\n\n");
+		rulesTxtBox.append("- If your stuck, read the messages across the\n.");
+		rulesTxtBox.append("  bottom for suggestions\n\n\n");
+		rulesTxtBox.append("  Thanks for playing. Have fun! :)");
+		
+		rulesWindow.pack();
+		rulesTxtBox.setEditable(false);
+		rulesWindow.add(rulesTxtBox);
 		
 		
-		menuBar.add(rules);
-		menuBar.add(restart);
+	
+		clickForYES.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
+		rulesMenu.addMenuListener(new MenuListener(){
+			@Override
+			public void menuSelected(MenuEvent e) {
+				// TODO Auto-generated method stub
+				rulesWindow.setVisible(true);
+			}
+			@Override
+			public void menuDeselected(MenuEvent e) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void menuCanceled(MenuEvent e) {
+				// TODO Auto-generated method stub
+			}	
+		});		//menu.getAccessibleContext().setAccessibleDescription("snakes are great");
+		
+		
+		menuBar.add(rulesMenu);
+		menuBar.add(restartMenu);
 		
 		window.setJMenuBar(menuBar);
 		
-		GameManager miniTest = new GameManager();
-		miniTest.setUpClassicGlade();
+
 
 		int columns = (miniTest.getColumns() + 4);
 		int rows = (miniTest.getRows() + 2);
